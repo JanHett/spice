@@ -5,8 +5,23 @@
 #import <tuple>
 
 namespace spice {
+    enum class channel_order {
+        RGB,
+        RGBA,
+        BGR,
+        BGRA,
+        CMYK,
+        CMYKA
+    };
+
+    enum class channels {
+        R, G, B,
+        C, M, Y, K,
+        A,
+    };
+
     /// Width, height and channel count of an image
-    using image_shape = std::tuple<size_t, size_t, uint8_t>;
+    using image_shape = std::tuple<size_t, size_t, channel_order>;
 
     /// Reference to a pixel value in an image
     class pixel_view {
@@ -15,18 +30,19 @@ namespace spice {
         size_t m_channels;
         bool m_valid = true;
     public:
-        pixel_view(float * const data, uint8_t channels);
+        pixel_view(float * const data, channel_order channels);
 
-        /// The channel count of the image
-        uint8_t & channels();
-        uint8_t channels() const;
+        /// The channel information of the image
+        channel_order & channels();
+        channel_order channels() const;
 
         /// Returns false if the pixel is outside the image dimensions,
         /// true otherwise.
         operator bool();
     };
 
-    /// Reference to a column in an image
+    /// Reference to a column in an image.
+    /// Use this sparingly as it tends to not be very cache-friendly.
     class column_view {
     private:
         float * const m_data;
@@ -39,7 +55,7 @@ namespace spice {
             float * const data,
             size_t line_length,
             size_t height,
-            uint8_t channels);
+            channel_order channels);
 
         pixel_view operator[] (size_t line);
 
@@ -54,8 +70,21 @@ namespace spice {
         image_shape m_shape;
     public:
         image();
-        image(size_t width, size_t height, uint8_t channels);
+        /// Create an image filled with black
+        image(size_t width, size_t height, channel_order channels);
         image(image const & other);
+        image(float const * const data,
+            size_t width,
+            size_t height,
+            channel_order channels);
+        image(uint16_t const * const data,
+            size_t width,
+            size_t height,
+            channel_order channels);
+        image(uint8_t const * const data,
+            size_t width,
+            size_t height,
+            channel_order channels);
 
         /// The width, height and channel count of the image
         image_shape & shape();
@@ -66,9 +95,9 @@ namespace spice {
         /// The height of the image
         size_t & height();
         size_t height() const;
-        /// The channel count of the image
-        uint8_t & channels();
-        uint8_t channels() const;
+        /// The channel information of the image
+        channel_order & channels();
+        channel_order channels() const;
 
         /// The raw data organised linewise in RGB(A)/CMYK(A) format.
         /// Top-left pixel is at index 0.

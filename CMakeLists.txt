@@ -10,40 +10,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 
 #####################
-# Catch2
+# Google Test
 #####################
 
-find_path(CATCH_INCLUDE_DIR ...)
+set(GTEST_ROOT "/usr/local/include/gtest" CACHE PATH "Path to googletest")
+find_package(GTest REQUIRED)
 
-if((NOT CATCH_INCLUDE_DIR) OR (NOT EXISTS ${CATCH_INCLUDE_DIR})
-    # we couldn't find the header files for FOO or they don't exist
-    message("Unable to find Catch2")
-
-    # we have a submodule setup for Catch2, assume it is under external/Catch2
-    # now we need to clone this submodule
-    execute_process(COMMAND git submodule update --init -- external/Catch2
-                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-
-    # set CATCH_INCLUDE_DIR properly
-    set(CATCH_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external/Catch2/path/to/include
-        CACHE PATH "Catch2 include directory")
-
-    # also install it
-    install(DIRECTORY ${CATCH_INCLUDE_DIR}/Catch2 DESTINATION ${some_dest})
-
-    # for convenience setup a target
-    add_library(Catch2 INTERFACE)
-    target_include_directories(Catch2 INTERFACE
-                               $<BUILD_INTERFACE:${CATCH_INCLUDE_DIR}>
-                               $<INSTALL_INTERFACE:${some_dest}>)
-
-    # need to export target as well
-    install(TARGETS Catch2 EXPORT my_export_set DESTINATION ${some_dest})
-else()
-    # see above, setup target as well
-endif()
+#####################
+# OpenImageIO
+#####################
 
 find_package(OpenImageIO REQUIRED)
+# find_library(OPENIMAGEIO )
 
 # Main executable config
 file(GLOB SRC
