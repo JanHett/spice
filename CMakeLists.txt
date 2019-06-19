@@ -21,7 +21,6 @@ find_package(GTest REQUIRED)
 #####################
 
 find_package(OpenImageIO REQUIRED)
-# find_library(OPENIMAGEIO )
 
 # Main executable config
 file(GLOB SRC
