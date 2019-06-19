@@ -2,9 +2,19 @@ import argparse
 import subprocess
 import os
 
+class colors:
+    HEADER = '\033[95m'
+    OK = '\033[94m'
+    SUCCESS = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+    ENDC = '\033[0m'
+
 TARGETS = [
     'spice',
-    'test'
+    'tests'
     ]
 
 if __name__ == "__main__":
@@ -43,9 +53,20 @@ if __name__ == "__main__":
     subprocess.run(["cmake", f"-DCMAKE_BUILD_TYPE={args.build_type}", '..'],
         cwd=build_dir)
 
+    print(f"{colors.SUCCESS}Finished building targets {', '.join(args.target)}."
+        f"{colors.ENDC}")
+
+    # make it
+    subprocess.run(["make"], cwd=build_dir)
+
+    print(f"{colors.SUCCESS}Finished making targets {', '.join(args.target)}."
+        f"{colors.ENDC}")
+
     if args.run:
         if args.run_args:
             run_args = args.run_args.split()
         else:
             run_args = []
-        subprocess.run([f'./{args.run}'].extend(run_args), cwd=build_dir)
+        run_cmd = [f'./{args.run}', *run_args]
+    
+        subprocess.run(run_cmd, cwd=build_dir)

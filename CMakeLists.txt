@@ -9,6 +9,12 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 
+
+if(APPLE)
+    # Fix linking on 10.14+. See https://stackoverflow.com/questions/54068035
+    LINK_DIRECTORIES(/usr/local/lib)
+endif()
+
 #####################
 # Google Test
 #####################
@@ -29,7 +35,7 @@ file(GLOB SRC
     src/**/*.cpp
 )
 add_executable(${PROJECT_NAME} "src/main.cpp" ${SRC})
-target_link_libraries(${PROJECT_NAME} OpenImageIO)
+target_link_libraries(${PROJECT_NAME} OpenImageIO ${CMAKE_DL_LIBS})
 
 # Test executable config
 file(GLOB TESTS
@@ -38,7 +44,7 @@ file(GLOB TESTS
 )
 add_executable(tests ${TESTS})
 target_link_libraries(tests GTest::GTest)
-target_link_libraries(tests OpenImageIO)
+target_link_libraries(tests OpenImageIO ${CMAKE_DL_LIBS})
 gtest_discover_tests(tests)
 
 if(MSVC)
