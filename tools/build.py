@@ -1,6 +1,7 @@
 import argparse
 import subprocess
 import os
+import sys
 
 class colors:
     HEADER = '\033[95m'
@@ -50,17 +51,29 @@ if __name__ == "__main__":
     os.makedirs(build_dir, exist_ok=True)
 
     # build it
-    subprocess.run(["cmake", f"-DCMAKE_BUILD_TYPE={args.build_type}", '..'],
+    cmake = subprocess.run(["cmake",
+        f"-DCMAKE_BUILD_TYPE={args.build_type}",
+        '..'],
         cwd=build_dir)
 
-    print(f"{colors.SUCCESS}Finished building targets {', '.join(args.target)}."
-        f"{colors.ENDC}")
+    if cmake.returncode == 0:
+        print(f"{colors.SUCCESS}Finished building targets "
+            f"[{', '.join(args.target)}].{colors.ENDC}")
+    else:
+        print(f"{colors.FAIL}Building targets [{', '.join(args.target)}] "
+            f"failed. Aborting.{colors.ENDC}")
+        sys.exit(cmake.returncode)
 
     # make it
-    subprocess.run(["make"], cwd=build_dir)
+    make = subprocess.run(["make"], cwd=build_dir)
 
-    print(f"{colors.SUCCESS}Finished making targets {', '.join(args.target)}."
-        f"{colors.ENDC}")
+    if make.returncode == 0:
+        print(f"{colors.SUCCESS}Finished making targets "
+            f"[{', '.join(args.target)}].{colors.ENDC}")
+    else:
+        print(f"{colors.FAIL}Making targets [{', '.join(args.target)}] failed. "
+            f"Aborting.{colors.ENDC}")
+        sys.exit(make.returncode)
 
     if args.run:
         if args.run_args:
