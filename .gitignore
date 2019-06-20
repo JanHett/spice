@@ -1,4 +1,3 @@
 build
-doc/build
-doc/source/api
-doc/source/doxygen/output/
+doc/html
+doc/xml

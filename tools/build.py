@@ -18,6 +18,18 @@ TARGETS = [
     'tests'
     ]
 
+def p_success(message):
+    print(f"{colors.SUCCESS}{message}{colors.ENDC}")
+
+def p_warning(message):
+    print(f"{colors.WARNING}{message}{colors.ENDC}")
+
+def p_fail(message):
+    print(f"{colors.FAIL}{message}{colors.ENDC}")
+
+def p_format(message, *format):
+    print(f"{''.join(format)}{message}{colors.ENDC}")
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Build the spice library.')
     parser.add_argument('root',
@@ -43,6 +55,9 @@ if __name__ == "__main__":
     parser.add_argument('--run-args',
         help='Add the arguments to the call to execute the built program. has '
         'to be passed as a string.')
+    parser.add_argument('--build-documentation', '-d',
+        action='store_true',
+        help='Build the documentation.')
 
     args = parser.parse_args()
 
@@ -74,6 +89,20 @@ if __name__ == "__main__":
         print(f"{colors.FAIL}Making targets [{', '.join(args.target)}] failed. "
             f"Aborting.{colors.ENDC}")
         sys.exit(make.returncode)
+
+    # build the docs
+    if args.build_documentation:
+        doc_dir = os.path.abspath(os.path.join(args.root, 'doc'))
+
+        doxygen = subprocess.run([
+            "../external/m.css/documentation/doxygen.py",
+            # "--debug",
+            "Doxyfile-mcss"
+            ], cwd=doc_dir)
+        if make.returncode == 0:
+            p_success("Doxygen finished.")
+        else:
+            p_fail("Doxygen failed.")
 
     if args.run:
         if args.run_args:
