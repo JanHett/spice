@@ -2,7 +2,10 @@
 #define SPICE_IMAGE
 
 #import <vector>
+#import <array>
 #import <stdexcept>
+#import <type_traits>
+#import <limits>
 
 /**
  * Contains the entire public interface of the library.
@@ -17,13 +20,29 @@ namespace spice {
      * Note that different colour spaces cannot be combined with one another and
      * doing so results in undefined behaviour.
      */
-    enum class channel_semantics {
-        A      = 1,
-        RGB    = 2,
-        BGR    = 4,
-        CMYK   = 6,
-        YUV    = 8,
+    // enum class channel_semantics {
+    //     A      = 1,
+    //     RGB    = 2,
+    //     BGR    = 4,
+    //     CMYK   = 6,
+    //     YUV    = 8,
+    // };
+
+    /**
+     * All the possible channel names.
+     */
+    enum class channel_names {
+        RED, GREEN, BLUE,
+        Y, U, V,
+        CYAN, MAGENTA, YELLOW, BLACK,
+        ALPHA
     };
+
+    /**
+     * Alias for convenience and forwards compatibility (channel_list might pack
+     * much more information in the future: channel to index mapping etc...).
+     */
+    using channel_list = std::vector<channel_names>;
 
     /**
      * Refers to a single pixel in a `spice::image`. Note that this class has no
@@ -43,14 +62,16 @@ namespace spice {
          * It is therefore recommended to never use this structure explicitly
          * and instead only via `image::operator[]`.
          */
-        constexpr pixel_view(T * const data = nullptr);
+        constexpr pixel_view(T * const data = nullptr):
+        m_data(data) {}
         /**
          * Copy constructor. Constructs a `pixel_view` referring to the same
          * data as the copied `pixel_view`
          *
          * \param other The `pixel_view` to copy
          */
-        constexpr pixel_view(pixel_view const & other);
+        constexpr pixel_view(pixel_view const & other):
+        m_data(other.m_data) {}
 
         /**
          * Allows accessing pixel data with subscript notation. No bounds
@@ -66,7 +87,10 @@ namespace spice {
          * \param channel The index of the channel to retrieve the data from
          * \returns A single, one-channel data point of the image
          */
-        T& operator[](size_t channel);
+        T& operator[](size_t channel)
+        {
+            return m_data[channel];
+        }
         /**
          * Allows accessing pixel data with subscript notation. No bounds
          * checking is performed (use `image::at` for this purpose).
@@ -81,7 +105,10 @@ namespace spice {
          * \param channel The index of the channel to retrieve the data from
          * \returns A single, one-channel data point of the image
          */
-        T const & operator[](size_t channel) const;
+        T const & operator[](size_t channel) const
+        {
+            return m_data[channel];
+        }
     };
 
     /**
@@ -157,73 +184,78 @@ namespace spice {
         std::vector<T> m_data;
         size_t m_width;
         size_t m_height;
-        channel_semantics m_channel_semantics;
+        channel_list m_channel_semantics;
     public:
+        /**
+         * Convenience constant defining the value representing white. This will
+         * be `1` for floating point types and the type's maximum for all
+         * others.
+         */
+        static constexpr T white = ([]() -> float {
+            if (std::is_floating_point<T>::value) return 1.f;
+            return std::numeric_limits<T>::max();
+        })();
+
         /**
          * Creates an image and initialises it with black pixels.
          * \param width The width of the image
          * \param height The height of the image
-         * \param channels The meaning to assign to the channels
+         * \param channel_semantics The meaning to assign to the channels
          */
         image(
             size_t width = 1,
             size_t height = 1,
-            channel_semantics channels = channel_semantics::RGB);
+            channel_list channel_semantics = {
+                channel_names::RED,
+                channel_names::GREEN,
+                channel_names::BLUE,
+            }):
+        m_data(width * height * channel_semantics.size()),
+        m_width(width), m_height(height),
+        m_channel_semantics(channel_semantics) {}
         /**
          * Copy constructor. Performs a deep copy of the passed image.
+         * \param other The image to copy
          */
-        constexpr image(image const & other);
+        image(image const & other):
+        m_data(other.m_data),
+        m_width(other.m_width), m_height(other.m_height),
+        m_channel_semantics(other.m_channel_semantics) {}
 
         /**
          * The width of the image.
          */
-        size_t width() const;
+        size_t width() const
+        { return m_width; }
         /**
          * The height of the image.
          */
-        size_t height() const;
+        size_t height() const
+        { return m_height; }
         /**
          * The number of channels in the image.
          */
-        size_t channels() const;
-        /**
-         * The semantics assigned to the individual channels.
-         */
-        channel_semantics channel_semantics() const;
+        size_t channels() const
+        { return m_channel_semantics.size(); }
 
         /**
-         * Change the dimensions of the image.
-         *
-         * \param width The new width of the image
-         * \param height The new height of the image
-         * \param keep_spatial_semantics A bool deciding whether or not pixels
-         * should stay in their place (meaning the operation works like
-         * cropping) or if values should keep their place in the data vector
-         * (which is much faster but may lead to undesirable results for most
-         * cases).
-         *
-         * \remark If `keep_spatial_semantics = false`, the operation requires
-         * at most \f$ O(|W * H * C - W' * H' * C'|) \f$ time, where
-         * \f$W\f$, \f$H\f$, \f$C\f$ respectively refer to width, height and
-         * number of channels of the image.
-         *
-         * \todo Define runtime limits for `keep_spatial_semantics = true`.
+         * The meaning assigned to the individual channels.
          */
-        void resize(size_t width,
-            size_t height,
-            spice::channel_semantics channels,
-            bool keep_spatial_semantics = true);
+        channel_list channel_semantics() const
+        { return m_channel_semantics; }
 
         /**
          * Accessor to the underlying vector for fast linear data manipulation.
          * \returns a reference to the raw image data
          */
-        std::vector<T> & data();
+        std::vector<T> & data()
+        { return m_data; }
         /**
          * Accessor to the underlying vector for fast linear data manipulation.
          * \returns a const reference to the raw image data
          */
-        const std::vector<T> & data() const;
+        const std::vector<T> & data() const
+        { return m_data; }
 
         /**
          * Allows accessing pixel data with subscript notation. No bounds
@@ -265,7 +297,12 @@ namespace spice {
          * \returns a `pixel_view` referring to the pixel at the indicated
          * location
          */
-        pixel_view<T> operator()(size_t column, size_t row);
+        pixel_view<T> operator()(size_t column, size_t row)
+        {
+            return pixel_view<T>(&m_data[
+                column * m_height * channels() +    // x offset
+                row * channels()]);                 // y offset
+        }
         /**
          * Retrieves a reference to the entire pixel located at the indicated
          * coordinates. No bounds checking is performed.
@@ -275,7 +312,12 @@ namespace spice {
          * \returns a `pixel_view` referring to the pixel at the indicated
          * location
          */
-        const pixel_view<T> operator()(size_t column, size_t row) const;
+        const pixel_view<const T> operator()(size_t column, size_t row) const
+        {
+            return pixel_view<const T>(&m_data[
+                column * m_height * channels() +    // x offset
+                row * channels()]);                 // y offset
+        }
         /**
          * Retrieves a reference to a single channel's value located at the
          * indicated coordinates. No bounds checking is performed.
@@ -285,7 +327,13 @@ namespace spice {
          * \param channel
          * \returns The value at the indicated location
          */
-        T & operator()(size_t column, size_t row, size_t channel);
+        T & operator()(size_t column, size_t row, size_t channel)
+        {
+            return m_data[
+                column * m_height * channels() +    // x offset
+                row * channels() +                  // y offset
+                channel];                           // channel offset
+        }
         /**
          * Retrieves a reference to a single channel's value located at the
          * indicated coordinates. No bounds checking is performed.
@@ -295,7 +343,13 @@ namespace spice {
          * \param channel
          * \returns The value at the indicated location
          */
-        T const & operator()(size_t column, size_t row, size_t channel) const;
+        T const & operator()(size_t column, size_t row, size_t channel) const
+        {
+            return m_data[
+                column * m_height * channels() +    // x offset
+                row * channels() +                  // y offset
+                channel];                           // channel offset
+        }
 
         /**
          * Retrieves a reference to the entire pixel located at the indicated
@@ -349,6 +403,28 @@ namespace spice {
          * \throws std::out_of_range
          */
         T const & at(size_t column, size_t row, size_t channel) const;
+
+        /**
+         * Compares two images with one another. Two images are considered to be
+         * equal if they have the same `width`, `height`, `channel_semantics`
+         * and contain the same `data`.
+         */
+        friend bool operator==(image<T> const & lhs, image<T> const & rhs)
+        {
+            if (lhs.m_width != rhs.m_width) return false;
+            if (lhs.m_height != rhs.m_height) return false;
+            if (lhs.m_channel_semantics != rhs.m_channel_semantics)
+                return false;
+            if (lhs.m_data != rhs.m_data) return false;
+            return true;
+        }
+
+        /**
+         * Compares two images with one another. `operator!=` is implemented as
+         * the negation of `image::operator==`.
+         */
+        friend bool operator!=(image<T> const & lhs, image<T> const & rhs)
+        { return !(lhs == rhs); }
 
         /**
          * Adds the first image element-wise to the second.
