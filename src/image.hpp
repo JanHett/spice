@@ -12,23 +12,6 @@
  */
 namespace spice {
     /**
-     * \enum channel_semantics
-     * `channel_semantics` lists all the colour spaces spice can work with.
-     * Every base can be paired with an alpha channel by ways of the bit-wise
-     * `&` operator. E.g. RGBA might be obtained like this:
-     * `channel_semantics::RGB & channel_semantics::A`.
-     * Note that different colour spaces cannot be combined with one another and
-     * doing so results in undefined behaviour.
-     */
-    // enum class channel_semantics {
-    //     A      = 1,
-    //     RGB    = 2,
-    //     BGR    = 4,
-    //     CMYK   = 6,
-    //     YUV    = 8,
-    // };
-
-    /**
      * All the possible channel names.
      */
     enum class channel_names {

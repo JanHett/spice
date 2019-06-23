@@ -84,52 +84,52 @@ TEST(image, copy_constructor) {
     EXPECT_EQ(channel_names::ALPHA, im2.channel_semantics()[3]);
 }
 
-// TEST(image, operator_equals) {
-//     image<float> im1(2, 3, {
-//         channel_names::RED,
-//         channel_names::GREEN,
-//         channel_names::BLUE,
-//         channel_names::ALPHA
-//     });
-//     image<float> im2(im1);
+TEST(image, operator_equals) {
+    image<float> im1(2, 3, {
+        channel_names::RED,
+        channel_names::GREEN,
+        channel_names::BLUE,
+        channel_names::ALPHA
+    });
+    image<float> im2(im1);
 
-//     EXPECT_TRUE(im1 == im2);
-//     EXPECT_FALSE(im1 != im2);
+    EXPECT_TRUE(im1 == im2);
+    EXPECT_FALSE(im1 != im2);
 
-//     EXPECT_EQ(24, im2.data().size());
-//     for (auto d : im2.data()) {
-//         EXPECT_EQ(0.f, d);
-//     }
-//     EXPECT_EQ(2, im2.width());
-//     EXPECT_EQ(3, im2.height());
-//     EXPECT_EQ(4, im2.channels());
-//     EXPECT_EQ(4, im2.channel_semantics().size());
-//     EXPECT_EQ(channel_names::RED, im2.channel_semantics()[0]);
-//     EXPECT_EQ(channel_names::GREEN, im2.channel_semantics()[1]);
-//     EXPECT_EQ(channel_names::BLUE, im2.channel_semantics()[2]);
-//     EXPECT_EQ(channel_names::ALPHA, im2.channel_semantics()[3]);
+    EXPECT_EQ(24, im2.data().size());
+    for (auto d : im2.data()) {
+        EXPECT_EQ(0.f, d);
+    }
+    EXPECT_EQ(2, im2.width());
+    EXPECT_EQ(3, im2.height());
+    EXPECT_EQ(4, im2.channels());
+    EXPECT_EQ(4, im2.channel_semantics().size());
+    EXPECT_EQ(channel_names::RED, im2.channel_semantics()[0]);
+    EXPECT_EQ(channel_names::GREEN, im2.channel_semantics()[1]);
+    EXPECT_EQ(channel_names::BLUE, im2.channel_semantics()[2]);
+    EXPECT_EQ(channel_names::ALPHA, im2.channel_semantics()[3]);
 
-//     im2(0, 0, 0) = 0.42;
+    im2(0, 0, 0) = 0.42;
 
-//     EXPECT_FALSE(im1 == im2);
-//     EXPECT_TRUE(im1 != im2);
+    EXPECT_FALSE(im1 == im2);
+    EXPECT_TRUE(im1 != im2);
 
-//     image<float> im3(4, 1);
-//     image<float> im4(1, 4);
+    image<float> im3(4, 1);
+    image<float> im4(1, 4);
 
-//     EXPECT_FALSE(im3 == im4);
-//     EXPECT_TRUE(im3 != im4);
+    EXPECT_FALSE(im3 == im4);
+    EXPECT_TRUE(im3 != im4);
 
-//     image<float> im5(2, 2, {
-//         channel_names::Y,
-//         channel_names::U,
-//         channel_names::V
-//     });
-//     image<float> im6(2, 2);
+    image<float> im5(2, 2, {
+        channel_names::Y,
+        channel_names::U,
+        channel_names::V
+    });
+    image<float> im6(2, 2);
 
-//     EXPECT_FALSE(im5 == im6);
-//     EXPECT_TRUE(im3 != im6);
-// }
+    EXPECT_FALSE(im5 == im6);
+    EXPECT_TRUE(im3 != im6);
+}
 
 TEST(image, operator_call_two_arg) {
     auto im = make_checkerboard<float>(2, 2, {
