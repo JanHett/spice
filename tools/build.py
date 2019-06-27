@@ -15,7 +15,8 @@ class colors:
 
 TARGETS = [
     'spice',
-    'tests'
+    'tests',
+    'spice_coverage'
     ]
 
 def p_success(message):
@@ -81,6 +82,9 @@ if __name__ == "__main__":
 
     # make it
     make = subprocess.run(["make"], cwd=build_dir)
+
+    if 'spice_coverage' in args.target:
+        make = subprocess.run(["make", "spice_coverage"], cwd=build_dir)
 
     if make.returncode == 0:
         print(f"{colors.SUCCESS}Finished making targets "

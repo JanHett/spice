@@ -16,7 +16,8 @@ namespace spice {
      */
     enum class channel_names {
         RED, GREEN, BLUE,
-        Y, U, V,
+        Y, Cb, Cr,
+        U, V,
         CYAN, MAGENTA, YELLOW, BLACK,
         ALPHA
     };

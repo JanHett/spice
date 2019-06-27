@@ -3,6 +3,7 @@ include(GoogleTest)
 cmake_minimum_required(VERSION 3.10)
 
 project(spice LANGUAGES CXX)
+set(PROJECT_TEST_NAME tests)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_CXX_STANDARD 17)
@@ -28,7 +29,23 @@ find_package(GTest REQUIRED)
 
 find_package(OpenImageIO REQUIRED)
 
+#####################
+# Code coverage
+#####################
+
+# if(CMAKE_COMPILER_IS_GNUCXX)
+include(CodeCoverage)
+APPEND_COVERAGE_COMPILER_FLAGS()
+SETUP_TARGET_FOR_COVERAGE_LCOV(NAME ${PROJECT_NAME}_coverage
+                              EXECUTABLE tests
+                              DEPENDENCIES tests)
+# setup_target_for_coverage(${PROJECT_NAME}_coverage ${PROJECT_TEST_NAME} coverage)
+# endif()
+
+#########################
 # Main executable config
+#########################
+
 file(GLOB SRC
     src/**/*.h
     src/**/*.hpp
@@ -37,7 +54,10 @@ file(GLOB SRC
 add_executable(${PROJECT_NAME} "src/main.cpp" ${SRC})
 target_link_libraries(${PROJECT_NAME} OpenImageIO ${CMAKE_DL_LIBS})
 
+#########################
 # Test executable config
+#########################
+
 file(GLOB TESTS
     tests/*.cpp
     tests/**/*.cpp
@@ -46,6 +66,10 @@ add_executable(tests ${TESTS})
 target_link_libraries(tests GTest::GTest)
 target_link_libraries(tests OpenImageIO ${CMAKE_DL_LIBS})
 gtest_discover_tests(tests)
+
+###########################
+# Set up compiler warnings
+###########################
 
 if(MSVC)
   add_compile_options(/W4 /WX)
