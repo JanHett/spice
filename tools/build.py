@@ -69,16 +69,25 @@ if __name__ == "__main__":
     # build it
     cmake = subprocess.run(["cmake",
         f"-DCMAKE_BUILD_TYPE={args.build_type}",
+        "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
         '..'],
         cwd=build_dir)
 
     if cmake.returncode == 0:
         print(f"{colors.SUCCESS}Finished building targets "
             f"[{', '.join(args.target)}].{colors.ENDC}")
+
+        # symlink compilation DB
+        subprocess.run(["ln",
+            "-s",
+            "./compile_commands.json",
+            "../compile_commands.json"],
+            cwd=build_dir)
     else:
         print(f"{colors.FAIL}Building targets [{', '.join(args.target)}] "
             f"failed. Aborting.{colors.ENDC}")
         sys.exit(cmake.returncode)
+
 
     # make it
     make = subprocess.run(["make"], cwd=build_dir)

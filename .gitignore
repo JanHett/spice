@@ -2,3 +2,4 @@ build
 doc/html
 doc/xml
 doc/m.math.cache
+compile_commands.json
