@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 #include <type_traits>
+#import <limits>
+#import <cstdint>
 #include "../src/image.hpp"
 
 using namespace spice;
@@ -16,7 +18,9 @@ image<T> make_checkerboard(size_t width = 1,
     image<T> im(width, height, channel_semantics);
     for (size_t pxl = 0; pxl < im.data().size(); pxl += im.channels())
         for (size_t chan = 0; chan < im.channels(); ++chan)
-            im.data()[pxl + chan] = (pxl / 3) % 2 == 0 ? image<T>::white : 0;
+            im.data()[pxl + chan] = (pxl / 3) % 2 == 0 ?
+                image<T>::intensity_range.max :
+                image<T>::intensity_range.min;
 
     return im;
 }
@@ -217,4 +221,14 @@ TEST(image, operator_call_three_arg_const) {
     EXPECT_EQ(im_const(1, 1, 0), 0);
     EXPECT_EQ(im_const(1, 1, 1), 0);
     EXPECT_EQ(im_const(1, 1, 2), 0);
+}
+
+TEST(image, intensity_range) {
+    EXPECT_EQ(image<float>::intensity_range, (range<float>{0, 1.f}));
+
+    EXPECT_EQ(image<double>::intensity_range, (range<double>{0, 1.f}));
+
+    EXPECT_EQ(image<uint16_t>::intensity_range, (range<uint16_t>{
+            std::numeric_limits<uint16_t>::min(),
+            std::numeric_limits<uint16_t>::max()}));
 }

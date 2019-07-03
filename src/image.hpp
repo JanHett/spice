@@ -28,6 +28,28 @@ namespace spice {
     using channel_list = std::vector<channel_names>;
 
     /**
+     * Describes a range of grey values of the particular type.
+     */
+    template<typename T>
+    struct range {
+        /** The low end of the range. */
+        T min;
+        /** The high end of the range. */
+        T max;
+
+        /**
+         * Two ranges are equal if and only if both their min and their max are
+         * equal as determined by comparison with `==`.
+         */
+        friend bool operator==(range<T> const & lhs, range<T> const & rhs)
+        {
+            if (lhs.min == rhs.min && lhs.max == rhs.max)
+                return true;
+            return false;
+        }
+    };
+
+    /**
      * Refers to a single pixel in a `spice::image`. Note that this class has no
      * information about the size of the image it is referring to and thus
      * cannot perform bounds checking. Use `image::at` for that.
@@ -170,13 +192,19 @@ namespace spice {
         channel_list m_channel_semantics;
     public:
         /**
-         * Convenience constant defining the value representing white. This will
-         * be `1` for floating point types and the type's maximum for all
-         * others.
+         * Convenience constant defining the value representing black and the
+         * value representing white. This will be { 0, `1` } for floating point
+         * types and the type's minumum and maximum for all others.
+         *
+         * Note that this range convention implies that floating point images
+         * can contain pixel values beyond the black-white spectrum (meaning
+         * values that will be clipped when rendered).
          */
-        static constexpr T white = ([]() -> float {
-            if (std::is_floating_point<T>::value) return 1.f;
-            return std::numeric_limits<T>::max();
+        static const constexpr range intensity_range = ([]() -> range<T> {
+            if (std::is_floating_point<T>::value) return {T{}, T(1.f)};
+            return {
+                std::numeric_limits<T>::min(),
+                std::numeric_limits<T>::max()};
         })();
 
         /**
@@ -186,12 +214,12 @@ namespace spice {
          * \param channel_semantics The meaning to assign to the channels
          */
         image(
-            size_t width = 1,
-            size_t height = 1,
-            channel_list channel_semantics = {
+            size_t const width = 1,
+            size_t const height = 1,
+            channel_list const channel_semantics = {
                 channel_names::RED,
                 channel_names::GREEN,
-                channel_names::BLUE,
+                channel_names::BLUE
             }):
         m_data(width * height * channel_semantics.size()),
         m_width(width), m_height(height),
