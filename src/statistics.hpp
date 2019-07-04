@@ -38,9 +38,10 @@ namespace statistics {
             hist.push_back(std::vector<size_t>(samples, 0));
 
         // count
+        auto data_length = source.width() * source.height();
         for (
             size_t offset = 0;
-            offset < source.width() * source.height();
+            offset < data_length;
             offset += source_channels)
         {
             for (size_t chan = 0; chan < source_channels; ++chan)
@@ -48,7 +49,7 @@ namespace statistics {
                 // calculate which class the pixel's channel value belongs to...
                 size_t intensity_class = std::lround(
                     (source.data()[offset * source_channels + chan] /
-                    image<T>::intensity_range.max) * samples);
+                    image<T>::intensity_range.max) * (samples - 1));
                 // and increment the relevant class' counter
                 ++hist[chan][intensity_class];
             }

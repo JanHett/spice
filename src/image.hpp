@@ -194,7 +194,7 @@ namespace spice {
     public:
         /**
          * Convenience constant defining the value representing black and the
-         * value representing white. This will be { 0, `1` } for floating point
+         * value representing white. This will be `{ 0, 1 }` for floating point
          * types and the type's minumum and maximum for all others.
          *
          * Note that this range convention implies that floating point images
@@ -253,7 +253,7 @@ namespace spice {
         /**
          * The meaning assigned to the individual channels.
          */
-        channel_list channel_semantics() const
+        channel_list const & channel_semantics() const
         { return m_channel_semantics; }
 
         /**
