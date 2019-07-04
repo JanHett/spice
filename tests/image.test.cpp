@@ -224,9 +224,16 @@ TEST(image, operator_call_three_arg_const) {
 }
 
 TEST(image, intensity_range) {
+    // check that the intensity range is indeed constexpr
+    static_assert(image<float>::intensity_range.min == 0,
+        "image<float> intensity range does not bottom out at 0.");
+    static_assert(image<float>::intensity_range.max == 1.f,
+        "image<float> intensity range does not max out at 1.");
+
+    // check various types' intensity ranges for correctness
     EXPECT_EQ(image<float>::intensity_range, (range<float>{0, 1.f}));
 
-    EXPECT_EQ(image<double>::intensity_range, (range<double>{0, 1.f}));
+    EXPECT_EQ(image<double>::intensity_range, (range<double>{0, 1.0}));
 
     EXPECT_EQ(image<uint16_t>::intensity_range, (range<uint16_t>{
             std::numeric_limits<uint16_t>::min(),

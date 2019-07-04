@@ -16,7 +16,8 @@ namespace spice {
      */
     enum class channel_names {
         RED, GREEN, BLUE,
-        Y, U, V,
+        Y, Cb, Cr,
+        U, V,
         CYAN, MAGENTA, YELLOW, BLACK,
         ALPHA
     };
@@ -221,7 +222,7 @@ namespace spice {
                 channel_names::GREEN,
                 channel_names::BLUE
             }):
-        m_data(width * height * channel_semantics.size()),
+        m_data(width * height * channel_semantics.size(), T{}),
         m_width(width), m_height(height),
         m_channel_semantics(channel_semantics) {}
         /**
@@ -439,23 +440,38 @@ namespace spice {
 
         /**
          * Adds the first image element-wise to the second.
+         * If the two images have different dimensions, only the overlapping
+         * parts will be taken into account. The images will be aligned by their
+         * top-left corners.
          */
         image<T>& operator+=(image<T> const & rhs);
         /**
          * Subtracts the first image element-wise from the second.
+         * If the two images have different dimensions, only the overlapping
+         * parts will be taken into account. The images will be aligned by their
+         * top-left corners.
          */
         image<T>& operator-=(image<T> const & rhs);
         /**
          * Multiplies the first image element-wise with the second.
+         * If the two images have different dimensions, only the overlapping
+         * parts will be taken into account. The images will be aligned by their
+         * top-left corners.
          */
         image<T>& operator*=(image<T> const & rhs);
         /**
          * Divides the first image element-wise from the second.
+         * If the two images have different dimensions, only the overlapping
+         * parts will be taken into account. The images will be aligned by their
+         * top-left corners.
          */
         image<T>& operator/=(image<T> const & rhs);
 
         /**
          * Adds the two images element-wise.
+         * If the two images have different dimensions, only the overlapping
+         * parts will be taken into account. The images will be aligned by their
+         * top-left corners.
          */
         friend image<T> operator+(image<T> lhs, image<T> const & rhs) {
             lhs += rhs;
@@ -463,6 +479,9 @@ namespace spice {
         }
         /**
          * Subtracts the two images element-wise.
+         * If the two images have different dimensions, only the overlapping
+         * parts will be taken into account. The images will be aligned by their
+         * top-left corners.
          */
         friend image<T> operator-(image<T> lhs, image<T> const & rhs) {
             lhs -= rhs;
@@ -470,6 +489,9 @@ namespace spice {
         }
         /**
          * Multiplies the two images element-wise.
+         * If the two images have different dimensions, only the overlapping
+         * parts will be taken into account. The images will be aligned by their
+         * top-left corners.
          */
         friend image<T> operator*(image<T> lhs, image<T> const & rhs) {
             lhs *= rhs;
@@ -477,6 +499,9 @@ namespace spice {
         }
         /**
          * Divides the two images element-wise.
+         * If the two images have different dimensions, only the overlapping
+         * parts will be taken into account. The images will be aligned by their
+         * top-left corners.
          */
         friend image<T> operator/(image<T> lhs, image<T> const & rhs) {
             lhs /= rhs;
