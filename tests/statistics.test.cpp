@@ -47,3 +47,30 @@ TEST(histogram, single_channel_impulse_grey) {
         EXPECT_EQ(hist_grey[0][sample], 0);
     }
 }
+
+TEST(histogram, single_channel_overflow_underflow) {
+    image<double> grey(10, 42, {channel_names::ALPHA});
+    double grey_val = image<double>::intensity_range.max / 2;
+    for (auto & smpl: grey.data())
+        smpl = grey_val;
+
+    // introduce values that are outside the intensity range of the image
+    grey(0, 0, 0) = -1;
+    grey(0, 1, 0) = 1.47;
+
+    auto hist_grey = statistics::histogram(grey, 100);
+
+    EXPECT_EQ(1, hist_grey.size());
+    EXPECT_EQ(100, hist_grey[0].size());
+    // should be all grey except for one sample clipped to black and another
+    // clipped to white
+    EXPECT_EQ(418, hist_grey[0][50]);
+    EXPECT_EQ(1, hist_grey[0][0]);
+    EXPECT_EQ(1, hist_grey[0][99]);
+    // check that the rest of the samples are actually all 0
+    for (size_t sample = 1; sample < hist_grey[0].size() - 1; ++sample)
+    {
+        if (sample == 50) continue; // skip the grey part
+        EXPECT_EQ(hist_grey[0][sample], 0);
+    }
+}

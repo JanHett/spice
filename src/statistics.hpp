@@ -49,10 +49,15 @@ namespace statistics {
         {
             for (size_t chan = 0; chan < source_channels; ++chan)
             {
+                T clamped_val = std::clamp(
+                    source.data()[offset * source_channels + chan],
+                    image<T>::intensity_range.min,
+                    image<T>::intensity_range.max);
                 // calculate which class the pixel's channel value belongs to...
                 size_t intensity_class = std::lround(
-                    (source.data()[offset * source_channels + chan] / max_val)
+                    (clamped_val / max_val)
                     * (samples - 1));
+
                 // and increment the relevant class' counter
                 ++hist[chan][intensity_class];
             }
