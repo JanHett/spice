@@ -7,6 +7,8 @@
 #import <type_traits>
 #import <limits>
 
+#import <OpenImageIO/imageio.h>
+
 /**
  * Contains the entire public interface of the library.
  */
@@ -208,6 +210,23 @@ namespace spice {
                 std::numeric_limits<T>::max()};
         })();
 
+        /**
+         * Creates an image and initialises it with the values found in the
+         * passed data array.
+         * \param width The width of the image
+         * \param height The height of the image
+         * \param channel_semantics The meaning to assign to the channels
+         *
+         * \todo Catch data of size != width * height * channel_semantics.size()
+         */
+        image(
+            std::vector<T> data,
+            size_t const width,
+            size_t const height,
+            channel_list const channel_semantics):
+        m_data(data),
+        m_width(width), m_height(height),
+        m_channel_semantics(channel_semantics) {}
         /**
          * Creates an image and initialises it with black pixels.
          * \param width The width of the image
@@ -508,6 +527,30 @@ namespace spice {
             return lhs;
         }
     };
+
+    template<typename T>
+    image<T> load_image(char const * filename)
+    {
+        auto file = OIIO::ImageInput::open(filename);
+        // if (!file)
+        // TODO: handle error
+
+        const OIIO::ImageSpec & spec = file->spec();
+        channel_list channels = spec.channelnames;
+
+        std::vector<T> img_data(spec.width * spec.height * spec.nchannels);
+        file->read_image(TypeDesc format, &img_data[0]);
+
+        image<T> result(
+            img_data,
+            spec.width,
+            spec.height,
+            channels
+            );
+
+        file->close();
+    }
 }
+
 
 #endif // SPICE_IMAGE
