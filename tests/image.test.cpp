@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <type_traits>
 #import <limits>
+#import <numeric>
 #import <cstdint>
 #include "../src/image.hpp"
 #include "../src/statistics.hpp"
@@ -231,7 +232,9 @@ TEST(image_helpers, type_to_typedesc) {
 TEST(image_support, load_image) {
     auto boat = load_image<float>("../data/testing/boat.jpg");
 
-    // auto hist = statistics::histogram(boat, 50);
+    auto hist = statistics::histogram(boat, 50);
+
+    // print histogram for debugging
     // for (auto & channel : hist) {
     //     std::cout << "-------------------\n";
     //     for (auto sample : channel) {
@@ -247,4 +250,25 @@ TEST(image_support, load_image) {
 
     EXPECT_EQ(boat.channel_semantics(),
         std::vector<std::string>({ "R", "G", "B" }));
+    EXPECT_EQ(boat.width(), 512);
+    EXPECT_EQ(boat.height(), 410);
+
+    size_t red_average = std::accumulate(
+        hist[0].begin(),
+        hist[0].end(),
+        0)/hist[0].size();
+    EXPECT_GT(red_average, 0);
+    EXPECT_LT(red_average, 1500);
+    size_t green_average = std::accumulate(
+        hist[1].begin(),
+        hist[1].end(),
+        0)/hist[1].size();
+    EXPECT_GT(green_average, 0);
+    EXPECT_LT(green_average, 1500);
+    size_t blue_average = std::accumulate(
+        hist[2].begin(),
+        hist[2].end(),
+        0)/hist[2].size();
+    EXPECT_GT(blue_average, 0);
+    EXPECT_LT(blue_average, 1500);
 }
