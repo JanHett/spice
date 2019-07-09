@@ -23,7 +23,7 @@ namespace statistics {
      * \param source The image to analyse
      * \param samples The granularity with which to divide the intensity range
      * of the image.
-     * \returns A vector of vectors of length == `samples` where each of the
+     * \returns A vector of vectors of length `samples` where each of the
      * sub-vectors represents the histogram of one channel.
      */
     template<typename T>

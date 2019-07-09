@@ -12,23 +12,13 @@
 /**
  * Contains the entire public interface of the library.
  */
-namespace spice {
-    /**
-     * All the possible channel names.
-     */
-    enum class channel_names {
-        RED, GREEN, BLUE,
-        Y, Cb, Cr,
-        U, V,
-        CYAN, MAGENTA, YELLOW, BLACK,
-        ALPHA
-    };
-
+namespace spice
+{
     /**
      * Alias for convenience and forwards compatibility (channel_list might pack
      * much more information in the future: channel to index mapping etc...).
      */
-    using channel_list = std::vector<channel_names>;
+    using channel_list = std::vector<std::string>;
 
     /**
      * Describes a range of grey values of the particular type.
@@ -234,13 +224,9 @@ namespace spice {
          * \param channel_semantics The meaning to assign to the channels
          */
         image(
-            size_t const width = 1,
-            size_t const height = 1,
-            channel_list const channel_semantics = {
-                channel_names::RED,
-                channel_names::GREEN,
-                channel_names::BLUE
-            }):
+            size_t const width = 0,
+            size_t const height = 0,
+            channel_list const channel_semantics = {}):
         m_data(width * height * channel_semantics.size(), T{}),
         m_width(width), m_height(height),
         m_channel_semantics(channel_semantics) {}
@@ -528,18 +514,71 @@ namespace spice {
         }
     };
 
+    namespace helpers
+    {
+        /** Converts a C++ double to OIIO::TypeDesc::DOUBLE. */
+        template<typename T>
+        constexpr std::enable_if_t<std::is_same<
+            T,
+            double>::value,
+        OIIO::TypeDesc> type_to_typedesc() {
+            return OIIO::TypeDesc::DOUBLE;
+        }
+        /** Converts a C++ float to OIIO::TypeDesc::FLOAT. */
+        template<typename T>
+        constexpr std::enable_if_t<std::is_same<
+            T,
+            float>::value,
+        OIIO::TypeDesc> type_to_typedesc() {
+            return OIIO::TypeDesc::FLOAT;
+        }
+        /** Converts a C++ uint32_t to OIIO::TypeDesc::UINT. */
+        template<typename T>
+        constexpr std::enable_if_t<std::is_same<
+            T,
+            uint32_t>::value,
+        OIIO::TypeDesc> type_to_typedesc() {
+            return OIIO::TypeDesc::UINT;
+        }
+        /** Converts a C++ uint16_t to OIIO::TypeDesc::UINT16. */
+        template<typename T>
+        constexpr std::enable_if_t<std::is_same<
+            T,
+            uint16_t>::value,
+        OIIO::TypeDesc> type_to_typedesc() {
+            return OIIO::TypeDesc::UINT16;
+        }
+        /** Converts a C++ uint8_t to OIIO::TypeDesc::UINT8. */
+        template<typename T>
+        constexpr std::enable_if_t<std::is_same<
+            T,
+            uint8_t>::value,
+        OIIO::TypeDesc> type_to_typedesc() {
+            return OIIO::TypeDesc::UINT8;
+        }
+    }
+
+    /**
+     * Loads an image from disk and returns a representation of the indicated
+     * data type. All conversions are handled internally.
+     *
+     * \param filename The path on disk relative to the current working
+     * directory
+     * \returns An image object representing the file contents
+     */
     template<typename T>
     image<T> load_image(char const * filename)
     {
         auto file = OIIO::ImageInput::open(filename);
-        // if (!file)
-        // TODO: handle error
+        // TODO more expressive error handling
+        if (!file)
+            return image<T>();
 
         const OIIO::ImageSpec & spec = file->spec();
         channel_list channels = spec.channelnames;
 
         std::vector<T> img_data(spec.width * spec.height * spec.nchannels);
-        file->read_image(TypeDesc format, &img_data[0]);
+        file->read_image(helpers::type_to_typedesc<T>(), &img_data[0]);
 
         image<T> result(
             img_data,
@@ -549,6 +588,8 @@ namespace spice {
             );
 
         file->close();
+
+        return result;
     }
 }
 

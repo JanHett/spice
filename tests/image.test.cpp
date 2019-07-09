@@ -3,17 +3,14 @@
 #import <limits>
 #import <cstdint>
 #include "../src/image.hpp"
+#include "../src/statistics.hpp"
 
 using namespace spice;
 
 template<typename T>
 image<T> make_checkerboard(size_t width = 1,
     size_t height = 1,
-    channel_list channel_semantics = {
-        channel_names::RED,
-        channel_names::GREEN,
-        channel_names::BLUE
-    })
+    channel_list channel_semantics = { "R", "G", "B" })
 {
     image<T> im(width, height, channel_semantics);
     for (size_t pxl = 0; pxl < im.data().size(); pxl += im.channels())
@@ -28,26 +25,15 @@ image<T> make_checkerboard(size_t width = 1,
 TEST(image, default_constructor) {
     image<float> im;
 
-    EXPECT_EQ(3, im.data().size());
-    for (auto d : im.data()) {
-        EXPECT_EQ(0.f, d);
-    }
-    EXPECT_EQ(1, im.width());
-    EXPECT_EQ(1, im.height());
-    EXPECT_EQ(3, im.channels());
-    EXPECT_EQ(3, im.channel_semantics().size());
-    EXPECT_EQ(channel_names::RED, im.channel_semantics()[0]);
-    EXPECT_EQ(channel_names::GREEN, im.channel_semantics()[1]);
-    EXPECT_EQ(channel_names::BLUE, im.channel_semantics()[2]);
+    EXPECT_EQ(0, im.data().size());
+    EXPECT_EQ(0, im.width());
+    EXPECT_EQ(0, im.height());
+    EXPECT_EQ(0, im.channels());
+    EXPECT_EQ(0, im.channel_semantics().size());
 }
 
 TEST(image, size_constructor) {
-    image<float> im1(2, 3, {
-        channel_names::RED,
-        channel_names::GREEN,
-        channel_names::BLUE,
-        channel_names::ALPHA
-    });
+    image<float> im1(2, 3, { "R", "G", "B", "A" });
 
     EXPECT_EQ(24, im1.data().size());
     for (auto d : im1.data()) {
@@ -57,18 +43,18 @@ TEST(image, size_constructor) {
     EXPECT_EQ(3, im1.height());
     EXPECT_EQ(4, im1.channels());
     EXPECT_EQ(4, im1.channel_semantics().size());
-    EXPECT_EQ(channel_names::RED, im1.channel_semantics()[0]);
-    EXPECT_EQ(channel_names::GREEN, im1.channel_semantics()[1]);
-    EXPECT_EQ(channel_names::BLUE, im1.channel_semantics()[2]);
-    EXPECT_EQ(channel_names::ALPHA, im1.channel_semantics()[3]);
+    EXPECT_EQ("R", im1.channel_semantics()[0]);
+    EXPECT_EQ("G", im1.channel_semantics()[1]);
+    EXPECT_EQ("B", im1.channel_semantics()[2]);
+    EXPECT_EQ("A", im1.channel_semantics()[3]);
 }
 
 TEST(image, copy_constructor) {
     image<float> im1(2, 3, {
-        channel_names::RED,
-        channel_names::GREEN,
-        channel_names::BLUE,
-        channel_names::ALPHA
+        "R",
+        "G",
+        "B",
+        "A"
     });
     image<float> im2(im1);
 
@@ -82,18 +68,18 @@ TEST(image, copy_constructor) {
     EXPECT_EQ(3, im2.height());
     EXPECT_EQ(4, im2.channels());
     EXPECT_EQ(4, im2.channel_semantics().size());
-    EXPECT_EQ(channel_names::RED, im2.channel_semantics()[0]);
-    EXPECT_EQ(channel_names::GREEN, im2.channel_semantics()[1]);
-    EXPECT_EQ(channel_names::BLUE, im2.channel_semantics()[2]);
-    EXPECT_EQ(channel_names::ALPHA, im2.channel_semantics()[3]);
+    EXPECT_EQ("R", im2.channel_semantics()[0]);
+    EXPECT_EQ("G", im2.channel_semantics()[1]);
+    EXPECT_EQ("B", im2.channel_semantics()[2]);
+    EXPECT_EQ("A", im2.channel_semantics()[3]);
 }
 
 TEST(image, operator_equals) {
     image<float> im1(2, 3, {
-        channel_names::RED,
-        channel_names::GREEN,
-        channel_names::BLUE,
-        channel_names::ALPHA
+        "R",
+        "G",
+        "B",
+        "A"
     });
     image<float> im2(im1);
 
@@ -108,10 +94,10 @@ TEST(image, operator_equals) {
     EXPECT_EQ(3, im2.height());
     EXPECT_EQ(4, im2.channels());
     EXPECT_EQ(4, im2.channel_semantics().size());
-    EXPECT_EQ(channel_names::RED, im2.channel_semantics()[0]);
-    EXPECT_EQ(channel_names::GREEN, im2.channel_semantics()[1]);
-    EXPECT_EQ(channel_names::BLUE, im2.channel_semantics()[2]);
-    EXPECT_EQ(channel_names::ALPHA, im2.channel_semantics()[3]);
+    EXPECT_EQ("R", im2.channel_semantics()[0]);
+    EXPECT_EQ("G", im2.channel_semantics()[1]);
+    EXPECT_EQ("B", im2.channel_semantics()[2]);
+    EXPECT_EQ("A", im2.channel_semantics()[3]);
 
     im2(0, 0, 0) = 0.42;
 
@@ -124,11 +110,7 @@ TEST(image, operator_equals) {
     EXPECT_FALSE(im3 == im4);
     EXPECT_TRUE(im3 != im4);
 
-    image<float> im5(2, 2, {
-        channel_names::Y,
-        channel_names::U,
-        channel_names::V
-    });
+    image<float> im5(2, 2, { "Y", "U", "V" });
     image<float> im6(2, 2);
 
     EXPECT_FALSE(im5 == im6);
@@ -136,11 +118,7 @@ TEST(image, operator_equals) {
 }
 
 TEST(image, operator_call_two_arg) {
-    auto im = make_checkerboard<float>(2, 2, {
-        channel_names::Y,
-        channel_names::U,
-        channel_names::V
-    });
+    auto im = make_checkerboard<float>(2, 2, { "Y", "U", "V" });
 
     EXPECT_EQ(im(0, 0)[0], 1);
     EXPECT_EQ(im(0, 0)[1], 1);
@@ -157,11 +135,7 @@ TEST(image, operator_call_two_arg) {
 }
 
 TEST(image, operator_call_two_arg_const) {
-    auto im = make_checkerboard<float>(2, 2, {
-        channel_names::Y,
-        channel_names::U,
-        channel_names::V
-    });
+    auto im = make_checkerboard<float>(2, 2, { "Y", "U", "V" });
 
     auto const im_const(im);
 
@@ -180,11 +154,7 @@ TEST(image, operator_call_two_arg_const) {
 }
 
 TEST(image, operator_call_three_arg) {
-    auto im = make_checkerboard<float>(2, 2, {
-        channel_names::Y,
-        channel_names::U,
-        channel_names::V
-    });
+    auto im = make_checkerboard<float>(2, 2, { "Y", "U", "V" });
 
     EXPECT_EQ(im(0, 0, 0), 1);
     EXPECT_EQ(im(0, 0, 1), 1);
@@ -201,11 +171,7 @@ TEST(image, operator_call_three_arg) {
 }
 
 TEST(image, operator_call_three_arg_const) {
-    auto im = make_checkerboard<float>(2, 2, {
-        channel_names::Y,
-        channel_names::U,
-        channel_names::V
-    });
+    auto im = make_checkerboard<float>(2, 2, { "Y", "U", "V" });
 
     auto const im_const(im);
 
@@ -238,4 +204,47 @@ TEST(image, intensity_range) {
     EXPECT_EQ(image<uint16_t>::intensity_range, (range<uint16_t>{
             std::numeric_limits<uint16_t>::min(),
             std::numeric_limits<uint16_t>::max()}));
+}
+
+TEST(image_helpers, type_to_typedesc) {
+    static_assert(helpers::type_to_typedesc<double>() ==
+        OIIO::TypeDesc::DOUBLE,
+        "type_to_typedesc does not return DOUBLE for input of double");
+
+    static_assert(helpers::type_to_typedesc<float>() ==
+        OIIO::TypeDesc::FLOAT,
+        "type_to_typedesc does not return FLOAT for input of float");
+
+    static_assert(helpers::type_to_typedesc<uint32_t>() ==
+        OIIO::TypeDesc::UINT,
+        "type_to_typedesc does not return UINT for input of uint32_t");
+
+    static_assert(helpers::type_to_typedesc<uint16_t>() ==
+        OIIO::TypeDesc::UINT16,
+        "type_to_typedesc does not return UINT16 for input of uint16_t");
+
+    static_assert(helpers::type_to_typedesc<uint8_t>() ==
+        OIIO::TypeDesc::UINT8,
+        "type_to_typedesc does not return UINT8 for input of uint8_t");
+}
+
+TEST(image_support, load_image) {
+    auto boat = load_image<float>("../data/testing/boat.jpg");
+
+    // auto hist = statistics::histogram(boat, 50);
+    // for (auto & channel : hist) {
+    //     std::cout << "-------------------\n";
+    //     for (auto sample : channel) {
+    //         std::cout << sample << "\t| ";
+    //         size_t bar_length = sample / 80;
+    //         for (size_t i = 0; i < bar_length; ++i){
+    //             std::cout << "=";
+    //         }
+    //         std::cout << "\n";
+    //     }
+    //     std::cout << "\n";
+    // }
+
+    EXPECT_EQ(boat.channel_semantics(),
+        std::vector<std::string>({ "R", "G", "B" }));
 }
