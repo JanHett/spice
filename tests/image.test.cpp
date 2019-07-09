@@ -272,3 +272,12 @@ TEST(image_support, load_image) {
     EXPECT_GT(blue_average, 0);
     EXPECT_LT(blue_average, 1500);
 }
+
+TEST(image_support, write_image) {
+    auto boat = load_image<float>("../data/testing/boat.jpg");
+
+    bool written = write_image("../data/testing/boat_2.jpg",
+        boat, OIIO::TypeDesc::UINT8);
+
+    EXPECT_TRUE(written);
+}

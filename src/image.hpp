@@ -203,6 +203,9 @@ namespace spice
         /**
          * Creates an image and initialises it with the values found in the
          * passed data array.
+         * \note The `data` vector should be structured in column-major order.
+         *
+         * \param data The raw image data
          * \param width The width of the image
          * \param height The height of the image
          * \param channel_semantics The meaning to assign to the channels
@@ -560,7 +563,8 @@ namespace spice
 
     /**
      * Loads an image from disk and returns a representation of the indicated
-     * data type. All conversions are handled internally.
+     * data type. All conversions are handled internally by OIIO.
+     * If the image could not be read, an empty image is returned (size 0x0x0).
      *
      * \param filename The path on disk relative to the current working
      * directory
@@ -580,6 +584,8 @@ namespace spice
         std::vector<T> img_data(spec.width * spec.height * spec.nchannels);
         file->read_image(helpers::type_to_typedesc<T>(), &img_data[0]);
 
+        // TODO: transpose the data before constructing an image object
+
         image<T> result(
             img_data,
             spec.width,
@@ -590,6 +596,39 @@ namespace spice
         file->close();
 
         return result;
+    }
+
+    /**
+     * Writes an image to a file at the specified location.
+     *
+     * \param filename The path to write to relative to the current working
+     * directory
+     * \param data The image to save to disk
+     * \returns true if the image was successfully written, false if an error
+     * occurred.
+     */
+    template<typename T>
+    bool write_image(
+        char const * filename,
+        image<T> const & data,
+        OIIO::TypeDesc format = helpers::type_to_typedesc<T>())
+    {
+        std::unique_ptr<OIIO::ImageOutput> out =
+            OIIO::ImageOutput::create(filename);
+        if (!out)
+            return false;
+
+        OIIO::ImageSpec spec(
+            data.width(),
+            data.height(),
+            data.channels(),
+            format);
+        out->open(filename, spec);
+        // TODO: transpose image before writing
+        out->write_image(helpers::type_to_typedesc<T>(), &data.data()[0]);
+        out->close();
+
+        return true;
     }
 }
 
