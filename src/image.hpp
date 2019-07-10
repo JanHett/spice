@@ -105,14 +105,87 @@ namespace spice
     }
 
     /**
-     * Adds two vector-like types component-wise. The vectors are assumed to be
-     * of equal size - no bounds checking is performed.
+     * Subtracts two vector-like types component-wise. The vectors are assumed
+     * to be of equal size - no bounds checking is performed.
      */
     template<typename T_lhs, typename T_rhs>
-    T_rhs operator+(T_lhs const & lhs, T_rhs rhs)
+    T_lhs& operator-=(
+        T_lhs & lhs, T_rhs const & rhs)
     {
-        rhs += lhs;
-        return rhs;
+        for (size_t idx = 0; idx < lhs.size(); ++idx)
+            lhs[idx] -= rhs[idx];
+        return lhs;
+    }
+
+    /**
+     * Subtracts two vector-like types component-wise. The vectors are assumed
+     * to be of equal size - no bounds checking is performed.
+     */
+    template<typename T_lhs, typename T_rhs>
+    T_lhs operator-(T_lhs lhs, T_rhs const & rhs)
+    {
+        lhs -= rhs;
+        return lhs;
+    }
+
+    /**
+     * Multiplies two vector-like types component-wise. The vectors are assumed
+     * to be of equal size - no bounds checking is performed.
+     */
+    template<typename T_lhs, typename T_rhs>
+    T_lhs& operator*=(
+        T_lhs & lhs, T_rhs const & rhs)
+    {
+        for (size_t idx = 0; idx < lhs.size(); ++idx)
+            lhs[idx] *= rhs[idx];
+        return lhs;
+    }
+
+    /**
+     * Multiplies two vector-like types component-wise. The vectors are assumed
+     * to be of equal size - no bounds checking is performed.
+     */
+    template<typename T_lhs, typename T_rhs>
+    T_lhs operator*(T_lhs lhs, T_rhs const & rhs)
+    {
+        lhs *= rhs;
+        return lhs;
+    }
+
+    /**
+     * Divides two vector-like types component-wise. The vectors are assumed to
+     * be of equal size - no bounds checking is performed.
+     */
+    template<typename T_lhs, typename T_rhs>
+    std::enable_if_t<!std::is_arithmetic<T_rhs>::value, T_lhs&> operator/=(
+        T_lhs & lhs, T_rhs const & rhs)
+    {
+        for (size_t idx = 0; idx < lhs.size(); ++idx)
+            lhs[idx] /= rhs[idx];
+        return lhs;
+    }
+
+    /**
+     * Divides two vector-like types component-wise. The vectors are assumed to
+     * be of equal size - no bounds checking is performed.
+     */
+    template<typename T_lhs, typename T_rhs>
+    T_lhs operator/(T_lhs lhs, T_rhs const & rhs)
+    {
+        lhs /= rhs;
+        return lhs;
+    }
+
+    /**
+     * Divides a vector-like type by a primitive.
+     */
+    template<typename T_lhs, typename T_rhs>
+    std::enable_if_t<std::is_arithmetic<T_rhs>::value, T_lhs&> operator/=(
+        T_lhs & lhs, T_rhs const & rhs)
+    {
+        for (size_t idx = 0; idx < lhs.size(); ++idx)
+            lhs[idx] /= rhs;
+        return lhs;
     }
 
     //--------------------------------------------------------------------------
@@ -136,6 +209,13 @@ namespace spice
          * Constructs a color vector out of the passed list of values.
          */
         color(std::vector<T> data): m_data(data) {}
+        /**
+         * Constructs a color object from a hex code. 3, 4, 6 and 8 character
+         * codes are supported. Semantics are automatically assumed to be
+         * RGB(A).
+         */
+        // color(std::string hex):
+        // m_data(hex.size() > 4 ? hex.size() / 2 : hex.size()) { /* TODO */ }
 
         /**
          * /returns The size of the color vector
@@ -190,7 +270,7 @@ namespace spice
          * \param other The `pixel_view` to copy
          */
         constexpr pixel_view(pixel_view const & other):
-        m_data(other.m_data) {}
+        m_data(other.m_data), m_nchannels(other.m_nchannels) {}
 
         /**
          * /returns The number of channels of the pixel
@@ -748,8 +828,8 @@ namespace spice
      * directory
      * \param data The image to save to disk
      * \param format The data format the file should be written with
-     * \returns true if the image was successfully written, false if an error
-     * occurred.
+     * \returns `true` if the image was successfully written, `false` if an
+     * error occurred.
      */
     template<typename T>
     bool write_image(

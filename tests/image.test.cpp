@@ -5,6 +5,7 @@
 #import <cstdint>
 #include "../src/image.hpp"
 #include "../src/statistics.hpp"
+#include "../src/print.hpp"
 
 using namespace spice;
 
@@ -62,6 +63,33 @@ TEST(vector_like_operators, operator_plus_equals_color) {
     EXPECT_EQ(c1[0], 1.f);
     EXPECT_EQ(c1[1], 0.47f);
     EXPECT_EQ(c1[2], 0.57f);
+}
+
+TEST(vector_like_operators, operator_plus_color_pixelview) {
+    color<float> c1({0.5, 0.42, 0.47});
+    std::vector<float> d2{0.5, 0.05, 0.1};
+    pixel_view<float> pv2(&d2[0], 3);
+
+    auto c3 = c1 + pv2;
+    auto pv3 = pv2 + c1;
+
+    EXPECT_EQ(c1, color<float>({0.5, 0.42, 0.47}));
+    EXPECT_NE(c1, c3);
+    // pv3 should be a copy of pv2 but their underlying data is the same, so
+    // they still equal one another after the addition.
+    EXPECT_EQ(pv2, pv3);
+    EXPECT_NE(&pv2, &pv3);
+    EXPECT_EQ(pv2, pixel_view<float>(&d2[0], 3));
+
+    EXPECT_EQ(pv3, c3);
+
+    EXPECT_EQ(c3[0], 1.f);
+    EXPECT_EQ(c3[1], 0.47f);
+    EXPECT_EQ(c3[2], 0.57f);
+
+    EXPECT_EQ(pv3[0], 1.f);
+    EXPECT_EQ(pv3[1], 0.47f);
+    EXPECT_EQ(pv3[2], 0.57f);
 }
 
 TEST(vector_like_operators, operator_equals_color_pixel_view) {
@@ -356,18 +384,11 @@ TEST(image_support, load_image) {
     auto hist = statistics::histogram(boat, 50);
 
     // print histogram for debugging
-    // for (auto & channel : hist) {
-    //     std::cout << "-------------------\n";
-    //     for (auto sample : channel) {
-    //         std::cout << sample << "\t| ";
-    //         size_t bar_length = sample / 80;
-    //         for (size_t i = 0; i < bar_length; ++i){
-    //             std::cout << "=";
-    //         }
-    //         std::cout << "\n";
-    //     }
-    //     std::cout << "\n";
-    // }
+    // spice::print::histogram(hist, 100, {
+    //     color<float>({1, 0, 0}),
+    //     color<float>({0, 1, 0}),
+    //     color<float>({0, 0, 1})
+    // });
 
     EXPECT_EQ(boat.channel_semantics(),
         std::vector<std::string>({ "R", "G", "B" }));
