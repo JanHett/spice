@@ -23,6 +23,127 @@ image<T> make_checkerboard(size_t width = 1,
     return im;
 }
 
+TEST(vector_like_operators, operator_equals_color) {
+    color<float> c1({0.5, 0.42, 0.47});
+    color<float> c2({0.5, 0.42, 0.47});
+    color<float> c3({0.5, 0.42, 0.47, 0.1});
+    color<float> c4({0.47, 0.42, 0.47});
+
+    EXPECT_TRUE(c1 == c2);
+    EXPECT_TRUE(c2 == c1);
+
+    EXPECT_FALSE(c1 == c3);
+    EXPECT_FALSE(c3 == c1);
+    EXPECT_FALSE(c1 == c4);
+    EXPECT_FALSE(c4 == c1);
+}
+
+TEST(vector_like_operators, operator_not_equals_color) {
+    color<float> c1({0.5, 0.42, 0.47});
+    color<float> c2({0.5, 0.42, 0.47});
+    color<float> c3({0.5, 0.42, 0.47, 0.1});
+    color<float> c4({0.47, 0.42, 0.47});
+
+    EXPECT_FALSE(c1 != c2);
+    EXPECT_FALSE(c2 != c1);
+
+    EXPECT_TRUE(c1 != c3);
+    EXPECT_TRUE(c3 != c1);
+    EXPECT_TRUE(c1 != c4);
+    EXPECT_TRUE(c4 != c1);
+}
+
+TEST(vector_like_operators, operator_plus_equals_color) {
+    color<float> c1({0.5, 0.42, 0.47});
+    color<float> c2({0.5, 0.05, 0.1});
+
+    c1 += c2;
+
+    EXPECT_EQ(c1[0], 1.f);
+    EXPECT_EQ(c1[1], 0.47f);
+    EXPECT_EQ(c1[2], 0.57f);
+}
+
+TEST(vector_like_operators, operator_equals_color_pixel_view) {
+    color<float> c1({0.5, 0.42, 0.47});
+    color<float> c2({0.5, 0.42, 0.47});
+    color<float> c3({0.5, 0.42, 0.47, 0.1});
+    color<float> c4({0.47, 0.42, 0.47});
+
+    std::vector<float> d1{0.5, 0.42, 0.47};
+    std::vector<float> d2{0.5, 0.42, 0.47};
+    std::vector<float> d3{0.5, 0.42, 0.47, 0.1};
+    std::vector<float> d4{0.47, 0.42, 0.47};
+
+    pixel_view<float> pv1(&d1[0], 3);
+    pixel_view<float> pv2(&d2[0], 3);
+    pixel_view<float> pv3(&d3[0], 4);
+    pixel_view<float> pv4(&d4[0], 3);
+
+    EXPECT_TRUE(pv1 == c2);
+    EXPECT_TRUE(pv2 == c1);
+
+    EXPECT_FALSE(pv1 == c3);
+    EXPECT_FALSE(pv3 == c1);
+    EXPECT_FALSE(pv1 == c4);
+    EXPECT_FALSE(pv4 == c1);
+
+    EXPECT_TRUE(c1 == pv2);
+    EXPECT_TRUE(c2 == pv1);
+
+    EXPECT_FALSE(c1 == pv3);
+    EXPECT_FALSE(c3 == pv1);
+    EXPECT_FALSE(c1 == pv4);
+    EXPECT_FALSE(c4 == pv1);
+}
+
+TEST(vector_like_operators, operator_equals_pixel_view) {
+    std::vector<float> d1{0.5, 0.42, 0.47};
+    std::vector<float> d2{0.5, 0.42, 0.47};
+    std::vector<float> d3{0.5, 0.42, 0.47, 0.1};
+    std::vector<float> d4{0.47, 0.42, 0.47};
+
+    pixel_view<float> pv1(&d1[0], 3);
+    pixel_view<float> pv2(&d2[0], 3);
+    pixel_view<float> pv3(&d3[0], 4);
+    pixel_view<float> pv4(&d4[0], 3);
+
+    EXPECT_TRUE(pv1 == pv2);
+    EXPECT_TRUE(pv2 == pv1);
+
+    EXPECT_FALSE(pv1 == pv3);
+    EXPECT_FALSE(pv3 == pv1);
+    EXPECT_FALSE(pv1 == pv4);
+    EXPECT_FALSE(pv4 == pv1);
+}
+
+TEST(color, operator_subscript) {
+    color<float> c({0.5, 0.42, 0.47, 0.1});
+
+    EXPECT_EQ(c[0], 0.5f);
+    EXPECT_EQ(c[1], 0.42f);
+    EXPECT_EQ(c[2], 0.47f);
+    EXPECT_EQ(c[3], 0.1f);
+
+    c[0] = 3.1415;
+
+    EXPECT_EQ(c[0], 3.1415f);
+}
+
+TEST(color, operator_subscript_const) {
+    const color<float> c({0.5, 0.42, 0.47, 0.1});
+
+    EXPECT_EQ(c[0], 0.5f);
+    EXPECT_EQ(c[1], 0.42f);
+    EXPECT_EQ(c[2], 0.47f);
+    EXPECT_EQ(c[3], 0.1f);
+
+    auto & first = c[0];
+    static_assert(
+        std::is_const<std::remove_reference<decltype(first)>::type>::value,
+        "color::operator[] const does not return const value");
+}
+
 TEST(image, default_constructor) {
     image<float> im;
 

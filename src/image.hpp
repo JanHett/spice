@@ -14,6 +14,10 @@
  */
 namespace spice
 {
+    //--------------------------------------------------------------------------
+    // Utility structs and typedefs
+    //--------------------------------------------------------------------------
+
     /**
      * Alias for convenience and forwards compatibility (channel_list might pack
      * much more information in the future: channel to index mapping etc...).
@@ -42,15 +46,129 @@ namespace spice
         }
     };
 
+    //--------------------------------------------------------------------------
+    // Operator overloads for vector-like types
+    //--------------------------------------------------------------------------
+
+    /**
+     * Compares two vector-like types (e.g. `spice::color` or
+     * `spice::pixel_view`).
+     * Two vector-like types are equal if they are of the same size and all of
+     * their elements are equal as determined by comparison with `==`.
+     */
+    template<typename T_lhs, typename T_rhs>
+    bool operator==(
+        T_lhs const & lhs, T_rhs const & rhs)
+    {
+        if (!(lhs.size() == rhs.size()))
+            return false;
+        for (size_t idx = 0; idx < lhs.size(); ++idx)
+            if (!(lhs[idx] == rhs[idx]))
+                return false;
+        return true;
+    }
+
+    /**
+     * Compares two vector-like types (e.g. `spice::color` or
+     * `spice::pixel_view`).
+     * Two vector-like types are not equal if they are either of different sizes
+     * or any of their elements are not equal as determined by comparison with
+     * `==`.
+     */
+    template<typename T_lhs, typename T_rhs>
+    bool operator!=(
+        T_lhs const & lhs, T_rhs const & rhs)
+    { return !(lhs == rhs); }
+
+    /**
+     * Adds two vector-like types component-wise. The vectors are assumed to be
+     * of equal size - no bounds checking is performed.
+     */
+    template<typename T_lhs, typename T_rhs>
+    T_lhs& operator+=(
+        T_lhs & lhs, T_rhs const & rhs)
+    {
+        for (size_t idx = 0; idx < lhs.size(); ++idx)
+            lhs[idx] += rhs[idx];
+        return lhs;
+    }
+
+    /**
+     * Adds two vector-like types component-wise. The vectors are assumed to be
+     * of equal size - no bounds checking is performed.
+     */
+    template<typename T_lhs, typename T_rhs>
+    T_lhs operator+(T_lhs lhs, T_rhs const & rhs)
+    {
+        lhs += rhs;
+        return lhs;
+    }
+
+    /**
+     * Adds two vector-like types component-wise. The vectors are assumed to be
+     * of equal size - no bounds checking is performed.
+     */
+    template<typename T_lhs, typename T_rhs>
+    T_rhs operator+(T_lhs const & lhs, T_rhs rhs)
+    {
+        rhs += lhs;
+        return rhs;
+    }
+
+    //--------------------------------------------------------------------------
+    // High-level data structures
+    //--------------------------------------------------------------------------
+
+    /**
+     * Represents a color. Fulfills concept _vector-like_.
+     */
+    template<typename T>
+    struct color {
+    private:
+        std::vector<T> m_data;
+    public:
+
+        /**
+         * Constructs a color vector with zero elements and no semantics.
+         */
+        color(): m_data() {}
+        /**
+         * Constructs a color vector out of the passed list of values.
+         */
+        color(std::vector<T> data): m_data(data) {}
+
+        /**
+         * /returns The size of the color vector
+         */
+        size_t size() const {
+            return m_data.size();
+        }
+
+        /**
+         * Returns a channel from this color vector with the provided offeset
+         */
+        T & operator[] (size_t channel) {
+            return m_data[channel];
+        }
+        /**
+         * Returns a channel from this color vector with the provided offeset
+         */
+        T const & operator[] (size_t channel) const {
+            return m_data[channel];
+        }
+    };
+
     /**
      * Refers to a single pixel in a `spice::image`. Note that this class has no
      * information about the size of the image it is referring to and thus
      * cannot perform bounds checking. Use `image::at` for that.
+     * Fulfills concept _vector-like_.
      */
     template<typename T>
     struct pixel_view {
     private:
         T * const m_data;
+        size_t m_nchannels;
     public:
         /**
          * Constructs a `pixel_view` referring to the pixel starting at `data`.
@@ -59,9 +177,12 @@ namespace spice
          * the referred-to data has been invalidated.
          * It is therefore recommended to never use this structure explicitly
          * and instead only via `image::operator[]`.
+         *
+         * \param data Pointer to the first channel of this pixel's data
+         * \param channels The number of channels in this pixel
          */
-        constexpr pixel_view(T * const data = nullptr):
-        m_data(data) {}
+        constexpr pixel_view(T * const data = nullptr, size_t channels = 0):
+        m_data(data), m_nchannels(channels) {}
         /**
          * Copy constructor. Constructs a `pixel_view` referring to the same
          * data as the copied `pixel_view`
@@ -70,6 +191,13 @@ namespace spice
          */
         constexpr pixel_view(pixel_view const & other):
         m_data(other.m_data) {}
+
+        /**
+         * /returns The number of channels of the pixel
+         */
+        size_t size() const {
+            return m_nchannels;
+        }
 
         /**
          * Allows accessing pixel data with subscript notation. No bounds
@@ -118,6 +246,7 @@ namespace spice
     struct column_view {
     private:
         T * const m_data;
+        size_t m_nchannels;
     public:
         /**
          * Constructs a `column_view` referring to the column starting at `data`.
@@ -126,8 +255,11 @@ namespace spice
          * the referred-to data has been invalidated.
          * It is therefore recommended to never use this structure explicitly
          * and instead only via `image::operator[]`.
+         *
+         * \param data Pointer to the first channel of this column's data
+         * \param channels The number of channels in a pixel
          */
-        constexpr column_view(T * const data = nullptr);
+        constexpr column_view(T * const data = nullptr, size_t channels = 0);
         /**
          * Copy constructor. Constructs a `column_view` referring to the same
          * data as the copied `column_view`
@@ -517,46 +649,57 @@ namespace spice
         }
     };
 
+    /**
+     * This namespace contains utility functionality like adapters between
+     * interfaces.
+     */
     namespace helpers
     {
+        /**
+         * Wraps `std::enable_if_t` in such a way that the template is enabled
+         * when the first two template arguments are equal as determined by
+         * `std::is_same`. When enabled, this type becomes equivalent to the
+         * third argument `T_result`.
+         */
+        template<typename T_lhs, typename T_rhs, typename T_result>
+        using enable_if_same_t = std::enable_if_t<std::is_same<
+            T_lhs,
+            T_rhs>::value,
+        T_result>;
+
         /** Converts a C++ double to OIIO::TypeDesc::DOUBLE. */
         template<typename T>
-        constexpr std::enable_if_t<std::is_same<
-            T,
-            double>::value,
-        OIIO::TypeDesc> type_to_typedesc() {
+        constexpr enable_if_same_t<T, double, OIIO::TypeDesc>
+        type_to_typedesc()
+        {
             return OIIO::TypeDesc::DOUBLE;
         }
         /** Converts a C++ float to OIIO::TypeDesc::FLOAT. */
         template<typename T>
-        constexpr std::enable_if_t<std::is_same<
-            T,
-            float>::value,
-        OIIO::TypeDesc> type_to_typedesc() {
+        constexpr enable_if_same_t<T, float, OIIO::TypeDesc>
+        type_to_typedesc()
+        {
             return OIIO::TypeDesc::FLOAT;
         }
         /** Converts a C++ uint32_t to OIIO::TypeDesc::UINT. */
         template<typename T>
-        constexpr std::enable_if_t<std::is_same<
-            T,
-            uint32_t>::value,
-        OIIO::TypeDesc> type_to_typedesc() {
+        constexpr enable_if_same_t<T, uint32_t, OIIO::TypeDesc>
+        type_to_typedesc()
+        {
             return OIIO::TypeDesc::UINT;
         }
         /** Converts a C++ uint16_t to OIIO::TypeDesc::UINT16. */
         template<typename T>
-        constexpr std::enable_if_t<std::is_same<
-            T,
-            uint16_t>::value,
-        OIIO::TypeDesc> type_to_typedesc() {
+        constexpr enable_if_same_t<T, uint16_t, OIIO::TypeDesc>
+        type_to_typedesc()
+        {
             return OIIO::TypeDesc::UINT16;
         }
         /** Converts a C++ uint8_t to OIIO::TypeDesc::UINT8. */
         template<typename T>
-        constexpr std::enable_if_t<std::is_same<
-            T,
-            uint8_t>::value,
-        OIIO::TypeDesc> type_to_typedesc() {
+        constexpr enable_if_same_t<T, uint8_t, OIIO::TypeDesc>
+        type_to_typedesc()
+        {
             return OIIO::TypeDesc::UINT8;
         }
     }
@@ -604,6 +747,7 @@ namespace spice
      * \param filename The path to write to relative to the current working
      * directory
      * \param data The image to save to disk
+     * \param format The data format the file should be written with
      * \returns true if the image was successfully written, false if an error
      * occurred.
      */
