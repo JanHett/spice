@@ -402,21 +402,17 @@ TEST(image_helpers, type_to_typedesc) {
 TEST(image_support, load_image) {
     auto boat = load_image<float>("../data/testing/boat.jpg");
 
-    for (size_t x = 0; x < boat.width(); x += 8){
-        for (size_t y = 0; y < boat.height(); y += 8)
-            std::cout << print::color_escape_string<float, pixel_view<float>>(
-                "  ", boat(x, y), boat(x, y));
-        std::cout << "\n";
-    }
-
     auto hist = statistics::histogram(boat, 50);
 
     // print histogram for debugging
-    print::histogram(hist, 100, {
-        color<float>({1, 0, 0}),
-        color<float>({0, 1, 0}),
-        color<float>({0, 0, 1})
-    });
+    // print::histogram(hist, 100, {
+    //     color<float>({1, 0, 0}),
+    //     color<float>({0, 1, 0}),
+    //     color<float>({0, 0, 1})
+    // });
+
+    // print image for debugging
+    // print::image(boat, 10);
 
     EXPECT_EQ(boat.channel_semantics(),
         std::vector<std::string>({ "R", "G", "B" }));

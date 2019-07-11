@@ -36,8 +36,10 @@ namespace print {
             image<T_data>::intensity_range.min);
         const float offset = 0 - image<T_data>::intensity_range.min;
 
-        color<T_data> bg_scaled = background * scaling_factor + offset;
-        color<T_data> fg_scaled = foreground * scaling_factor + offset;
+        color<T_data> bg_scaled = background;
+        bg_scaled *= scaling_factor + offset;
+        color<T_data> fg_scaled = foreground;
+        fg_scaled *= scaling_factor + offset;
 
         // std::cout << "\nScale: " << scaling_factor << ", offset " << offset << "\n";
         // std::cout << "Vector size: " << bg_scaled.size() << "\n";
@@ -56,6 +58,24 @@ namespace print {
         std::to_string(static_cast<int>(std::floor(fg_scaled[2]))) + "m" +
         // add the actual string and the ending escape code
         str + "\033[0m";
+    }
+
+    /**
+     * Prints an image in pixel-art style to the `stream`.
+     *
+     * \note Since there is no way to reliably make exactly square pixels, the
+     * aspect ratio will be off.
+     */
+    template<typename T>
+    void image(image<T> const & img, size_t stride = 1,
+        std::ostream & stream = std::cout) {
+        for (size_t x = 0; x < img.height(); x += stride){
+            for (size_t y = 0; y < img.width(); y += stride)
+                stream << print::color_escape_string<float,
+                    pixel_view<float const>>(
+                    "  ", img(y, x), img(y, x));
+            stream << "\n";
+        }
     }
 
     /**
