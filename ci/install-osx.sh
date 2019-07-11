@@ -5,8 +5,7 @@ brew install openimageio
 
 # get doxygen, LaTex and m.css set up for documentation
 brew install doxygen
-# mactex is massive - we might need to prevent a timeout
-travis_wait brew cask install mactex-no-gui
+brew cask install mactex-no-gui
 pip3 install jinja2 Pygments
 # git submodule --init --recursive --remote
 

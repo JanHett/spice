@@ -9,7 +9,8 @@ os:
   - osx
 # dist: xenial
 
-install: ./ci/install-${TRAVIS_OS_NAME}.sh
+# mactex is massive and needs ages to install so we need the waiter
+install: travis_wait 45 ./ci/install-${TRAVIS_OS_NAME}.sh
 
 script: ./ci/travis.sh
 
