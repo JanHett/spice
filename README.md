@@ -1,4 +1,6 @@
-# spice {#index}
+# spice
+
+[![Build Status](https://travis-ci.org/JanHett/spice.svg?branch=master)](https://travis-ci.org/JanHett/spice)
 
 ## A light-weight image processing library.
 

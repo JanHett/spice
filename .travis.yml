@@ -5,9 +5,9 @@ compiler:
   - clang
   - gcc
 os:
-  - linux
+# - linux
   - osx
-dist: xenial
+# dist: xenial
 
 install: ./ci/install-${TRAVIS_OS_NAME}.sh
 

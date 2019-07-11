@@ -11,7 +11,7 @@ apt-get install \
     texlive-fonts-extra \
     texlive-fonts-recommended
 pip3 install jinja2 Pygments
-git submodule --init --recursive --remote
+# git submodule --init --recursive --remote
 
 # clone, compile and make Google test
 git clone https://github.com/google/googletest.git ./external/gtest
