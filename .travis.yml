@@ -1,0 +1,35 @@
+sudo: false
+language: cpp
+python: 3.7.1
+
+compiler:
+  - clang
+  - gcc
+os:
+  - linux
+  - osx
+dist: xenial
+
+install:
+  - ./ci/install-${TRAVIS_OS_NAME}.sh
+    sudo: true
+script:
+  - ./ci/travis.sh
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
+  keep_history: true
+  on:
+    branch: gh-pages
+  local_dir: ./doc/html
+  committer_from_gh: true
+
+branches:
+  only:
+    - master
+    - "/^v\\d+\\./"
+
+notifications:
+  email: false
