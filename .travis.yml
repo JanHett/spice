@@ -1,6 +1,5 @@
-sudo: false
+sudo: true
 language: cpp
-python: 3.7.1
 
 compiler:
   - clang
@@ -10,11 +9,9 @@ os:
   - osx
 dist: xenial
 
-install:
-  - ./ci/install-${TRAVIS_OS_NAME}.sh
-    sudo: true
-script:
-  - ./ci/travis.sh
+install: ./ci/install-${TRAVIS_OS_NAME}.sh
+
+script: ./ci/travis.sh
 
 deploy:
   provider: pages
