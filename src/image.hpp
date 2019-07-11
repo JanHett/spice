@@ -604,7 +604,8 @@ namespace spice
         {
             return pixel_view<T>(&m_data[
                 column * m_height * channels() +    // x offset
-                row * channels()]);                 // y offset
+                row * channels()],                  // y offset
+                channels());
         }
         /**
          * Retrieves a reference to the entire pixel located at the indicated
@@ -619,7 +620,8 @@ namespace spice
         {
             return pixel_view<const T>(&m_data[
                 column * m_height * channels() +    // x offset
-                row * channels()]);                 // y offset
+                row * channels()],                  // y offset
+                channels());
         }
         /**
          * Retrieves a reference to a single channel's value located at the

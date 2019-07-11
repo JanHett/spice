@@ -39,9 +39,10 @@ namespace print {
         color<T_data> bg_scaled = background * scaling_factor + offset;
         color<T_data> fg_scaled = foreground * scaling_factor + offset;
 
-        std::cout << "\nScale: " << scaling_factor << ", offset " << offset << "\n";
-        std::cout << "Original |" << background[0] << "|" << background[1] << "|" << background[2] << "\n";
-        std::cout << "Scaled   |" << bg_scaled[0] << "|" << bg_scaled[1] << "|" << bg_scaled[2] << "\n";
+        // std::cout << "\nScale: " << scaling_factor << ", offset " << offset << "\n";
+        // std::cout << "Vector size: " << bg_scaled.size() << "\n";
+        // std::cout << "Original |" << background[0] << "|" << background[1] << "|" << background[2] << "\n";
+        // std::cout << "Scaled   |" << bg_scaled[0] << "|" << bg_scaled[1] << "|" << bg_scaled[2] << "\n";
 
         return std::string("\033[48;2;") +
         // set BG-colours
