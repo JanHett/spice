@@ -85,11 +85,23 @@ namespace spice
      * of equal size - no bounds checking is performed.
      */
     template<typename T_lhs, typename T_rhs>
-    T_lhs& operator+=(
+    std::enable_if_t<!std::is_arithmetic<T_rhs>::value, T_lhs&> operator+=(
         T_lhs & lhs, T_rhs const & rhs)
     {
         for (size_t idx = 0; idx < lhs.size(); ++idx)
             lhs[idx] += rhs[idx];
+        return lhs;
+    }
+
+    /**
+     * Adds an arithmetic type to a vector-like type.
+     */
+    template<typename T_lhs, typename T_rhs>
+    std::enable_if_t<std::is_arithmetic<T_rhs>::value, T_lhs&> operator+=(
+        T_lhs & lhs, T_rhs const & rhs)
+    {
+        for (size_t idx = 0; idx < lhs.size(); ++idx)
+            lhs[idx] += rhs;
         return lhs;
     }
 
@@ -109,11 +121,23 @@ namespace spice
      * to be of equal size - no bounds checking is performed.
      */
     template<typename T_lhs, typename T_rhs>
-    T_lhs& operator-=(
+    std::enable_if_t<!std::is_arithmetic<T_rhs>::value, T_lhs&> operator-=(
         T_lhs & lhs, T_rhs const & rhs)
     {
         for (size_t idx = 0; idx < lhs.size(); ++idx)
             lhs[idx] -= rhs[idx];
+        return lhs;
+    }
+
+    /**
+     * Subtracts an arithmetic type from a vector-like type.
+     */
+    template<typename T_lhs, typename T_rhs>
+    std::enable_if_t<std::is_arithmetic<T_rhs>::value, T_lhs&> operator-=(
+        T_lhs & lhs, T_rhs const & rhs)
+    {
+        for (size_t idx = 0; idx < lhs.size(); ++idx)
+            lhs[idx] -= rhs;
         return lhs;
     }
 
@@ -133,11 +157,23 @@ namespace spice
      * to be of equal size - no bounds checking is performed.
      */
     template<typename T_lhs, typename T_rhs>
-    T_lhs& operator*=(
+    std::enable_if_t<!std::is_arithmetic<T_rhs>::value, T_lhs&> operator*=(
         T_lhs & lhs, T_rhs const & rhs)
     {
         for (size_t idx = 0; idx < lhs.size(); ++idx)
             lhs[idx] *= rhs[idx];
+        return lhs;
+    }
+
+    /**
+     * Multiplies an arithmetic type with a vector-like type.
+     */
+    template<typename T_lhs, typename T_rhs>
+    std::enable_if_t<std::is_arithmetic<T_rhs>::value, T_lhs&> operator*=(
+        T_lhs & lhs, T_rhs const & rhs)
+    {
+        for (size_t idx = 0; idx < lhs.size(); ++idx)
+            lhs[idx] *= rhs;
         return lhs;
     }
 
@@ -166,17 +202,6 @@ namespace spice
     }
 
     /**
-     * Divides two vector-like types component-wise. The vectors are assumed to
-     * be of equal size - no bounds checking is performed.
-     */
-    template<typename T_lhs, typename T_rhs>
-    T_lhs operator/(T_lhs lhs, T_rhs const & rhs)
-    {
-        lhs /= rhs;
-        return lhs;
-    }
-
-    /**
      * Divides a vector-like type by a primitive.
      */
     template<typename T_lhs, typename T_rhs>
@@ -188,55 +213,20 @@ namespace spice
         return lhs;
     }
 
+    /**
+     * Divides two vector-like types component-wise. The vectors are assumed to
+     * be of equal size - no bounds checking is performed.
+     */
+    template<typename T_lhs, typename T_rhs>
+    T_lhs operator/(T_lhs lhs, T_rhs const & rhs)
+    {
+        lhs /= rhs;
+        return lhs;
+    }
+
     //--------------------------------------------------------------------------
     // High-level data structures
     //--------------------------------------------------------------------------
-
-    /**
-     * Represents a color. Fulfills concept _vector-like_.
-     */
-    template<typename T>
-    struct color {
-    private:
-        std::vector<T> m_data;
-    public:
-
-        /**
-         * Constructs a color vector with zero elements and no semantics.
-         */
-        color(): m_data() {}
-        /**
-         * Constructs a color vector out of the passed list of values.
-         */
-        color(std::vector<T> data): m_data(data) {}
-        /**
-         * Constructs a color object from a hex code. 3, 4, 6 and 8 character
-         * codes are supported. Semantics are automatically assumed to be
-         * RGB(A).
-         */
-        // color(std::string hex):
-        // m_data(hex.size() > 4 ? hex.size() / 2 : hex.size()) { /* TODO */ }
-
-        /**
-         * /returns The size of the color vector
-         */
-        size_t size() const {
-            return m_data.size();
-        }
-
-        /**
-         * Returns a channel from this color vector with the provided offeset
-         */
-        T & operator[] (size_t channel) {
-            return m_data[channel];
-        }
-        /**
-         * Returns a channel from this color vector with the provided offeset
-         */
-        T const & operator[] (size_t channel) const {
-            return m_data[channel];
-        }
-    };
 
     /**
      * Refers to a single pixel in a `spice::image`. Note that this class has no
@@ -280,6 +270,20 @@ namespace spice
         }
 
         /**
+         * Copies values referenced by `other` to data array referenced by this
+         * `pixel_view`.
+         *
+         * \note This will copy the first _n_ channels, where _n =
+         * max(this->size, other.size())_.
+         */
+        pixel_view<T>& operator=(pixel_view<T const> const & other)
+        {
+            for (size_t idx = 0; idx < m_nchannels; ++idx)
+                (*this)[idx] = other[idx];
+            return *this;
+        }
+
+        /**
          * Allows accessing pixel data with subscript notation. No bounds
          * checking is performed (use `image::at` for this purpose).
          *
@@ -313,6 +317,73 @@ namespace spice
          */
         T const & operator[](size_t channel) const
         {
+            return m_data[channel];
+        }
+    };
+
+    /**
+     * Represents a color. Fulfills concept _vector-like_.
+     */
+    template<typename T = float>
+    struct color {
+    private:
+        std::vector<T> m_data;
+    public:
+
+        /**
+         * Constructs a color vector with zero elements and no semantics.
+         */
+        color(): m_data() {}
+        /**
+         * Constructs a color vector out of the passed list of values.
+         */
+        color(std::vector<T> data): m_data(data) {}
+        /**
+         * Constructs a color from a pixel_view.
+         */
+        color(pixel_view<T> const & other): m_data(other.size()) {
+            for (size_t idx = 0; idx < m_data.size(); ++idx)
+                m_data[idx] = other[idx];
+        }
+        /**
+         * Constructs a color object from a hex code. 3, 4, 6 and 8 character
+         * codes are supported. Semantics are automatically assumed to be
+         * RGB(A).
+         */
+        // color(std::string hex):
+        // m_data(hex.size() > 4 ? hex.size() / 2 : hex.size()) { /* TODO */ }
+
+        /**
+         * /returns The size of the color vector
+         */
+        size_t size() const {
+            return m_data.size();
+        }
+
+        /**
+         * Copies values referenced by `other` to this color object.
+         *
+         * \note This will adjust the size of the color object to equal that of
+         * the pixel view.
+         */
+        color<T>& operator=(pixel_view<T const> const & other)
+        {
+            m_data.resize(other.size());
+            for (size_t idx = 0; idx < size(); ++idx)
+                (*this)[idx] = other[idx];
+            return *this;
+        }
+
+        /**
+         * Returns a channel from this color vector with the provided offeset
+         */
+        T & operator[] (size_t channel) {
+            return m_data[channel];
+        }
+        /**
+         * Returns a channel from this color vector with the provided offeset
+         */
+        T const & operator[] (size_t channel) const {
             return m_data[channel];
         }
     };
@@ -727,6 +798,16 @@ namespace spice
             lhs /= rhs;
             return lhs;
         }
+
+        image<T> transpose() const {
+            image<T> new_i(m_width, m_height, m_channel_semantics);
+
+            for (size_t x = 0; x < m_width; ++x)
+                for (size_t y = 0; y < m_height; ++y)
+                    new_i(y, x) = (*this)(x, y);
+
+            return new_i;
+        }
     };
 
     /**
@@ -808,9 +889,23 @@ namespace spice
         file->read_image(helpers::type_to_typedesc<T>(), &img_data[0]);
 
         // TODO: transpose the data before constructing an image object
+        std::vector<T> tx_img_data(spec.width * spec.height * spec.nchannels);
+        for (size_t y = 0; y < spec.height; ++y)
+            for (size_t x = 0; x < spec.width; ++x)
+                for (size_t chan = 0; chan < spec.nchannels; ++chan)
+                    tx_img_data[
+                        x * spec.height * spec.nchannels +
+                        y * spec.nchannels +
+                        chan
+                    ] =
+                    img_data[
+                        y * spec.width * spec.nchannels +
+                        x * spec.nchannels +
+                        chan
+                    ];
 
         image<T> result(
-            img_data,
+            tx_img_data,
             spec.width,
             spec.height,
             channels
@@ -848,8 +943,8 @@ namespace spice
             data.channels(),
             format);
         out->open(filename, spec);
-        // TODO: transpose image before writing
-        out->write_image(helpers::type_to_typedesc<T>(), &data.data()[0]);
+        out->write_image(helpers::type_to_typedesc<T>(),
+            &data.transpose().data()[0]); // transposing image before writing
         out->close();
 
         return true;

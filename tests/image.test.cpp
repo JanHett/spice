@@ -145,6 +145,26 @@ TEST(vector_like_operators, operator_equals_pixel_view) {
     EXPECT_FALSE(pv4 == pv1);
 }
 
+TEST(color, constructor_copy_pixel_view) {
+    std::vector<float> d1{0.5, 0.42, 0.47};
+    pixel_view<float> pv1(&d1[0], 3);
+
+    color<float> c1(pv1);
+
+    EXPECT_EQ(c1.size(), pv1.size());
+
+    EXPECT_EQ(c1[0], 0.5f);
+    EXPECT_EQ(c1[1], 0.42f);
+    EXPECT_EQ(c1[2], 0.47f);
+
+    EXPECT_NE(&c1[0], &pv1[0]);
+    EXPECT_NE(&c1[0], &d1[0]);
+    EXPECT_NE(&c1[1], &pv1[1]);
+    EXPECT_NE(&c1[1], &d1[1]);
+    EXPECT_NE(&c1[2], &pv1[2]);
+    EXPECT_NE(&c1[3], &d1[2]);
+}
+
 TEST(color, operator_subscript) {
     color<float> c({0.5, 0.42, 0.47, 0.1});
 
@@ -381,10 +401,17 @@ TEST(image_helpers, type_to_typedesc) {
 TEST(image_support, load_image) {
     auto boat = load_image<float>("../data/testing/boat.jpg");
 
+    for (size_t x = 0; x < boat.width(); x += 4){
+        for (size_t y = 0; y < boat.height(); y += 4)
+            std::cout << print::color_escape_string<float, pixel_view<float>>(
+                "  ", boat(x, y), boat(x, y));
+        std::cout << "\n";
+    }
+
     auto hist = statistics::histogram(boat, 50);
 
     // print histogram for debugging
-    // spice::print::histogram(hist, 100, {
+    // print::histogram(hist, 100, {
     //     color<float>({1, 0, 0}),
     //     color<float>({0, 1, 0}),
     //     color<float>({0, 0, 1})

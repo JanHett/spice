@@ -14,6 +14,9 @@ namespace spice {
 /**
  * This namespace exports utilities to print some of spice's types to the
  * console.
+ * These are mainly meant for debugging purposes.
+ * \note Functions that print in colour assume that the terminal supports 24 bit
+ * colour output.
  */
 namespace print {
     /**
@@ -23,32 +26,33 @@ namespace print {
      * \param foreground The text colour
      * \param background The background colour
      */
-    template<typename T>
-    std::string color_string(
+    template<typename T_data = float, typename T_color = color<T_data>>
+    std::string color_escape_string(
         std::string const & str,
-        color<T> const & foreground,
-        color<T> const & background)
+        T_color const & foreground,
+        T_color const & background)
     {
-        const float scaling_factor = 255 / (image<T>::intensity_range.max -
-            image<T>::intensity_range.min);
-        const float offset = 0 - image<T>::intensity_range.min;
+        const float scaling_factor = 255 / (image<T_data>::intensity_range.max -
+            image<T_data>::intensity_range.min);
+        const float offset = 0 - image<T_data>::intensity_range.min;
+
+        color<T_data> bg_scaled = background * scaling_factor + offset;
+        color<T_data> fg_scaled = foreground * scaling_factor + offset;
+
+        std::cout << "\nScale: " << scaling_factor << ", offset " << offset << "\n";
+        std::cout << "Original |" << background[0] << "|" << background[1] << "|" << background[2] << "\n";
+        std::cout << "Scaled   |" << bg_scaled[0] << "|" << bg_scaled[1] << "|" << bg_scaled[2] << "\n";
 
         return std::string("\033[48;2;") +
         // set BG-colours
-        std::to_string(static_cast<int>(
-            std::floor(background[0] * scaling_factor + offset))) + ";" +
-        std::to_string(static_cast<int>(
-            std::floor(background[1] * scaling_factor + offset))) + ";" +
-        std::to_string(static_cast<int>(
-            std::floor(background[2] * scaling_factor + offset))) +
+        std::to_string(static_cast<int>(std::floor(bg_scaled[0]))) + ";" +
+        std::to_string(static_cast<int>(std::floor(bg_scaled[1]))) + ";" +
+        std::to_string(static_cast<int>(std::floor(bg_scaled[2]))) +
         // set FG-colours
         ";38;2;" +
-        std::to_string(static_cast<int>(
-            std::floor(foreground[0] * scaling_factor + offset))) + ";" +
-        std::to_string(static_cast<int>(
-            std::floor(foreground[1] * scaling_factor + offset))) + ";" +
-        std::to_string(static_cast<int>(
-            std::floor(foreground[2] * scaling_factor + offset))) + "m" +
+        std::to_string(static_cast<int>(std::floor(fg_scaled[0]))) + ";" +
+        std::to_string(static_cast<int>(std::floor(fg_scaled[1]))) + ";" +
+        std::to_string(static_cast<int>(std::floor(fg_scaled[2]))) + "m" +
         // add the actual string and the ending escape code
         str + "\033[0m";
     }
@@ -56,15 +60,20 @@ namespace print {
     /**
      * Prints a histogram to the provided stream.
      *
+     * /note You should use a color type that allows overflow to avoid clipping
+     * while calculating the color for the individual bars.
+     *
      * \param histogram The data to print
      * \param max_amplitude The length of the longest bar in single spaces
-     * \param colors The colour to print each channel in. Note that superfluous
-     * colours will be ignored and missing colours will be represented as grey.
+     * \param colors The colour to print each channel in. Note that the colours
+     * should be represented as RGB, superfluous colours will be ignored and
+     * missing colours will be represented as grey.
      * \param stream The stream to insert the histogram into
      */
+    template<typename T = float>
     void histogram(std::vector<std::vector<size_t>> const & histogram,
         size_t max_amplitude,
-        std::vector<color<float>> colors,
+        std::vector<color<T>> colors,
         std::ostream & stream = std::cout)
     {
         // find the most common value class per channel
@@ -85,23 +94,22 @@ namespace print {
             for (size_t cell = 0; cell < max_amplitude; ++cell) {
                 // calculate colour (sum of all active channels' colours divided
                 // by number of channels) and print
-                color<float> cell_color({0,0,0});
+                color<T> cell_color({0,0,0});
                 for (size_t channel = 0; channel < histogram.size(); ++channel)
                 {
                     if ((histogram[channel][sample] * scale) < cell) {
                         if (colors.size() > channel)
                             cell_color += colors[channel];
                         else
-                            cell_color += color<float>({0.5, 0.5, 0.5});
+                            cell_color += color<T>({0.5, 0.5, 0.5});
                     }
-
-                    // stream << " | ";
-                    // for (size_t c = 0; c < cell_color.size(); ++c)
-                    //     stream << std::to_string(cell_color[c]);
                 }
-                cell_color /= histogram.size();
-                cell_color = color<float>({1, 1, 1}) - cell_color;
-                stream << color_string("=", cell_color, cell_color);
+                // normalise colours
+                cell_color /= std::max({cell_color[0],
+                    cell_color[1],
+                    cell_color[2]});
+                cell_color = color<T>({1, 1, 1}) - cell_color;
+                stream << color_escape_string(" ", cell_color, cell_color);
             }
             stream << "\n";
         }
