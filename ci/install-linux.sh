@@ -21,6 +21,6 @@ cd build
 cmake -Dgtest_build_samples=OFF -Dgtest_build_tests=OFF ../
 make
 cp libgtest* /usr/lib
-mkdir /usr/local/lib/googletest
-ln -s /usr/lib/libgtest.a /usr/local/lib/googletest/libgtest.a
-ln -s /usr/lib/libgtest_main.a /usr/local/lib/googletest/libgtest_main.a
+sudo mkdir /usr/local/lib/googletest
+sudo ln -s /usr/lib/libgtest.a /usr/local/lib/googletest/libgtest.a
+sudo ln -s /usr/lib/libgtest_main.a /usr/local/lib/googletest/libgtest_main.a
