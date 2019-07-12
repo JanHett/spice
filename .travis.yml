@@ -33,6 +33,7 @@ notifications:
 
 addons:
   homebrew:
+    update: true
     packages:
       - openimageio
       - doxygen
