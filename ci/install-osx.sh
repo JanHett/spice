@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 # install "simple" dependencies
-brew install openimageio
+# brew install openimageio
 
 # get doxygen, LaTex and m.css set up for documentation
-brew install doxygen
+# brew install doxygen
 # brew cask install mactex-no-gui
 pip3 install jinja2 Pygments
 # git submodule --init --recursive --remote

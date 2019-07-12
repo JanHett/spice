@@ -30,3 +30,9 @@ branches:
 
 notifications:
   email: false
+
+addons:
+  homebrew:
+    packages:
+      - openimageio
+      - doxygen
