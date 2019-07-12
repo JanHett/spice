@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>spice</title>
+  <title>spice::range struct | spice</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
   <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
   <link rel="icon" href="favicon-dark.png" type="image/png" />
@@ -44,9 +44,79 @@
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
         <h1>
-          spice
+          <div class="m-doc-template">template&lt;typename T&gt;</div>
+          <span class="m-breadcrumb"><a href="namespacespice.html">spice</a>::<wbr/></span>range <span class="m-thin">struct</span>
         </h1>
-<p><a href="https://travis-ci.org/JanHett/spice"><figure class="m-figure"><img src="spice.svg?branch=master" alt="Image" /><figcaption>&gt;</figcaption></figure></a></p><h3>A light-weight image processing library.</h3><p>This is a re-write of a previous project of mine. It attempts to correct some of the design mistakes I made. That being said, it is far from being usable at the moment. In fact, for now it &quot;does&quot; (almost) nothing for the moment. My current goal is to set up the data structures I need to implement actual functionality. I am taking my time with this, because one of the lessons I learned from the predecessor of this project is that data structures make a huge difference for the performance, reliability and usability of a library. Once this basis is established, I will be sure to boast about the added features in the appropriate place (meaning either in the README or in the documentation).</p><p>Check out the <a href="https://janhett.github.io/spice/">documentation</a> for a more in-depth look at what this library does. I have also published an <a href="https://medium.com/@janhettenkofer/designing-an-efficient-user-friendly-image-data-structure-a24a8aed4a2d?source=friends_link&amp;sk=5c8808dfabcf1841752c1fb3e8916238">article</a> about the considerations that went into the <code><a href="classspice_1_1image.html" class="m-doc">spice::<wbr />image</a></code> data structure.</p><h4>Building</h4><p>spice does not yet have a fully fledged cmake/make setup. Setting this up is part of getting the library to a usable state and will happen before a proper release.</p><p>For now, there is a Python build script called <code>./tools/build</code>. Please run it with <code>-h</code> to find out how to use it, it is changing much too frequently to keep this README up to date.</p><p>The main library depends on OpenImageIO and nothing else. For unit testing, Google Test is required and to build the documentation, you need Doxygen and m.css.</p>
+        <div class="m-block m-default">
+          <h3>Contents</h3>
+          <ul>
+            <li>
+              Reference
+              <ul>
+                <li><a href="#pub-attribs">Public variables</a></li>
+                <li><a href="#friends">Friends</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+<p>Describes a range of grey values of the particular type.</p>
+        <section id="pub-attribs">
+          <h2><a href="#pub-attribs">Public variables</a></h2>
+          <dl class="m-doc">
+            <dt>
+              T <a href="#aeca048c3121c422a74bb41cd82990f05" class="m-doc">min</a>
+            </dt>
+            <dd></dd>
+            <dt>
+              T <a href="#a05387bb6ba02c56eccd80fa57fe79153" class="m-doc">max</a>
+            </dt>
+            <dd></dd>
+          </dl>
+        </section>
+        <section id="friends">
+          <h2><a href="#friends">Friends</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a2aa06ea65a2d8d28166b375302e4209e" class="m-doc">operator==</a>(</span><span class="m-doc-wrap"><a href="structspice_1_1range.html" class="m-doc">range</a>&lt;T&gt; const&amp; lhs,
+              <a href="structspice_1_1range.html" class="m-doc">range</a>&lt;T&gt; const&amp; rhs) -&gt; bool</span>
+            </dt>
+            <dd></dd>
+          </dl>
+        </section>
+        <section>
+          <h2>Function documentation</h2>
+          <section class="m-doc-details" id="a2aa06ea65a2d8d28166b375302e4209e"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename T&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">bool </span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a2aa06ea65a2d8d28166b375302e4209e" class="m-doc-self">operator==</a>(</span><span class="m-doc-wrap"><a href="structspice_1_1range.html" class="m-doc">range</a>&lt;T&gt; const&amp; lhs,
+              <a href="structspice_1_1range.html" class="m-doc">range</a>&lt;T&gt; const&amp; rhs)</span></span>
+            </h3>
+<p>Two ranges are equal if and only if both their min and their max are equal as determined by comparison with <code>==</code>.</p>
+          </div></section>
+        </section>
+        <section>
+          <h2>Variable documentation</h2>
+          <section class="m-doc-details" id="aeca048c3121c422a74bb41cd82990f05"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename T&gt;
+              </div>
+              T spice::<wbr />range&lt;T&gt;::<wbr /><a href="#aeca048c3121c422a74bb41cd82990f05" class="m-doc-self">min</a>
+            </h3>
+<p>The low end of the range.</p>
+          </div></section>
+          <section class="m-doc-details" id="a05387bb6ba02c56eccd80fa57fe79153"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename T&gt;
+              </div>
+              T spice::<wbr />range&lt;T&gt;::<wbr /><a href="#a05387bb6ba02c56eccd80fa57fe79153" class="m-doc-self">max</a>
+            </h3>
+<p>The high end of the range.</p>
+          </div></section>
+        </section>
       </div>
     </div>
   </div>
