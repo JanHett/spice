@@ -14,8 +14,8 @@ namespace spice {
 namespace blur {
     /**
      * Applies an approximation of a gaussian blur to the source image.
-     * This function has an asymptotic time complexity of \f$O(w * h * c)\f$
-     * where \f$w, h, c\f$ refer to the width, height and channel count of the
+     * This function has an asymptotic time complexity of _O(w * h * c)_
+     * where _w, h, c_ refer to the width, height and channel count of the
      * source image.
      *
      * \param source The image to blur
@@ -33,8 +33,8 @@ namespace blur {
     /**
      * Applies an approximation of a gaussian blur to a copy of the source
      * image.
-     * This function has an asymptotic time complexity of \f$O(w * h * c)\f$
-     * where \f$w, h, c\f$ refer to the width, height and channel count of the
+     * This function has an asymptotic time complexity of _O(w * h * c)_
+     * where _w, h, c_ refer to the width, height and channel count of the
      * source image.
      *
      * \param source The image to blur

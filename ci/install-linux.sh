@@ -5,11 +5,11 @@ apt-get install openimageio
 
 # get doxygen, LaTex and m.css set up for documentation
 apt-get install doxygen
-apt-get install \
-    texlive-base \
-    texlive-latex-extra \
-    texlive-fonts-extra \
-    texlive-fonts-recommended
+# apt-get install \
+#     texlive-base \
+#     texlive-latex-extra \
+#     texlive-fonts-extra \
+#     texlive-fonts-recommended
 pip3 install jinja2 Pygments
 # git submodule --init --recursive --remote
 

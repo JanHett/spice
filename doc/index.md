@@ -14,4 +14,4 @@ spice does not yet have a fully fledged cmake/make setup. Setting this up is par
 
 For now, there is a Python build script called `./tools/build`. Please run it with `-h` to find out how to use it, it is changing much too frequently to keep this README up to date.
 
-The main library depends on OpenImageIO and nothing else. For unit testing, Google Test is required and to build the documentation, you need Doxygen, LaTex and m.css.
+The main library depends on OpenImageIO and nothing else. For unit testing, Google Test is required and to build the documentation, you need Doxygen and m.css.
