@@ -81,7 +81,7 @@ namespace print {
     /**
      * Prints a histogram to the provided stream.
      *
-     * /note You should use a color type that allows overflow to avoid clipping
+     * \note You should use a color type that allows overflow to avoid clipping
      * while calculating the color for the individual bars.
      *
      * \param histogram The data to print
