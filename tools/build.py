@@ -28,6 +28,9 @@ def p_fail(message):
     print(f"{colors.FAIL}{message}{colors.ENDC}")
 
 def p_format(message, *format):
+    """
+    Prints `message` with all of the formatting escape codes applied.
+    """
     print(f"{''.join(format)}{message}{colors.ENDC}")
 
 if __name__ == "__main__":
@@ -72,22 +75,22 @@ if __name__ == "__main__":
         cwd=build_dir)
 
     if cmake.returncode == 0:
-        print(f"{colors.SUCCESS}Finished building targets "
-            f"[{', '.join(args.target)}].{colors.ENDC}")
+        p_success("Finished configuring and generating targets "
+            f"[{', '.join(args.target)}].")
     else:
-        print(f"{colors.FAIL}Building targets [{', '.join(args.target)}] "
-            f"failed. Aborting.{colors.ENDC}")
+        p_fail(f"Configuring targets [{', '.join(args.target)}] "
+            f"failed. Aborting.")
         sys.exit(cmake.returncode)
 
     # make it
     make = subprocess.run(["make"], cwd=build_dir)
 
     if make.returncode == 0:
-        print(f"{colors.SUCCESS}Finished making targets "
-            f"[{', '.join(args.target)}].{colors.ENDC}")
+        p_success("Finished building targets "
+            f"[{', '.join(args.target)}].")
     else:
-        print(f"{colors.FAIL}Making targets [{', '.join(args.target)}] failed. "
-            f"Aborting.{colors.ENDC}")
+        p_fail(f"Building targets [{', '.join(args.target)}] "
+            f"failed. Aborting.")
         sys.exit(make.returncode)
 
     # build the docs
