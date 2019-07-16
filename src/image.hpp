@@ -40,9 +40,7 @@ namespace spice
          */
         friend bool operator==(range<T> const & lhs, range<T> const & rhs)
         {
-            if (lhs.min == rhs.min && lhs.max == rhs.max)
-                return true;
-            return false;
+            return lhs.min == rhs.min && lhs.max == rhs.max;
         }
     };
 
@@ -484,7 +482,7 @@ namespace spice
         /**
          * Convenience constant defining the value representing black and the
          * value representing white. This will be `{ 0, 1 }` for floating point
-         * types and the type's minumum and maximum for all others.
+         * types and the type's minimum and maximum for all others.
          *
          * Note that this range convention implies that floating point images
          * can contain pixel values beyond the black-white spectrum (meaning
@@ -513,7 +511,7 @@ namespace spice
             std::vector<T> data,
             size_t const width,
             size_t const height,
-            channel_list const channel_semantics):
+            channel_list const & channel_semantics):
         m_data(data),
         m_width(width), m_height(height),
         m_channel_semantics(channel_semantics) {}
@@ -526,7 +524,7 @@ namespace spice
         image(
             size_t const width = 0,
             size_t const height = 0,
-            channel_list const channel_semantics = {}):
+            channel_list const & channel_semantics = {}):
         m_data(width * height * channel_semantics.size(), T{}),
         m_width(width), m_height(height),
         m_channel_semantics(channel_semantics) {}
@@ -542,17 +540,17 @@ namespace spice
         /**
          * The width of the image.
          */
-        size_t width() const
+        [[nodiscard]] size_t width() const
         { return m_width; }
         /**
          * The height of the image.
          */
-        size_t height() const
+        [[nodiscard]] size_t height() const
         { return m_height; }
         /**
          * The number of channels in the image.
          */
-        size_t channels() const
+        [[nodiscard]] size_t channels() const
         { return m_channel_semantics.size(); }
 
         /**
