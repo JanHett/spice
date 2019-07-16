@@ -944,7 +944,7 @@ namespace spice
     bool write_image(
         char const * filename,
         image<T> const & data,
-        OIIO::TypeDesc format = helpers::type_to_typedesc<T>())
+        OIIO::TypeDesc const & format = helpers::type_to_typedesc<T>())
     {
         std::unique_ptr<OIIO::ImageOutput> out =
             OIIO::ImageOutput::create(filename);
