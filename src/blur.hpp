@@ -75,10 +75,10 @@ namespace blur {
                 // the right-most for each of the remaining pixels of the row.
                 for (size_t row = 1; row < img.height(); ++row)
                 {
-                    accumulator -=
+                    accumulator = accumulator -
                     (col[std::max(0ll, static_cast<long long>(row - radius))] /
                         diameter) +
-                    (col[std::min(img.height(), row + radius)] / diameter);
+                    (col[std::min(img.height() - 1, row + radius)] / diameter);
                     col[row] = accumulator;
                 }
             }

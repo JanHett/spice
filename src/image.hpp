@@ -231,7 +231,7 @@ namespace spice
     struct pixel_view;
 
     /**
-     * Represents a color. Fulfills concept _vector-like_.
+     * Represents a color. Is considered _vector-like_.
      */
     template<typename T = float>
     struct color {
@@ -275,7 +275,7 @@ namespace spice
         /**
          * /returns The size of the color vector
          */
-        size_t size() const {
+        [[nodiscard]] size_t size() const {
             return m_data.size();
         }
 
@@ -353,12 +353,30 @@ namespace spice
          * `pixel_view`.
          *
          * \note This will copy the first _n_ channels, where _n =
-         * max(this->size, other.size())_.
+         * min(this->size, other.size())_.
          */
-        pixel_view<T>& operator=(pixel_view<T const> const & other)
+        template<typename T_other>
+        pixel_view<T>& operator=(pixel_view<T_other> const & other)
         {
-            for (size_t idx = 0; idx < m_nchannels; ++idx)
-                (*this)[idx] = other[idx];
+            auto channels_to_copy = std::min(m_nchannels, other.size());
+            for (size_t idx = 0; idx < channels_to_copy; ++idx)
+                m_data[idx] = other[idx];
+            return *this;
+        }
+
+        /**
+         * Copies values referenced by `other` to data array referenced by this
+         * `pixel_view`.
+         *
+         * \note This will copy the first _n_ channels, where _n =
+         * min(this->size, other.size())_.
+         */
+        template<typename T_other>
+        pixel_view<T>& operator=(color<T_other> const & other)
+        {
+            auto channels_to_copy = std::min(m_nchannels, other.size());
+            for (size_t idx = 0; idx < channels_to_copy; ++idx)
+                m_data[idx] = other[idx];
             return *this;
         }
 
@@ -422,7 +440,8 @@ namespace spice
          * \param data Pointer to the first channel of this column's data
          * \param channels The number of channels in a pixel
          */
-        constexpr column_view(T * const data = nullptr, size_t channels = 0);
+        constexpr column_view(T * const data = nullptr, size_t channels = 0):
+        m_data(data), m_nchannels(channels) {}
         /**
          * Copy constructor. Constructs a `column_view` referring to the same
          * data as the copied `column_view`
@@ -445,7 +464,10 @@ namespace spice
          * \param row The index of the row of the pixel to retrieve a view for
          * \returns A `pixel_view` referring to the indicated column's data
          */
-        pixel_view<T> operator[](size_t row);
+        pixel_view<T> operator[](size_t row)
+        {
+            return pixel_view<T>(&m_data[row * m_nchannels], m_nchannels);
+        }
         /**
          * Allows accessing pixel data with subscript notation. No bounds
          * checking is performed (use `image::at` for this purpose).
@@ -460,7 +482,10 @@ namespace spice
          * \param row The index of the row of the pixel to retrieve a view for
          * \returns A `pixel_view` referring to the indicated column's data
          */
-        const pixel_view<T> operator[](size_t row) const;
+        pixel_view<T const> operator[](size_t row) const
+        {
+            return pixel_view<T>(&m_data[row * m_nchannels], m_nchannels);
+        }
     };
 
     /**
@@ -586,7 +611,11 @@ namespace spice
          * \param column The index of the column to retrieve a view for
          * \returns A `column_view` referring to the indicated column's data
          */
-        column_view<T> operator[](size_t column);
+        column_view<T> operator[](size_t column)
+        {
+            return column_view<T>(&m_data[column * m_height * channels()],
+                channels());
+        }
         /**
          * Allows accessing pixel data with subscript notation. No bounds
          * checking is performed (use `image::at` for this purpose).
@@ -601,7 +630,11 @@ namespace spice
          * \param column The index of the column to retrieve a view for
          * \returns A `column_view` referring to the indicated column's data
          */
-        const column_view<T> operator[](size_t column) const;
+        const column_view<T> operator[](size_t column) const
+        {
+            return column_view<T>(&m_data[column * m_height * channels()],
+                channels());
+        }
 
         /**
          * Retrieves a reference to the entire pixel located at the indicated
