@@ -307,6 +307,17 @@ namespace spice
         }
     };
 
+    template<typename T>
+    std::ostream& operator<<(std::ostream& os, color<T> const & pxl)
+    {
+        os << "(";
+        for (size_t idx = 0; idx < pxl.size() - 1; ++idx)
+            os << pxl[idx] << ", ";
+        os << pxl[pxl.size() - 1];
+        os << ")";
+        return os;
+    }
+
     /**
      * Refers to a single pixel in a `spice::image`. Note that this class has no
      * information about the size of the image it is referring to and thus
@@ -417,6 +428,17 @@ namespace spice
             return m_data[channel];
         }
     };
+
+    template<typename T>
+    std::ostream& operator<<(std::ostream& os, pixel_view<T> const & pxl)
+    {
+        os << "(";
+        for (size_t idx = 0; idx < pxl.size() - 1; ++idx)
+            os << pxl[idx] << ", ";
+        os << pxl[pxl.size() - 1];
+        os << ")";
+        return os;
+    }
 
     /**
      * Refers to a column of pixel data in a `spice::image`. Note that this

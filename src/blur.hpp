@@ -6,6 +6,7 @@
 #define SPICE_BLUR
 
 #import "image.hpp"
+#include "print.hpp"
 
 namespace spice {
 /**
@@ -52,6 +53,9 @@ namespace blur {
         void fast_gaussian_vertical_box_blur(image<T> & img,
             size_t radius)
         {
+            std::cout << "\nBefore:\n";
+            print::image(img, 6);
+
             // make sure the radius is not so large as to exceed the image's
             // dimensions
             radius = std::min(img.height(), radius);
@@ -63,18 +67,26 @@ namespace blur {
                 color<T> accumulator(std::vector<T>(img.channels(),
                     image<T>::intensity_range.min));
 
+                std::cout << "\nAccumulating... ";
+                std::cout << "- " << accumulator << " -";
                 // calculate initial average
-                for (size_t offset = 0; offset < radius; ++offset)
-                    accumulator += col[offset];
+                accumulator = accumulator + (col[0] * (radius - 1)) / diameter;
+                for (size_t offset = 0; offset < radius; ++offset) {
+                    std::cout << "- " << accumulator << " -";
+                    accumulator = accumulator + (col[offset] / diameter);
+                }
+                std::cout << "- " << accumulator << " -";
 
-                accumulator /= diameter;
+                // accumulator /= radius;
                 col[0] = accumulator;
 
-                // calculate following pixel's values by subtracting left-most
-                // pixel within the radius and adding the one to the right of
-                // the right-most for each of the remaining pixels of the row.
+                // calculate following pixel's values by subtracting top-most
+                // pixel within the radius and adding the one below the lowest
+                // for each of the remaining pixels of the column.
                 for (size_t row = 1; row < img.height(); ++row)
                 {
+                    // std::cout << "Subtracting value at " << std::max(0ll, static_cast<long long>(row - radius)) << "\n";
+                    // std::cout << "Adding value at " << std::min(img.height() - 1, row + radius) << "\n";
                     accumulator = accumulator -
                     (col[std::max(0ll, static_cast<long long>(row - radius))] /
                         diameter) +
@@ -82,6 +94,9 @@ namespace blur {
                     col[row] = accumulator;
                 }
             }
+
+            std::cout << "\nAfter:\n";
+            print::image(img, 6);
         }
     }
 

@@ -12,6 +12,15 @@ TEST(fast_gaussian, normal_call) {
     print::image(boat, 6);
     blur::fast_gaussian(boat, 3);
     print::image(boat, 6);
+    // for (size_t x = 0; x < boat.width(); x += 10) {
+    //     for (size_t y = 0; y < boat.height(); y += 10) {
+    //         std::cout << "{" <<
+    //         boat(x, y, 0) << "|" <<
+    //         boat(x, y, 1) << "|" <<
+    //         boat(x, y, 2) << "}";
+    //     }
+    //     std::cout << "---\n";
+    // }
 }
 
 TEST(fast_gaussian, radius_larger_than_image) {
