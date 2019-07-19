@@ -50,11 +50,13 @@ namespace blur {
          * Calculates a single pass of vertical box blur in-place.
          */
         template<typename T>
-        void fast_gaussian_vertical_box_blur(image<T> & img,
+        image<T> fast_gaussian_vertical_box_blur(image<T> const & img,
             size_t radius)
         {
             std::cout << "\nBefore:\n";
             print::image(img, 6);
+
+            image<std::remove_const_t<T>> blurred(img);
 
             // make sure the radius is not so large as to exceed the image's
             // dimensions
@@ -62,23 +64,24 @@ namespace blur {
             auto diameter = radius * 2 + 1;
             for (size_t column = 0; column < img.width(); ++column)
             {
-                auto col = img[column];
+                const column_view col_original = img[column];
+                auto col_blurred  = blurred[column];
                 // accumulator initialised with vector of min-values
                 color<T> accumulator(std::vector<T>(img.channels(),
                     image<T>::intensity_range.min));
 
-                std::cout << "\nAccumulating... ";
+                std::cout << "\nAccumulating, base pixel is " << col_original[0] << " ";
                 std::cout << "- " << accumulator << " -";
                 // calculate initial average
-                accumulator = accumulator + (col[0] * (radius - 1)) / diameter;
+                accumulator = (col_original[0] * (radius)) / diameter;
                 for (size_t offset = 0; offset < radius; ++offset) {
                     std::cout << "- " << accumulator << " -";
-                    accumulator = accumulator + (col[offset] / diameter);
+                    accumulator += (col_original[offset] / diameter);
                 }
                 std::cout << "- " << accumulator << " -";
 
                 // accumulator /= radius;
-                col[0] = accumulator;
+                col_blurred[0] = accumulator;
 
                 // calculate following pixel's values by subtracting top-most
                 // pixel within the radius and adding the one below the lowest
@@ -88,15 +91,17 @@ namespace blur {
                     // std::cout << "Subtracting value at " << std::max(0ll, static_cast<long long>(row - radius)) << "\n";
                     // std::cout << "Adding value at " << std::min(img.height() - 1, row + radius) << "\n";
                     accumulator = accumulator -
-                    (col[std::max(0ll, static_cast<long long>(row - radius))] /
+                    (col_original[std::max(0ll, static_cast<long long>(row - radius))] /
                         diameter) +
-                    (col[std::min(img.height() - 1, row + radius)] / diameter);
-                    col[row] = accumulator;
+                    (col_original[std::min(img.height() - 1, row + radius)] / diameter);
+                    col_blurred[row] = accumulator;
                 }
             }
 
             std::cout << "\nAfter:\n";
             print::image(img, 6);
+
+            return blurred;
         }
     }
 
@@ -116,24 +121,28 @@ namespace blur {
      * individual threads
      */
     template<typename T>
-    void fast_gaussian(image<T> & source, float sigma, size_t passes = 5)
+    image<T> fast_gaussian(image<T> const & source,
+        float sigma,
+        size_t passes = 5)
     {
         // algorithm described here:
         // http://blog.ivank.net/fastest-gaussian-blur.html (MIT license)
 
         const std::vector<size_t> radii =
             fast_gaussian_box_sizes(sigma, passes);
+
+        image<T> blurred(source);
         for (size_t radius_i = 0; radius_i < radii.size(); ++radius_i) {
-            fast_gaussian_vertical_box_blur(source, radii[radius_i]);
+            blurred = fast_gaussian_vertical_box_blur(blurred, radii[radius_i]);
         }
 
         // blur the other way
-        source = source.transpose();
+        blurred = blurred.transpose();
         for (size_t radius_i = 0; radius_i < radii.size(); ++radius_i) {
-            fast_gaussian_vertical_box_blur(source, radii[radius_i]);
+            fast_gaussian_vertical_box_blur(blurred, radii[radius_i]);
         }
 
-        source = source.transpose();
+        return blurred.transpose();
     }
 
     /**

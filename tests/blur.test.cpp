@@ -10,8 +10,8 @@ TEST(fast_gaussian, normal_call) {
     auto boat = load_image<float>("../data/testing/boat.jpg");
 
     print::image(boat, 6);
-    blur::fast_gaussian(boat, 3);
-    print::image(boat, 6);
+    auto b_boat = blur::fast_gaussian(boat, 3);
+    print::image(b_boat, 6);
     // for (size_t x = 0; x < boat.width(); x += 10) {
     //     for (size_t y = 0; y < boat.height(); y += 10) {
     //         std::cout << "{" <<

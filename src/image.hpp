@@ -506,7 +506,7 @@ namespace spice
          */
         pixel_view<T const> operator[](size_t row) const
         {
-            return pixel_view<T>(&m_data[row * m_nchannels], m_nchannels);
+            return pixel_view<T const>(&m_data[row * m_nchannels], m_nchannels);
         }
     };
 
