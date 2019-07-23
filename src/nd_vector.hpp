@@ -15,13 +15,60 @@ namespace spice
  * a coordinate, a colour, a transformation matrix, an image or an abstract,
  * higher-dimensional collection of elements.
  */
-template<size_t dimensions, typename T, bool owner>
+template<size_t Dimensions, typename T, bool Owner = true>
 class nd_vector
 {
 private:
     T * const m_data;
-    std::array<size_t, dimensions> m_shape;
+    std::array<size_t, Dimensions> m_shape;
 public:
+    /**
+     * \returns The number of dimensions as specified by the template
+     */
+    constexpr size_t dimensions() const
+    { return Dimensions; }
+
+    /**
+     * The shape of an nd_vector is its size in each of the dimensions.
+     * The interpretation of the semantics of said shape is up to the user.
+     *
+     * \returns The shape array describing this nd_vector
+     */
+    constexpr std::array<size_t, Dimensions> const & shape() const
+    { return m_shape; }
+
+    /**
+     * Calculates the total number of elements contained in this nd_vector.
+     *
+     * \note Since the actual size is specified as an array of `size_t` and this
+     * function returns the product over all its elements, it is possible that
+     * the calculation might overflow.
+     *
+     * \returns The total number of elements
+     */
+    size_t size() const
+    {
+        return std::reduce(
+            std::next(std::begin(m_shape)),
+            std::end(m_shape),
+            *std::begin(m_shape),
+            std::multiplies<>());
+    }
+
+    /**
+     * Allows accessing the underlying data directly. The data is returned in
+     * terms of a one-dimensional, non-owning nd_vector.
+     */
+    constexpr nd_vector<1, T, false> data()
+    { return nd_vector<1, T, false>(m_data, {size()}); }
+
+    /**
+     * Allows accessing the underlying data directly. The data is returned in
+     * terms of a one-dimensional, non-owning nd_vector.
+     */
+    constexpr nd_vector<1, T, false> const data() const
+    { return nd_vector<1, T, false>(m_data, {size()}); }
+
     /**
      * Constructs an nd_vector measuring 0 in every dimension, thus containing
      * no values.
@@ -33,15 +80,20 @@ public:
      */
     nd_vector(nd_vector const & other);
     /**
+     * Constructs a fresh nd_vector with the supplied data and shape.
+     */
+    nd_vector(std::initializer_list<T> data,
+        std::array<size_t, Dimensions> shape);
+    /**
      * Constructs a fresh nd_vector with the supplied data and shape. Owning
      * nd_vectors will take ownership of the pointer, non-owning nd_vectors will
      * leave resource management to the caller.
      */
-    nd_vector(T * const data, std::array<size_t, dimensions> shape);
+    nd_vector(T * const data, std::array<size_t, Dimensions> shape);
 
     /**
      * Destructor. Deletes data array only if this nd_vector owns it (i.e. if
-     * the template argument `owner` is `true`).
+     * the template argument `Owner` is `true`).
      */
     ~nd_vector();
 
@@ -49,7 +101,7 @@ public:
      * Copies the values from `other` to `this`, resizing the object as
      * necessary.
      */
-    template<std::enable_if_t<owner> = 0>
+    template<std::enable_if_t<Owner, int> = 0>
     nd_vector & operator=(nd_vector const & other)
     {
         if (this != &other) {
@@ -71,7 +123,7 @@ public:
 
     /**
      * Returns a view into the nd_vector. This view will be a non-owning
-     * nd_vector of dimensionality `dimensions - 1`.
+     * nd_vector of dimensionality `Dimensions - 1`.
      *
      * \note No bounds checking is performed (use `nd_vector::at` for this
      * purpose).
@@ -88,11 +140,11 @@ public:
      * \returns A non-owning `nd_vector` of decremented dimensionality referring
      * to the dimensional slice indicated by the index.
      */
-    template <std::enable_if_t<(dimensions > 1)> = 0>
-    nd_vector<dimensions - 1, T, false> operator[](size_t index);
+    template <std::enable_if_t<(Dimensions > 1), int> = 0>
+    nd_vector<Dimensions - 1, T, false> operator[](size_t index);
     /**
      * Returns a view into the nd_vector. This view will be a non-owning
-     * nd_vector of dimensionality `dimensions - 1`.
+     * nd_vector of dimensionality `Dimensions - 1`.
      *
      * \note No bounds checking is performed (use `nd_vector::at` for this
      * purpose).
@@ -109,8 +161,8 @@ public:
      * \returns A non-owning `nd_vector` of decremented dimensionality referring
      * to the dimensional slice indicated by the index.
      */
-    template <std::enable_if_t<(dimensions > 1)> = 0>
-    nd_vector<dimensions - 1, T, false> const operator[](size_t index) const;
+    template <std::enable_if_t<(Dimensions > 1), int> = 0>
+    nd_vector<Dimensions - 1, T, false> const operator[](size_t index) const;
 
     /**
      * Returns an element from the nd_vector.
@@ -131,8 +183,11 @@ public:
      * \param index The index of the element to retrieve
      * \returns A reference to an element in the `nd_vector`
      */
-    template <std::enable_if_t<dimensions == 1> = 0>
-    T & operator[](size_t index);
+    template <std::enable_if_t<Dimensions == 1, int> = 0>
+    T & operator[](size_t index) {
+        return m_data[index];
+    }
+
     /**
      * Returns an element from the nd_vector.
      *
@@ -152,7 +207,7 @@ public:
      * \param index The index of the element to retrieve
      * \returns A reference to an element in the `nd_vector`
      */
-    template <std::enable_if_t<dimensions == 1> = 0>
+    template <std::enable_if_t<Dimensions == 1, int> = 0>
     T const & operator[](size_t index) const;
 
     /**
@@ -168,8 +223,8 @@ public:
      * arguments passed to this function.
      */
     template<typename ...Ts,
-        std::enable_if_t<(sizeof...(Ts) < dimensions)> = 0>
-    nd_vector<dimensions - sizeof...(Ts), T, false> operator()(Ts... indeces);
+        std::enable_if_t<(sizeof...(Ts) < Dimensions), int> = 0>
+    nd_vector<Dimensions - sizeof...(Ts), T, false> operator()(Ts... indeces);
     /**
      * Creates a non-owning nd_vector referring to a lower-dimensional slice of
      * this nd_vector.
@@ -183,8 +238,8 @@ public:
      * arguments passed to this function.
      */
     template<typename ...Ts,
-        std::enable_if_t<(sizeof...(Ts) < dimensions)> = 0>
-    nd_vector<dimensions - sizeof...(Ts), T, false> const
+        std::enable_if_t<(sizeof...(Ts) < Dimensions), int> = 0>
+    nd_vector<Dimensions - sizeof...(Ts), T, false> const
     operator()(Ts... indeces) const;
 
     /**
@@ -197,7 +252,7 @@ public:
      * \returns A reference to an element in the nd_vector
      */
     template<typename ...Ts,
-        std::enable_if_t<sizeof...(Ts) == dimensions> = 0>
+        std::enable_if_t<sizeof...(Ts) == Dimensions, int> = 0>
     T & operator()(Ts... indeces);
     /**
      * Retrieves a reference to an element of this nd_vector.
@@ -209,7 +264,7 @@ public:
      * \returns A reference to an element in the nd_vector
      */
     template<typename ...Ts,
-        std::enable_if_t<sizeof...(Ts) == dimensions> = 0>
+        std::enable_if_t<sizeof...(Ts) == Dimensions, int> = 0>
     T const & operator()(Ts... indeces) const;
 
     /**
@@ -226,8 +281,8 @@ public:
      * arguments passed to this function.
      */
     template<typename ...Ts,
-        std::enable_if_t<(sizeof...(Ts) < dimensions)> = 0>
-    nd_vector<dimensions - sizeof...(Ts), T, false> at(Ts... indeces)
+        std::enable_if_t<(sizeof...(Ts) < Dimensions), int> = 0>
+    nd_vector<Dimensions - sizeof...(Ts), T, false> at(Ts... indeces)
     {
         std::vector<size_t> coordinates = {indeces...};
         for (size_t i = 0; i < coordinates.size(); ++i)
@@ -257,8 +312,8 @@ public:
      * arguments passed to this function.
      */
     template<typename ...Ts,
-        std::enable_if_t<(sizeof...(Ts) < dimensions)> = 0>
-    nd_vector<dimensions - sizeof...(Ts), T, false> const
+        std::enable_if_t<(sizeof...(Ts) < Dimensions), int> = 0>
+    nd_vector<Dimensions - sizeof...(Ts), T, false> const
     at(Ts... indeces) const
     {
         std::vector<size_t> coordinates = {indeces...};
@@ -287,7 +342,7 @@ public:
      * \returns A reference to an element in the nd_vector
      */
     template<typename ...Ts,
-        std::enable_if_t<sizeof...(Ts) == dimensions> = 0>
+        std::enable_if_t<sizeof...(Ts) == Dimensions, int> = 0>
     T & at(Ts... indeces)
     {
         std::vector<size_t> coordinates = {indeces...};
@@ -315,7 +370,7 @@ public:
      * \returns A reference to an element in the nd_vector
      */
     template<typename ...Ts,
-        std::enable_if_t<sizeof...(Ts) == dimensions> = 0>
+        std::enable_if_t<sizeof...(Ts) == Dimensions, int> = 0>
     T const & at(Ts... indeces) const
     {
         std::vector<size_t> coordinates = {indeces...};
@@ -354,22 +409,32 @@ public:
     { return !(lhs == rhs); }
 
     /**
-     * Calculates the total number of elements contained in this nd_vector.
-     *
-     * \note Since the actual size is specified as an array of `size_t` and this
-     * function returns the product over all its elements, it is possible that
-     * the calculation might overflow.
-     *
-     * \returns The total number of elements
+     * Compares an nd_vector with a pointer type. They are considered
+     * to be equal if the pointer points to the same address as the nd_vector.
      */
-    size_t size()
-    {
-        return std::reduce(
-            std::begin(m_shape).next(),
-            std::end(m_shape),
-            *std::begin(m_shape),
-            std::multiplies<>());
-    }
+    friend bool operator==(nd_vector const & lhs, T const * const rhs)
+    { return lhs.m_data == rhs; }
+
+    /**
+     * Compares an nd_vector with a pointer type. `operator!=` is implemented as
+     * the negation of `nd_vector::operator==`.
+     */
+    friend bool operator!=(nd_vector const & lhs, T const * const rhs)
+    { return !(lhs == rhs); }
+
+    /**
+     * Compares an nd_vector with a pointer type. They are considered
+     * to be equal if the pointer points to the same address as the nd_vector.
+     */
+    friend bool operator==(T const * const lhs, nd_vector const & rhs)
+    { return lhs == rhs.m_data; }
+
+    /**
+     * Compares an nd_vector with a pointer type. `operator!=` is implemented as
+     * the negation of `nd_vector::operator==`.
+     */
+    friend bool operator!=(T const * const lhs, nd_vector const & rhs)
+    { return !(lhs == rhs); }
 };
 }
 
