@@ -19,7 +19,7 @@ template<size_t Dimensions, typename T, bool Owner = true>
 class nd_vector
 {
 protected:
-    T * const m_data;
+    T * m_data;
     std::array<size_t, Dimensions> m_shape;
 public:
     /**
@@ -58,7 +58,7 @@ public:
     /**
      * Allows accessing the underlying data directly.
      */
-    constexpr T * data()
+    constexpr T * const data()
     { return m_data; }
 
     /**
@@ -72,58 +72,15 @@ public:
      * Constructs an nd_vector measuring 0 in every dimension, thus containing
      * no values.
      */
-    nd_vector(): m_data(nullptr), m_shape{} {}
-    /**
-     * Copies the values from `other` to `this`, setting the shape as
-     * necessary.
-     */
-    // nd_vector(nd_vector const & other);
-    /**
-     * Constructs a fresh nd_vector with the supplied data and shape.
-     */
-    // nd_vector(std::initializer_list<T> data,
-    //     std::array<size_t, Dimensions> shape);
+    constexpr nd_vector(): m_data(nullptr), m_shape{} {}
     /**
      * Constructs a fresh nd_vector with the supplied data and shape. Owning
      * nd_vectors will take ownership of the pointer, non-owning nd_vectors will
      * leave resource management to the caller.
      */
-    nd_vector(T * const data, std::array<size_t, Dimensions> shape):
+    constexpr nd_vector(T * const data, std::array<size_t, Dimensions> shape):
     m_data(data), m_shape(shape)
     {}
-
-    /**
-     * Destructor. Deletes data array only if this nd_vector owns it (i.e. if
-     * the template argument `Owner` is `true`).
-     */
-    ~nd_vector()
-    {
-        if constexpr(Owner)
-            delete[] m_data;
-    }
-
-    /**
-     * Copies the values from `other` to `this`, resizing the object as
-     * necessary.
-     */
-    nd_vector & operator=(nd_vector const & other);
-    // {
-    //     if (this != &other) {
-    //         if (other.size() != size()){
-    //             delete[] m_data;
-    //             m_shape.fill(0);
-    //             m_data = nullptr;
-    //             m_data = new T[other.size()];
-    //             m_shape = other.m_shape;
-    //         }
-    //     }
-    //     return *this;
-    // }
-
-    /**
-     * Moves the data from `other` to `this`, resizing the object as necessary.
-     */
-    nd_vector & operator=(nd_vector && other);
 
     /**
      * Returns a view into the nd_vector. This view will be a non-owning
@@ -400,6 +357,7 @@ public:
 template <typename T, bool Owner>
 class nd_vector<1, T, Owner>: public nd_vector<0, T, Owner>
 {
+public:
     using nd_vector<0, T, Owner>::nd_vector;
 
     /**
@@ -445,6 +403,92 @@ class nd_vector<1, T, Owner>: public nd_vector<0, T, Owner>
      * \returns A reference to an element in the `nd_vector`
      */
     T const & operator[](size_t index) const;
+};
+
+/**
+ * Specialisation of spice::nd_vector template class for owning vectors.
+ */
+template<size_t Dimensions, typename T>
+class nd_vector<Dimensions, T, true>: public nd_vector<Dimensions, T, false>{
+public:
+    using nd_vector<Dimensions, T, false>::nd_vector;
+
+    /**
+     * Constructs a fresh nd_vector with the specified shape, initialising the
+     * data with `T{}`.
+     */
+    nd_vector(std::array<size_t, Dimensions> shape):
+    // initialise superclass with `nd_vector(T*, array<size_t, Dimensions>)`
+    // size of data array has to be calculated from shape
+    nd_vector<Dimensions, T, false>(new T[std::reduce(
+            std::next(std::begin(shape)),
+            std::end(shape),
+            *std::begin(shape),
+            std::multiplies<>())], shape)
+    {
+        // initialise with 0 (or equivalent value)
+        for (size_t i = 0; i < this->size(); ++i)
+            this->m_data[i] = T{};
+    }
+    /**
+     * Copies the values and shape from `other` to `this`.
+     */
+    template<bool Owner_other>
+    nd_vector(nd_vector<Dimensions, T, Owner_other> const & other):
+    // initialise superclass with `nd_vector(T*, array<size_t, Dimensions>)`
+    // size of data array has to be calculated from other's shape
+    nd_vector<Dimensions, T, false>(new T[other.size()], other.shape())
+    {
+        // copy values over
+        for (size_t i = 0; i < this->size(); ++i)
+            this->m_data[i] = other.data()[i];
+    }
+    /**
+     * Moves the data from `other` to `this`.
+     */
+    nd_vector(nd_vector && other) noexcept:
+    nd_vector(std::exchange(other.m_data, nullptr), std::move(other.shape()))
+    {
+        std::cout << "Moved\n";
+    }
+
+    /**
+     * Constructs a fresh nd_vector with the supplied data and shape.
+     */
+    nd_vector(std::initializer_list<T> data,
+        std::array<size_t, Dimensions> shape);
+
+    /**
+     * Destructor. Deletes data array only if this nd_vector owns it (i.e. if
+     * the template argument `Owner` is `true`).
+     */
+    ~nd_vector()
+    {
+        delete[] this->m_data;
+    }
+
+    /**
+     * Copies the values from `other` to `this`, resizing the object as
+     * necessary.
+     */
+    nd_vector & operator=(nd_vector const & other);
+    // {
+    //     if (this != &other) {
+    //         if (other.size() != size()){
+    //             delete[] m_data;
+    //             m_shape.fill(0);
+    //             m_data = nullptr;
+    //             m_data = new T[other.size()];
+    //             m_shape = other.m_shape;
+    //         }
+    //     }
+    //     return *this;
+    // }
+
+    /**
+     * Moves the data from `other` to `this`, resizing the object as necessary.
+     */
+    nd_vector & operator=(nd_vector && other);
 };
 
 }
