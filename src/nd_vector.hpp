@@ -18,7 +18,7 @@ namespace spice
 template<size_t Dimensions, typename T, bool Owner = true>
 class nd_vector
 {
-private:
+protected:
     T * const m_data;
     std::array<size_t, Dimensions> m_shape;
 public:
@@ -56,65 +56,69 @@ public:
     }
 
     /**
-     * Allows accessing the underlying data directly. The data is returned in
-     * terms of a one-dimensional, non-owning nd_vector.
+     * Allows accessing the underlying data directly.
      */
-    constexpr nd_vector<1, T, false> data()
-    { return nd_vector<1, T, false>(m_data, {size()}); }
+    constexpr T * data()
+    { return m_data; }
 
     /**
      * Allows accessing the underlying data directly. The data is returned in
      * terms of a one-dimensional, non-owning nd_vector.
      */
-    constexpr nd_vector<1, T, false> const data() const
-    { return nd_vector<1, T, false>(m_data, {size()}); }
+    constexpr T const * data() const
+    { return m_data; }
 
     /**
      * Constructs an nd_vector measuring 0 in every dimension, thus containing
      * no values.
      */
-    nd_vector();
+    nd_vector(): m_data(nullptr), m_shape{} {}
     /**
      * Copies the values from `other` to `this`, setting the shape as
      * necessary.
      */
-    nd_vector(nd_vector const & other);
+    // nd_vector(nd_vector const & other);
     /**
      * Constructs a fresh nd_vector with the supplied data and shape.
      */
-    nd_vector(std::initializer_list<T> data,
-        std::array<size_t, Dimensions> shape);
+    // nd_vector(std::initializer_list<T> data,
+    //     std::array<size_t, Dimensions> shape);
     /**
      * Constructs a fresh nd_vector with the supplied data and shape. Owning
      * nd_vectors will take ownership of the pointer, non-owning nd_vectors will
      * leave resource management to the caller.
      */
-    nd_vector(T * const data, std::array<size_t, Dimensions> shape);
+    nd_vector(T * const data, std::array<size_t, Dimensions> shape):
+    m_data(data), m_shape(shape)
+    {}
 
     /**
      * Destructor. Deletes data array only if this nd_vector owns it (i.e. if
      * the template argument `Owner` is `true`).
      */
-    ~nd_vector();
+    ~nd_vector()
+    {
+        if constexpr(Owner)
+            delete[] m_data;
+    }
 
     /**
      * Copies the values from `other` to `this`, resizing the object as
      * necessary.
      */
-    template<std::enable_if_t<Owner, int> = 0>
-    nd_vector & operator=(nd_vector const & other)
-    {
-        if (this != &other) {
-            if (other.size() != size()){
-                delete[] m_data;
-                m_shape.fill(0);
-                m_data = nullptr;
-                m_data = new T[other.size()];
-                m_shape = other.m_shape;
-            }
-        }
-        return *this;
-    }
+    nd_vector & operator=(nd_vector const & other);
+    // {
+    //     if (this != &other) {
+    //         if (other.size() != size()){
+    //             delete[] m_data;
+    //             m_shape.fill(0);
+    //             m_data = nullptr;
+    //             m_data = new T[other.size()];
+    //             m_shape = other.m_shape;
+    //         }
+    //     }
+    //     return *this;
+    // }
 
     /**
      * Moves the data from `other` to `this`, resizing the object as necessary.
@@ -140,7 +144,6 @@ public:
      * \returns A non-owning `nd_vector` of decremented dimensionality referring
      * to the dimensional slice indicated by the index.
      */
-    template <std::enable_if_t<(Dimensions > 1), int> = 0>
     nd_vector<Dimensions - 1, T, false> operator[](size_t index);
     /**
      * Returns a view into the nd_vector. This view will be a non-owning
@@ -161,54 +164,7 @@ public:
      * \returns A non-owning `nd_vector` of decremented dimensionality referring
      * to the dimensional slice indicated by the index.
      */
-    template <std::enable_if_t<(Dimensions > 1), int> = 0>
     nd_vector<Dimensions - 1, T, false> const operator[](size_t index) const;
-
-    /**
-     * Returns an element from the nd_vector.
-     *
-     * \note This overload is activated for one-dimensional nd_vectors.
-     *
-     * \note No bounds checking is performed (use `nd_vector::at` for this
-     * purpose).
-     *
-     * \note Accessing element values via `nd_vector::operator()` is slightly
-     * faster since no intermediate objects have to be constructed.
-     * Iterating over `nd_vector::data` is faster still.
-     *
-     * Calling `my_image[42][47][2]` on an nd_vector representing an RGB image
-     * would return the blue channel value in column 43 (index 42), row 48 of
-     * the image.
-     * 
-     * \param index The index of the element to retrieve
-     * \returns A reference to an element in the `nd_vector`
-     */
-    template <std::enable_if_t<Dimensions == 1, int> = 0>
-    T & operator[](size_t index) {
-        return m_data[index];
-    }
-
-    /**
-     * Returns an element from the nd_vector.
-     *
-     * \note This overload is activated for one-dimensional nd_vectors.
-     *
-     * \note No bounds checking is performed (use `nd_vector::at` for this
-     * purpose).
-     *
-     * \note Accessing element values via `nd_vector::operator()` is slightly
-     * faster since no intermediate objects have to be constructed.
-     * Iterating over `nd_vector::data` is faster still.
-     *
-     * Calling `my_image[42][47][2]` on an nd_vector representing an RGB image
-     * would return the blue channel value in column 43 (index 42), row 48 of
-     * the image.
-     * 
-     * \param index The index of the element to retrieve
-     * \returns A reference to an element in the `nd_vector`
-     */
-    template <std::enable_if_t<Dimensions == 1, int> = 0>
-    T const & operator[](size_t index) const;
 
     /**
      * Creates a non-owning nd_vector referring to a lower-dimensional slice of
@@ -436,6 +392,61 @@ public:
     friend bool operator!=(T const * const lhs, nd_vector const & rhs)
     { return !(lhs == rhs); }
 };
+
+/**
+ * Specialisation of spice::nd_vector template class for one-dimensional
+ * vectors.
+ */
+template <typename T, bool Owner>
+class nd_vector<1, T, Owner>: public nd_vector<0, T, Owner>
+{
+    using nd_vector<0, T, Owner>::nd_vector;
+
+    /**
+     * Returns an element from the nd_vector.
+     *
+     * \note This overload is activated for one-dimensional nd_vectors.
+     *
+     * \note No bounds checking is performed (use `nd_vector::at` for this
+     * purpose).
+     *
+     * \note Accessing element values via `nd_vector::operator()` is slightly
+     * faster since no intermediate objects have to be constructed.
+     * Iterating over `nd_vector::data` is faster still.
+     *
+     * Calling `my_image[42][47][2]` on an nd_vector representing an RGB image
+     * would return the blue channel value in column 43 (index 42), row 48 of
+     * the image.
+     * 
+     * \param index The index of the element to retrieve
+     * \returns A reference to an element in the `nd_vector`
+     */
+    T & operator[](size_t index) {
+        return this->m_data[index];
+    }
+
+    /**
+     * Returns an element from the nd_vector.
+     *
+     * \note This overload is activated for one-dimensional nd_vectors.
+     *
+     * \note No bounds checking is performed (use `nd_vector::at` for this
+     * purpose).
+     *
+     * \note Accessing element values via `nd_vector::operator()` is slightly
+     * faster since no intermediate objects have to be constructed.
+     * Iterating over `nd_vector::data` is faster still.
+     *
+     * Calling `my_image[42][47][2]` on an nd_vector representing an RGB image
+     * would return the blue channel value in column 43 (index 42), row 48 of
+     * the image.
+     * 
+     * \param index The index of the element to retrieve
+     * \returns A reference to an element in the `nd_vector`
+     */
+    T const & operator[](size_t index) const;
+};
+
 }
 
 #endif // SPICE_ND_VECTOR

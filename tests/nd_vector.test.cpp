@@ -16,12 +16,12 @@ TEST(nd_vector, default_constructor) {
 TEST(nd_vector, copy_constructor) {}
 TEST(nd_vector, data_constructor) {}
 
+TEST(nd_vector, destructor_owner) {}
+TEST(nd_vector, destructor_non_owner) {}
+
 TEST(nd_vector, dimensions) {}
 TEST(nd_vector, shape) {}
 TEST(nd_vector, size) {}
-
-TEST(nd_vector, destructor_owner) {}
-TEST(nd_vector, destructor_non_owner) {}
 
 TEST(nd_vector, copy_assignment_owner) {}
 TEST(nd_vector, move_assignment_owner) {}
