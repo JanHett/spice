@@ -104,27 +104,76 @@ TEST(nd_vector, data_constructor) {
     delete[] non_owned_data;
 }
 
-TEST(nd_vector, destructor_owner) {}
-TEST(nd_vector, destructor_non_owner) {}
+TEST(nd_vector, dimensions) {
+    nd_vector<42, float> ndv;
 
-TEST(nd_vector, dimensions) {}
-TEST(nd_vector, shape) {}
-TEST(nd_vector, size) {}
+    static_assert(ndv.dimensions() == 42,
+        "nd_vector::dimensions returns incorrect value.");
+}
+TEST(nd_vector, shape) {
+    nd_vector<3, float> ndv({1,2,3});
 
-TEST(nd_vector, copy_assignment_owner) {}
-TEST(nd_vector, move_assignment_owner) {}
+    EXPECT_EQ(ndv.shape(), (std::array<size_t, 3>{1,2,3}));
+}
+TEST(nd_vector, size) {
+    nd_vector<3, float> ndv({1,2,3});
 
-TEST(nd_vector, copy_assignment_non_owner) {}
-TEST(nd_vector, move_assignment_non_owner) {}
+    EXPECT_EQ(ndv.size(), 6);
+}
 
-TEST(nd_vector, operator_subscript_n_dim) {}
-TEST(nd_vector, operator_subscript_n_dim_const) {}
+TEST(nd_vector, copy_assignment_owner) { GTEST_SKIP(); }
+TEST(nd_vector, move_assignment_owner) { GTEST_SKIP(); }
 
-TEST(nd_vector, operator_subscript_one_dim) {}
-TEST(nd_vector, operator_subscript_one_dim_const) {}
+TEST(nd_vector, copy_assignment_non_owner) { GTEST_SKIP(); }
+TEST(nd_vector, move_assignment_non_owner) { GTEST_SKIP(); }
 
-TEST(nd_vector, operator_call_intermediate_dim) {}
-TEST(nd_vector, operator_call_intermediate_dim_const) {}
+TEST(nd_vector, copy_assignment_scalar_owner) { GTEST_SKIP(); }
+TEST(nd_vector, move_assignment_scalar_owner) { GTEST_SKIP(); }
 
-TEST(nd_vector, operator_call_lowest_dim) {}
-TEST(nd_vector, operator_call_lowest_dim_const) {}
+TEST(nd_vector, copy_assignment_scalar_non_owner) { GTEST_SKIP(); }
+TEST(nd_vector, move_assignment_scalar_non_owner) { GTEST_SKIP(); }
+
+TEST(nd_vector, operator_subscript_n_dim) { GTEST_SKIP(); }
+TEST(nd_vector, operator_subscript_n_dim_const) { GTEST_SKIP(); }
+
+TEST(nd_vector, operator_subscript_one_dim) { GTEST_SKIP(); }
+TEST(nd_vector, operator_subscript_one_dim_const) { GTEST_SKIP(); }
+
+TEST(nd_vector, operator_call_intermediate_dim) { GTEST_SKIP(); }
+TEST(nd_vector, operator_call_intermediate_dim_const) { GTEST_SKIP(); }
+
+TEST(nd_vector, operator_call_lowest_dim) { GTEST_SKIP(); }
+TEST(nd_vector, operator_call_lowest_dim_const) { GTEST_SKIP(); }
+
+TEST(nd_vector, at_intermediate_dim) { GTEST_SKIP(); }
+TEST(nd_vector, at_intermediate_dim_const) { GTEST_SKIP(); }
+
+TEST(nd_vector, at_lowest_dim) { GTEST_SKIP(); }
+TEST(nd_vector, at_lowest_dim_const) { GTEST_SKIP(); }
+
+TEST(nd_vector, operator_equals) { GTEST_SKIP(); }
+TEST(nd_vector, operator_not_equals) { GTEST_SKIP(); }
+
+TEST(nd_vector, operator_plus_equals) { GTEST_SKIP(); }
+TEST(nd_vector, operator_plus) { GTEST_SKIP(); }
+
+TEST(nd_vector, operator_minus_equals) { GTEST_SKIP(); }
+TEST(nd_vector, operator_minus) { GTEST_SKIP(); }
+
+TEST(nd_vector, operator_multiply_equals) { GTEST_SKIP(); }
+TEST(nd_vector, operator_multiply) { GTEST_SKIP(); }
+
+TEST(nd_vector, operator_divide_equals) { GTEST_SKIP(); }
+TEST(nd_vector, operator_divide) { GTEST_SKIP(); }
+
+TEST(nd_vector, operator_plus_equals_scalar) { GTEST_SKIP(); }
+TEST(nd_vector, operator_plus_scalar) { GTEST_SKIP(); }
+
+TEST(nd_vector, operator_minus_equals_scalar) { GTEST_SKIP(); }
+TEST(nd_vector, operator_minus_scalar) { GTEST_SKIP(); }
+
+TEST(nd_vector, operator_multiply_equals_scalar) { GTEST_SKIP(); }
+TEST(nd_vector, operator_multiply_scalar) { GTEST_SKIP(); }
+
+TEST(nd_vector, operator_divide_equals_scalar) { GTEST_SKIP(); }
+TEST(nd_vector, operator_divide_scalar) { GTEST_SKIP(); }

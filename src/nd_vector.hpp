@@ -34,7 +34,7 @@ public:
      *
      * \returns The shape array describing this nd_vector
      */
-    constexpr std::array<size_t, Dimensions> const & shape() const
+    std::array<size_t, Dimensions> const & shape() const
     { return m_shape; }
 
     /**
@@ -447,10 +447,7 @@ public:
      * Moves the data from `other` to `this`.
      */
     nd_vector(nd_vector && other) noexcept:
-    nd_vector(std::exchange(other.m_data, nullptr), std::move(other.shape()))
-    {
-        std::cout << "Moved\n";
-    }
+    nd_vector(std::exchange(other.m_data, nullptr), std::move(other.shape())) {}
 
     /**
      * Constructs a fresh nd_vector with the supplied data and shape.
