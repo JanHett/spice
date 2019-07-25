@@ -133,8 +133,24 @@ TEST(nd_vector, move_assignment_scalar_owner) { GTEST_SKIP(); }
 TEST(nd_vector, copy_assignment_scalar_non_owner) { GTEST_SKIP(); }
 TEST(nd_vector, move_assignment_scalar_non_owner) { GTEST_SKIP(); }
 
-TEST(nd_vector, operator_subscript_n_dim) { GTEST_SKIP(); }
-TEST(nd_vector, operator_subscript_n_dim_const) { GTEST_SKIP(); }
+TEST(nd_vector, operator_subscript_n_dim) {
+    float data1[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    nd_vector<2, float, false> ndv1(data1, {2, 5});
+
+    EXPECT_EQ(ndv1[0], (nd_vector<1, float, false>(data1, {5})));
+
+    float data2[] = {10, 11, 12, 13, 14};
+    ndv1[0] = nd_vector<1, float, false>(data2, {5});
+    EXPECT_EQ(ndv1[0], (nd_vector<1, float, false>(data2, {5})));
+}
+TEST(nd_vector, operator_subscript_n_dim_const) {
+    float data1[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    const nd_vector<2, float, false> ndv1(data1, {2, 5});
+
+    EXPECT_EQ(ndv1[0], (nd_vector<1, float, false>(data1, {5})));
+    static_assert(std::is_const<decltype(ndv1[0])>::value,
+        "nd_vector::operator[] does not preserve const-ness.");
+}
 
 TEST(nd_vector, operator_subscript_one_dim) { GTEST_SKIP(); }
 TEST(nd_vector, operator_subscript_one_dim_const) { GTEST_SKIP(); }
@@ -151,8 +167,34 @@ TEST(nd_vector, at_intermediate_dim_const) { GTEST_SKIP(); }
 TEST(nd_vector, at_lowest_dim) { GTEST_SKIP(); }
 TEST(nd_vector, at_lowest_dim_const) { GTEST_SKIP(); }
 
-TEST(nd_vector, operator_equals) { GTEST_SKIP(); }
-TEST(nd_vector, operator_not_equals) { GTEST_SKIP(); }
+TEST(nd_vector, operator_equals) {
+    float data1[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    nd_vector<2, float, false> ndv1(data1, {2, 5});
+    nd_vector<2, float, false> ndv2(data1, {2, 5});
+
+    EXPECT_TRUE(ndv1 == ndv2);
+
+    float data2[] = {0, 1, 2, 3, 42, 5, 6, 7, 8, 9};
+    nd_vector<2, float, false> ndv3(data2, {2, 5});
+    nd_vector<2, float, false> ndv4(data2, {5, 2});
+
+    EXPECT_FALSE(ndv1 == ndv3);
+    EXPECT_FALSE(ndv4 == ndv3);
+}
+TEST(nd_vector, operator_not_equals) {
+    float data1[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    nd_vector<2, float, false> ndv1(data1, {2, 5});
+    nd_vector<2, float, false> ndv2(data1, {2, 5});
+
+    EXPECT_FALSE(ndv1 != ndv2);
+
+    float data2[] = {0, 1, 2, 3, 42, 5, 6, 7, 8, 9};
+    nd_vector<2, float, false> ndv3(data2, {2, 5});
+    nd_vector<2, float, false> ndv4(data2, {5, 2});
+
+    EXPECT_TRUE(ndv1 != ndv3);
+    EXPECT_TRUE(ndv4 != ndv3);
+}
 
 TEST(nd_vector, operator_plus_equals) { GTEST_SKIP(); }
 TEST(nd_vector, operator_plus) { GTEST_SKIP(); }
