@@ -83,6 +83,27 @@ public:
     {}
 
     /**
+     * Copies the values from `other` to `this`. Only values included in the
+     * intersection of the shapes of `other` and `this` are copied, the shape
+     * of `this` is not adjusted.
+     */
+    nd_vector & operator=(nd_vector const & other)
+    {
+        if (this != &other) {
+            size_t smaller_dim = std::min(m_shape[0], other.m_shape[0]);
+            for (size_t entry = 0; entry < smaller_dim; ++entry) {
+                (*this)[entry] = other[entry];
+            }
+        }
+        return *this;
+    }
+
+    /**
+     * Moves the data from `other` to `this`, resizing the object as necessary.
+     */
+    nd_vector & operator=(nd_vector && other);
+
+    /**
      * Returns an element from the nd_vector.
      *
      * \note This overload is activated for one-dimensional nd_vectors.
@@ -104,7 +125,7 @@ public:
     template<bool Enabled = Dimensions == 1,
         std::enable_if_t<Enabled, int> = 0>
     T & operator[](size_t index) {
-        return this->m_data[index];
+        return m_data[index];
     }
 
     /**
@@ -128,7 +149,8 @@ public:
      */
     template<bool Enabled = Dimensions == 1,
         std::enable_if_t<Enabled, int> = 0>
-    T const & operator[](size_t index) const;
+    T const & operator[](size_t index) const
+    { return m_data[index]; }
 
     /**
      * Returns a view into the nd_vector. This view will be a non-owning
@@ -445,6 +467,7 @@ public nd_vector<Dimensions, T, false>
 {
 public:
     using nd_vector<Dimensions, T, false>::nd_vector;
+    using nd_vector<Dimensions, T, false>::operator=;
 
     /**
      * Constructs a fresh nd_vector with the specified shape, initialising the
@@ -501,7 +524,7 @@ public:
      * Copies the values from `other` to `this`, resizing the object as
      * necessary.
      */
-    nd_vector & operator=(nd_vector const & other);
+    // nd_vector & operator=(nd_vector const & other);
     // {
     //     if (this != &other) {
     //         if (other.size() != size()){
@@ -518,7 +541,7 @@ public:
     /**
      * Moves the data from `other` to `this`, resizing the object as necessary.
      */
-    nd_vector & operator=(nd_vector && other);
+    // nd_vector & operator=(nd_vector && other);
 };
 
 }

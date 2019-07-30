@@ -121,11 +121,128 @@ TEST(nd_vector, size) {
     EXPECT_EQ(ndv.size(), 6);
 }
 
-TEST(nd_vector, copy_assignment_owner) { GTEST_SKIP(); }
+TEST(nd_vector, copy_assignment_owner) {
+    float * data_1d_1 = new float[5]{5, 6, 7, 8, 9};
+    nd_vector<1, float, true> ndv_1d_1(data_1d_1, {5});
+    float * data_1d_2 = new float[5]{0, 1, 2, 3, 4};
+    nd_vector<1, float, true> ndv_1d_2(data_1d_2, {5});
+
+    ndv_1d_1 = ndv_1d_2;
+
+    EXPECT_EQ(0, ndv_1d_1.data()[0]);
+    EXPECT_EQ(1, ndv_1d_1.data()[1]);
+    EXPECT_EQ(2, ndv_1d_1.data()[2]);
+    EXPECT_EQ(3, ndv_1d_1.data()[3]);
+    EXPECT_EQ(4, ndv_1d_1.data()[4]);
+    EXPECT_NE(ndv_1d_2.data(), ndv_1d_1.data());
+
+   float * data1 = new float[10]{
+       0, 1, 2, 3, 4,
+       5, 6, 7, 8, 9};
+   nd_vector<2, float, true> ndv1(data1, {5, 2});
+
+   float * data2 = new float[10]{
+       10, 11, 12, 13, 14,
+       15, 16, 17, 18, 19};
+   nd_vector<2, float, true> ndv2(data2, {5, 2});
+
+   ndv1 = ndv2;
+
+   EXPECT_EQ(10, ndv1.data()[0]);
+   EXPECT_EQ(11, ndv1.data()[1]);
+   EXPECT_EQ(12, ndv1.data()[2]);
+   EXPECT_EQ(13, ndv1.data()[3]);
+   EXPECT_EQ(14, ndv1.data()[4]);
+   EXPECT_EQ(15, ndv1.data()[5]);
+   EXPECT_EQ(16, ndv1.data()[6]);
+   EXPECT_EQ(17, ndv1.data()[7]);
+   EXPECT_EQ(18, ndv1.data()[8]);
+   EXPECT_EQ(19, ndv1.data()[9]);
+   EXPECT_NE(ndv2.data(), ndv1.data());
+}
 TEST(nd_vector, move_assignment_owner) { GTEST_SKIP(); }
 
-TEST(nd_vector, copy_assignment_non_owner) { GTEST_SKIP(); }
+TEST(nd_vector, copy_assignment_non_owner) {
+    float data_1d_1[] = {5, 6, 7, 8, 9};
+    nd_vector<1, float, false> ndv_1d_1(data_1d_1, {5});
+    float data_1d_2[] = {0, 1, 2, 3, 4};
+    nd_vector<1, float, false> ndv_1d_2(data_1d_2, {5});
+
+    ndv_1d_1 = ndv_1d_2;
+
+    EXPECT_EQ(0, ndv_1d_1.data()[0]);
+    EXPECT_EQ(1, ndv_1d_1.data()[1]);
+    EXPECT_EQ(2, ndv_1d_1.data()[2]);
+    EXPECT_EQ(3, ndv_1d_1.data()[3]);
+    EXPECT_EQ(4, ndv_1d_1.data()[4]);
+    EXPECT_NE(ndv_1d_2.data(), ndv_1d_1.data());
+
+   float data1[] = {
+       0, 1, 2, 3, 4,
+       5, 6, 7, 8, 9};
+   nd_vector<2, float, false> ndv1(data1, {5, 2});
+
+   float data2[] = {
+       10, 11, 12, 13, 14,
+       15, 16, 17, 18, 19};
+   nd_vector<2, float, false> ndv2(data2, {5, 2});
+
+   ndv1 = ndv2;
+
+   EXPECT_EQ(10, ndv1.data()[0]);
+   EXPECT_EQ(11, ndv1.data()[1]);
+   EXPECT_EQ(12, ndv1.data()[2]);
+   EXPECT_EQ(13, ndv1.data()[3]);
+   EXPECT_EQ(14, ndv1.data()[4]);
+   EXPECT_EQ(15, ndv1.data()[5]);
+   EXPECT_EQ(16, ndv1.data()[6]);
+   EXPECT_EQ(17, ndv1.data()[7]);
+   EXPECT_EQ(18, ndv1.data()[8]);
+   EXPECT_EQ(19, ndv1.data()[9]);
+   EXPECT_NE(ndv2.data(), ndv1.data());
+}
 TEST(nd_vector, move_assignment_non_owner) { GTEST_SKIP(); }
+
+TEST(nd_vector, copy_assignment_mixed) {
+    float * data_1d_1 = new float[5]{5, 6, 7, 8, 9};
+    nd_vector<1, float, true> ndv_1d_1(data_1d_1, {5});
+    float data_1d_2[] = {0, 1, 2, 3, 4};
+    nd_vector<1, float, false> ndv_1d_2(data_1d_2, {5});
+
+    ndv_1d_1 = ndv_1d_2;
+
+    EXPECT_EQ(0, ndv_1d_1.data()[0]);
+    EXPECT_EQ(1, ndv_1d_1.data()[1]);
+    EXPECT_EQ(2, ndv_1d_1.data()[2]);
+    EXPECT_EQ(3, ndv_1d_1.data()[3]);
+    EXPECT_EQ(4, ndv_1d_1.data()[4]);
+    EXPECT_NE(ndv_1d_2.data(), ndv_1d_1.data());
+
+   float data1[] = {
+       0, 1, 2, 3, 4,
+       5, 6, 7, 8, 9};
+   nd_vector<2, float, false> ndv1(data1, {5, 2});
+
+   float * data2 = new float[10]{
+       10, 11, 12, 13, 14,
+       15, 16, 17, 18, 19};
+   nd_vector<2, float, true> ndv2(data2, {5, 2});
+
+   ndv1 = ndv2;
+
+   EXPECT_EQ(10, ndv1.data()[0]);
+   EXPECT_EQ(11, ndv1.data()[1]);
+   EXPECT_EQ(12, ndv1.data()[2]);
+   EXPECT_EQ(13, ndv1.data()[3]);
+   EXPECT_EQ(14, ndv1.data()[4]);
+   EXPECT_EQ(15, ndv1.data()[5]);
+   EXPECT_EQ(16, ndv1.data()[6]);
+   EXPECT_EQ(17, ndv1.data()[7]);
+   EXPECT_EQ(18, ndv1.data()[8]);
+   EXPECT_EQ(19, ndv1.data()[9]);
+   EXPECT_NE(ndv2.data(), ndv1.data());
+}
+TEST(nd_vector, move_assignment_mixed) { GTEST_SKIP(); }
 
 TEST(nd_vector, copy_assignment_scalar_owner) { GTEST_SKIP(); }
 TEST(nd_vector, move_assignment_scalar_owner) { GTEST_SKIP(); }
@@ -139,9 +256,11 @@ TEST(nd_vector, operator_subscript_n_dim) {
 
     EXPECT_EQ(ndv1[0], (nd_vector<1, float, false>(data1, {5})));
 
+    // test assigning to returned non-owning nd_vector
     float data2[] = {10, 11, 12, 13, 14};
-    ndv1[0] = nd_vector<1, float, false>(data2, {5});
-    EXPECT_EQ(ndv1[0], (nd_vector<1, float, false>(data2, {5})));
+    nd_vector<1, float, false> new_ndv(data2, {5});
+    ndv1[0] = new_ndv;
+    EXPECT_EQ(ndv1[0], new_ndv);
 }
 TEST(nd_vector, operator_subscript_n_dim_const) {
     float data1[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
