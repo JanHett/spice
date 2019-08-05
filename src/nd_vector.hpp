@@ -521,22 +521,23 @@ public:
     }
 
     /**
-     * Copies the values from `other` to `this`, resizing the object as
-     * necessary.
+     * Copies the values from `other` to `this`. Only values included in the
+     * intersection of the shapes of `other` and `this` are copied, the shape
+     * of `this` is not adjusted.
+     *
+     * \todo avoid duplication of this function between owning and non-owning
+     * nd_vectors
      */
-    // nd_vector & operator=(nd_vector const & other);
-    // {
-    //     if (this != &other) {
-    //         if (other.size() != size()){
-    //             delete[] m_data;
-    //             m_shape.fill(0);
-    //             m_data = nullptr;
-    //             m_data = new T[other.size()];
-    //             m_shape = other.m_shape;
-    //         }
-    //     }
-    //     return *this;
-    // }
+    nd_vector & operator=(nd_vector const & other)
+    {
+        if (this != &other) {
+            size_t smaller_dim = std::min(this->m_shape[0], other.m_shape[0]);
+            for (size_t entry = 0; entry < smaller_dim; ++entry) {
+                (*this)[entry] = other[entry];
+            }
+        }
+        return *this;
+    }
 
     /**
      * Moves the data from `other` to `this`, resizing the object as necessary.
