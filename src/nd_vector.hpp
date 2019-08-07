@@ -104,6 +104,17 @@ public:
     nd_vector & operator=(nd_vector && other);
 
     /**
+     * Sets all values of `this` equal to `value`. The current shape is
+     * retained.
+     */
+    nd_vector & operator=(T const & value)
+    {
+        for (size_t offset = 0; offset < size(); ++offset)
+            m_data[offset] = value;
+        return *this;
+    }
+
+    /**
      * Returns an element from the nd_vector.
      *
      * \note This overload is activated for one-dimensional nd_vectors.

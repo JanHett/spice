@@ -244,11 +244,25 @@ TEST(nd_vector, copy_assignment_mixed) {
 }
 TEST(nd_vector, move_assignment_mixed) { GTEST_SKIP(); }
 
-TEST(nd_vector, copy_assignment_scalar_owner) { GTEST_SKIP(); }
-TEST(nd_vector, move_assignment_scalar_owner) { GTEST_SKIP(); }
+TEST(nd_vector, copy_assignment_scalar_owner) {
+    float * data = new float[6]{5, 6, 7, 8, 9, 0};
+    nd_vector<2, float, true> ndv(data, {3, 2});
 
-TEST(nd_vector, copy_assignment_scalar_non_owner) { GTEST_SKIP(); }
-TEST(nd_vector, move_assignment_scalar_non_owner) { GTEST_SKIP(); }
+    ndv = 42;
+
+    for (int idx = 0; idx < 5; ++idx)
+        EXPECT_EQ(42, ndv.data()[idx]);
+}
+
+TEST(nd_vector, copy_assignment_scalar_non_owner) {
+    float data[] = {0, 1, 2, 3, 4, 5, 6, 7};
+    nd_vector<3, float, false> ndv(data, {2, 2, 2});
+
+    ndv = 47;
+
+    for (int idx = 0; idx < 5; ++idx)
+        EXPECT_EQ(47, ndv.data()[idx]);
+}
 
 TEST(nd_vector, operator_subscript_n_dim) {
     float data1[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
