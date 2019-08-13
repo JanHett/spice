@@ -288,8 +288,44 @@ TEST(nd_vector, operator_subscript_n_dim_const) {
 TEST(nd_vector, operator_subscript_one_dim) { GTEST_SKIP(); }
 TEST(nd_vector, operator_subscript_one_dim_const) { GTEST_SKIP(); }
 
-TEST(nd_vector, operator_call_intermediate_dim) { GTEST_SKIP(); }
-TEST(nd_vector, operator_call_intermediate_dim_const) { GTEST_SKIP(); }
+TEST(nd_vector, operator_call_intermediate_dim) {
+    float data1[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    nd_vector<2, float, false> ndv1(data1, {2, 5});
+
+    auto one_dim = ndv1(1);
+    static_assert(std::is_same<
+            decltype(one_dim),
+            nd_vector<1, float, false>
+        >::value,
+        "Intermediate-dimensional call operator does not return an nd-vector");
+
+    EXPECT_EQ((std::array<size_t, 1>{5}), one_dim.shape());
+
+    EXPECT_EQ(5, one_dim(0));
+    EXPECT_EQ(6, one_dim(1));
+    EXPECT_EQ(7, one_dim(2));
+    EXPECT_EQ(8, one_dim(3));
+    EXPECT_EQ(9, one_dim(4));
+}
+TEST(nd_vector, operator_call_intermediate_dim_const) {
+    float data1[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    const nd_vector<2, float, false> ndv1(data1, {2, 5});
+
+    auto const one_dim = ndv1(1);
+    static_assert(std::is_same<
+            decltype(one_dim),
+            const nd_vector<1, float, false>
+        >::value,
+        "Intermediate-dimensional call operator does not return an nd-vector");
+
+    EXPECT_EQ((std::array<size_t, 1>{5}), one_dim.shape());
+
+    EXPECT_EQ(5, one_dim(0));
+    EXPECT_EQ(6, one_dim(1));
+    EXPECT_EQ(7, one_dim(2));
+    EXPECT_EQ(8, one_dim(3));
+    EXPECT_EQ(9, one_dim(4));
+}
 
 TEST(nd_vector, operator_call_lowest_dim) { GTEST_SKIP(); }
 TEST(nd_vector, operator_call_lowest_dim_const) { GTEST_SKIP(); }

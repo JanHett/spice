@@ -256,7 +256,15 @@ public:
      */
     template<typename ...Ts,
         std::enable_if_t<(sizeof...(Ts) < Dimensions), int> = 0>
-    nd_vector<Dimensions - sizeof...(Ts), T, false> operator()(Ts... indeces);
+    nd_vector<Dimensions - sizeof...(Ts), T, false> operator()(Ts... indeces)
+    {
+        T * sub_data;
+        std::array<size_t, Dimensions - sizeof...(Ts)> shape;
+        std::copy(m_shape + sizeof...(Ts), std::end(m_shape), shape);
+        return nd_vector<Dimensions - sizeof...(Ts), T, false>(
+            sub_data,
+            shape);
+    }
     /**
      * Creates a non-owning nd_vector referring to a lower-dimensional slice of
      * this nd_vector.
