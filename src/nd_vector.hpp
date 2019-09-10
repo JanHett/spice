@@ -73,6 +73,7 @@ public:
      * no values.
      */
     constexpr nd_vector(): m_data(nullptr), m_shape{} {}
+
     /**
      * Constructs a fresh nd_vector with the supplied data and shape. Owning
      * nd_vectors will take ownership of the pointer, non-owning nd_vectors will
@@ -202,6 +203,7 @@ public:
             &m_data[data_offset],
             new_shape);
     }
+
     /**
      * Returns a view into the nd_vector. This view will be a non-owning
      * nd_vector of dimensionality `Dimensions - 1`.
@@ -258,13 +260,30 @@ public:
         std::enable_if_t<(sizeof...(Ts) < Dimensions), int> = 0>
     nd_vector<Dimensions - sizeof...(Ts), T, false> operator()(Ts... indeces)
     {
-        T * sub_data;
-        std::array<size_t, Dimensions - sizeof...(Ts)> shape;
-        std::copy(m_shape + sizeof...(Ts), std::end(m_shape), shape);
+        // take the rear part of the current shape as the shape of the slice
+        std::array<size_t, Dimensions - sizeof...(Ts)> sub_shape;
+        std::copy(
+            std::begin(m_shape) + sizeof...(Ts),
+            std::end(m_shape),
+            std::begin(sub_shape));
+
+        // calculate starting index of data slice
+        size_t indeces_arr[] = {static_cast<size_t>(indeces)...};
+        size_t idx = 0;
+        for (size_t idx_offset = 0; idx_offset < sizeof...(Ts); ++idx_offset){
+            idx += std::reduce(
+                std::begin(m_shape) + idx_offset + 1,
+                std::end(m_shape),
+                1,
+                std::multiplies<size_t>()) * indeces_arr[idx_offset];
+        }
+        T * sub_data = &m_data[idx];
+
         return nd_vector<Dimensions - sizeof...(Ts), T, false>(
             sub_data,
-            shape);
+            sub_shape);
     }
+
     /**
      * Creates a non-owning nd_vector referring to a lower-dimensional slice of
      * this nd_vector.
@@ -280,7 +299,31 @@ public:
     template<typename ...Ts,
         std::enable_if_t<(sizeof...(Ts) < Dimensions), int> = 0>
     nd_vector<Dimensions - sizeof...(Ts), T, false> const
-    operator()(Ts... indeces) const;
+    operator()(Ts... indeces) const
+    {
+        // take the rear part of the current shape as the shape of the slice
+        std::array<size_t, Dimensions - sizeof...(Ts)> sub_shape;
+        std::copy(
+            std::begin(m_shape) + sizeof...(Ts),
+            std::end(m_shape),
+            std::begin(sub_shape));
+
+        // calculate starting index of data slice
+        size_t indeces_arr[] = {static_cast<size_t>(indeces)...};
+        size_t idx = 0;
+        for (size_t idx_offset = 0; idx_offset < sizeof...(Ts); ++idx_offset){
+            idx += std::reduce(
+                std::begin(m_shape) + idx_offset + 1,
+                std::end(m_shape),
+                1,
+                std::multiplies<size_t>()) * indeces_arr[idx_offset];
+        }
+        T * sub_data = &m_data[idx];
+
+        return nd_vector<Dimensions - sizeof...(Ts), T, false>(
+            sub_data,
+            sub_shape);
+    }
 
     /**
      * Retrieves a reference to an element of this nd_vector.
@@ -292,8 +335,22 @@ public:
      * \returns A reference to an element in the nd_vector
      */
     template<typename ...Ts,
+        class = std::common_type_t<Ts...>,
         std::enable_if_t<sizeof...(Ts) == Dimensions, int> = 0>
-    T & operator()(Ts... indeces);
+    T & operator()(Ts... indeces)
+    {
+        size_t indeces_arr[] = {static_cast<size_t>(indeces)...};
+        size_t idx = 0;
+        for (size_t idx_offset = 0; idx_offset < sizeof...(Ts); ++idx_offset){
+            idx += std::reduce(
+                std::begin(m_shape) + idx_offset + 1,
+                std::end(m_shape),
+                1,
+                std::multiplies<size_t>()) * indeces_arr[idx_offset];
+        }
+        return m_data[idx];
+    }
+
     /**
      * Retrieves a reference to an element of this nd_vector.
      *
@@ -301,11 +358,24 @@ public:
      * purpose).
      *
      * \param indeces The coordinates to retrieve the element from
-     * \returns A reference to an element in the nd_vector
+     * \returns A const reference to an element in the nd_vector
      */
     template<typename ...Ts,
+        class = std::common_type_t<Ts...>,
         std::enable_if_t<sizeof...(Ts) == Dimensions, int> = 0>
-    T const & operator()(Ts... indeces) const;
+    T const & operator()(Ts... indeces) const
+    {
+        size_t indeces_arr[] = {static_cast<size_t>(indeces)...};
+        size_t idx = 0;
+        for (size_t idx_offset = 0; idx_offset < sizeof...(Ts); ++idx_offset){
+            idx += std::reduce(
+                std::begin(m_shape) + idx_offset + 1,
+                std::end(m_shape),
+                1,
+                std::multiplies<size_t>()) * indeces_arr[idx_offset];
+        }
+        return m_data[idx];
+    }
 
     /**
      * Creates a non-owning nd_vector referring to a lower-dimensional slice of
@@ -338,6 +408,7 @@ public:
             }
         return operator()(indeces...);
     }
+
     /**
      * Creates a non-owning nd_vector referring to a lower-dimensional slice of
      * this nd_vector.
@@ -399,6 +470,7 @@ public:
             }
         return operator()(indeces...);
     }
+
     /**
      * Retrieves a reference to an element of this nd_vector.
      *
@@ -505,6 +577,7 @@ public:
         for (size_t i = 0; i < this->size(); ++i)
             this->m_data[i] = T{};
     }
+
     /**
      * Copies the values and shape from `other` to `this`.
      */
@@ -518,6 +591,7 @@ public:
         for (size_t i = 0; i < this->size(); ++i)
             this->m_data[i] = other.data()[i];
     }
+
     /**
      * Moves the data from `other` to `this`.
      */

@@ -301,17 +301,17 @@ TEST(nd_vector, operator_call_intermediate_dim) {
 
     EXPECT_EQ((std::array<size_t, 1>{5}), one_dim.shape());
 
-    EXPECT_EQ(5, one_dim(0));
-    EXPECT_EQ(6, one_dim(1));
-    EXPECT_EQ(7, one_dim(2));
-    EXPECT_EQ(8, one_dim(3));
-    EXPECT_EQ(9, one_dim(4));
+    EXPECT_EQ(5, one_dim[0]);
+    EXPECT_EQ(6, one_dim[1]);
+    EXPECT_EQ(7, one_dim[2]);
+    EXPECT_EQ(8, one_dim[3]);
+    EXPECT_EQ(9, one_dim[4]);
 }
 TEST(nd_vector, operator_call_intermediate_dim_const) {
     float data1[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     const nd_vector<2, float, false> ndv1(data1, {2, 5});
 
-    auto const one_dim = ndv1(1);
+    auto const one_dim = ndv1(0);
     static_assert(std::is_same<
             decltype(one_dim),
             const nd_vector<1, float, false>
@@ -320,15 +320,73 @@ TEST(nd_vector, operator_call_intermediate_dim_const) {
 
     EXPECT_EQ((std::array<size_t, 1>{5}), one_dim.shape());
 
-    EXPECT_EQ(5, one_dim(0));
-    EXPECT_EQ(6, one_dim(1));
-    EXPECT_EQ(7, one_dim(2));
-    EXPECT_EQ(8, one_dim(3));
-    EXPECT_EQ(9, one_dim(4));
+    EXPECT_EQ(0, one_dim(0));
+    EXPECT_EQ(1, one_dim(1));
+    EXPECT_EQ(2, one_dim(2));
+    EXPECT_EQ(3, one_dim(3));
+    EXPECT_EQ(4, one_dim(4));
 }
 
-TEST(nd_vector, operator_call_lowest_dim) { GTEST_SKIP(); }
-TEST(nd_vector, operator_call_lowest_dim_const) { GTEST_SKIP(); }
+TEST(nd_vector, operator_call_lowest_dim) {
+    float data1[] = {
+         0,  1,  2,  3,  4,
+         5,  6,  7,  8,  9,
+        10, 11, 12, 13, 14,
+        15, 16, 17, 18, 19
+    };
+    nd_vector<3, float, false> ndv1(data1, {2, 2, 5});
+
+    EXPECT_EQ( 0, ndv1(0, 0, 0));
+    EXPECT_EQ( 1, ndv1(0, 0, 1));
+    EXPECT_EQ( 2, ndv1(0, 0, 2));
+    EXPECT_EQ( 3, ndv1(0, 0, 3));
+    EXPECT_EQ( 4, ndv1(0, 0, 4));
+    EXPECT_EQ( 5, ndv1(0, 1, 0));
+    EXPECT_EQ( 6, ndv1(0, 1, 1));
+    EXPECT_EQ( 7, ndv1(0, 1, 2));
+    EXPECT_EQ( 8, ndv1(0, 1, 3));
+    EXPECT_EQ( 9, ndv1(0, 1, 4));
+    EXPECT_EQ(10, ndv1(1, 0, 0));
+    EXPECT_EQ(11, ndv1(1, 0, 1));
+    EXPECT_EQ(12, ndv1(1, 0, 2));
+    EXPECT_EQ(13, ndv1(1, 0, 3));
+    EXPECT_EQ(14, ndv1(1, 0, 4));
+    EXPECT_EQ(15, ndv1(1, 1, 0));
+    EXPECT_EQ(16, ndv1(1, 1, 1));
+    EXPECT_EQ(17, ndv1(1, 1, 2));
+    EXPECT_EQ(18, ndv1(1, 1, 3));
+    EXPECT_EQ(19, ndv1(1, 1, 4));
+}
+TEST(nd_vector, operator_call_lowest_dim_const) {
+    float data1[] = {
+         0,  1,  2,  3,  4,
+         5,  6,  7,  8,  9,
+        10, 11, 12, 13, 14,
+        15, 16, 17, 18, 19
+    };
+    const nd_vector<3, float, false> ndv1(data1, {2, 2, 5});
+
+    EXPECT_EQ( 0, ndv1(0, 0, 0));
+    EXPECT_EQ( 1, ndv1(0, 0, 1));
+    EXPECT_EQ( 2, ndv1(0, 0, 2));
+    EXPECT_EQ( 3, ndv1(0, 0, 3));
+    EXPECT_EQ( 4, ndv1(0, 0, 4));
+    EXPECT_EQ( 5, ndv1(0, 1, 0));
+    EXPECT_EQ( 6, ndv1(0, 1, 1));
+    EXPECT_EQ( 7, ndv1(0, 1, 2));
+    EXPECT_EQ( 8, ndv1(0, 1, 3));
+    EXPECT_EQ( 9, ndv1(0, 1, 4));
+    EXPECT_EQ(10, ndv1(1, 0, 0));
+    EXPECT_EQ(11, ndv1(1, 0, 1));
+    EXPECT_EQ(12, ndv1(1, 0, 2));
+    EXPECT_EQ(13, ndv1(1, 0, 3));
+    EXPECT_EQ(14, ndv1(1, 0, 4));
+    EXPECT_EQ(15, ndv1(1, 1, 0));
+    EXPECT_EQ(16, ndv1(1, 1, 1));
+    EXPECT_EQ(17, ndv1(1, 1, 2));
+    EXPECT_EQ(18, ndv1(1, 1, 3));
+    EXPECT_EQ(19, ndv1(1, 1, 4));
+}
 
 TEST(nd_vector, at_intermediate_dim) { GTEST_SKIP(); }
 TEST(nd_vector, at_intermediate_dim_const) { GTEST_SKIP(); }
