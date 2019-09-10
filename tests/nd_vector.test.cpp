@@ -388,11 +388,71 @@ TEST(nd_vector, operator_call_lowest_dim_const) {
     EXPECT_EQ(19, ndv1(1, 1, 4));
 }
 
-TEST(nd_vector, at_intermediate_dim) { GTEST_SKIP(); }
-TEST(nd_vector, at_intermediate_dim_const) { GTEST_SKIP(); }
+TEST(nd_vector, at_intermediate_dim) {
+    float data1[] = {
+         0,  1,  2,  3,  4,
+         5,  6,  7,  8,  9,
+        10, 11, 12, 13, 14,
+        15, 16, 17, 18, 19
+    };
+    nd_vector<3, float, false> ndv1(data1, {2, 2, 5});
 
-TEST(nd_vector, at_lowest_dim) { GTEST_SKIP(); }
-TEST(nd_vector, at_lowest_dim_const) { GTEST_SKIP(); }
+    EXPECT_THROW(ndv1.at(42), std::out_of_range);
+
+    EXPECT_EQ(ndv1.at(0, 0), ndv1(0, 0));
+    EXPECT_EQ(ndv1.at(0, 1), ndv1(0, 1));
+    EXPECT_EQ(ndv1.at(1, 0), ndv1(1, 0));
+    EXPECT_EQ(ndv1.at(1, 1), ndv1(1, 1));
+}
+TEST(nd_vector, at_intermediate_dim_const) {
+    float data1[] = {
+         0,  1,  2,  3,  4,
+         5,  6,  7,  8,  9,
+        10, 11, 12, 13, 14,
+        15, 16, 17, 18, 19
+    };
+    const nd_vector<3, float, false> ndv1(data1, {2, 2, 5});
+
+    EXPECT_THROW(ndv1.at(42), std::out_of_range);
+
+    EXPECT_EQ(ndv1.at(0, 0), ndv1(0, 0));
+    EXPECT_EQ(ndv1.at(0, 1), ndv1(0, 1));
+    EXPECT_EQ(ndv1.at(1, 0), ndv1(1, 0));
+    EXPECT_EQ(ndv1.at(1, 1), ndv1(1, 1));
+}
+
+TEST(nd_vector, at_lowest_dim) {
+    float data1[] = {
+         0,  1,  2,  3,  4,
+         5,  6,  7,  8,  9,
+        10, 11, 12, 13, 14,
+        15, 16, 17, 18, 19
+    };
+    nd_vector<3, float, false> ndv1(data1, {2, 2, 5});
+
+    EXPECT_THROW(ndv1.at(42), std::out_of_range);
+
+    EXPECT_EQ(ndv1.at(0, 0, 0), ndv1(0, 0, 0));
+    EXPECT_EQ(ndv1.at(0, 1, 1), ndv1(0, 1, 1));
+    EXPECT_EQ(ndv1.at(1, 0, 2), ndv1(1, 0, 2));
+    EXPECT_EQ(ndv1.at(1, 1, 4), ndv1(1, 1, 4));
+}
+TEST(nd_vector, at_lowest_dim_const) {
+    float data1[] = {
+         0,  1,  2,  3,  4,
+         5,  6,  7,  8,  9,
+        10, 11, 12, 13, 14,
+        15, 16, 17, 18, 19
+    };
+    const nd_vector<3, float, false> ndv1(data1, {2, 2, 5});
+
+    EXPECT_THROW(ndv1.at(42), std::out_of_range);
+
+    EXPECT_EQ(ndv1.at(0, 0, 4), ndv1(0, 0, 4));
+    EXPECT_EQ(ndv1.at(0, 1, 2), ndv1(0, 1, 2));
+    EXPECT_EQ(ndv1.at(1, 0, 0), ndv1(1, 0, 0));
+    EXPECT_EQ(ndv1.at(1, 1, 1), ndv1(1, 1, 1));
+}
 
 TEST(nd_vector, operator_equals) {
     float data1[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};

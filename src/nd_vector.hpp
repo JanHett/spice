@@ -391,11 +391,12 @@ public:
      * arguments passed to this function.
      */
     template<typename ...Ts,
+        class = std::common_type_t<Ts...>,
         std::enable_if_t<(sizeof...(Ts) < Dimensions), int> = 0>
     nd_vector<Dimensions - sizeof...(Ts), T, false> at(Ts... indeces)
     {
-        std::vector<size_t> coordinates = {indeces...};
-        for (size_t i = 0; i < coordinates.size(); ++i)
+        size_t coordinates[] = {static_cast<size_t>(indeces)...};
+        for (size_t i = 0; i < sizeof...(Ts); ++i)
             if (coordinates[i] > m_shape[i]) {
                 std::string coord_str("{ ");
                 for (auto const & coord : coordinates)
@@ -423,12 +424,13 @@ public:
      * arguments passed to this function.
      */
     template<typename ...Ts,
+        class = std::common_type_t<Ts...>,
         std::enable_if_t<(sizeof...(Ts) < Dimensions), int> = 0>
     nd_vector<Dimensions - sizeof...(Ts), T, false> const
     at(Ts... indeces) const
     {
-        std::vector<size_t> coordinates = {indeces...};
-        for (size_t i = 0; i < coordinates.size(); ++i)
+        size_t coordinates[] = {static_cast<size_t>(indeces)...};
+        for (size_t i = 0; i < sizeof...(Ts); ++i)
             if (coordinates[i] > m_shape[i]) {
                 std::string coord_str("{ ");
                 for (auto const & coord : coordinates)
@@ -453,11 +455,12 @@ public:
      * \returns A reference to an element in the nd_vector
      */
     template<typename ...Ts,
+        class = std::common_type_t<Ts...>,
         std::enable_if_t<sizeof...(Ts) == Dimensions, int> = 0>
     T & at(Ts... indeces)
     {
-        std::vector<size_t> coordinates = {indeces...};
-        for (size_t i = 0; i < coordinates.size(); ++i)
+        size_t coordinates[] = {static_cast<size_t>(indeces)...};
+        for (size_t i = 0; i < sizeof...(Ts); ++i)
             if (coordinates[i] > m_shape[i]) {
                 std::string coord_str("{ ");
                 for (auto const & coord : coordinates)
@@ -482,11 +485,12 @@ public:
      * \returns A reference to an element in the nd_vector
      */
     template<typename ...Ts,
+        class = std::common_type_t<Ts...>,
         std::enable_if_t<sizeof...(Ts) == Dimensions, int> = 0>
     T const & at(Ts... indeces) const
     {
-        std::vector<size_t> coordinates = {indeces...};
-        for (size_t i = 0; i < coordinates.size(); ++i)
+        size_t coordinates[] = {static_cast<size_t>(indeces)...};
+        for (size_t i = 0; i < sizeof...(Ts); ++i)
             if (coordinates[i] > m_shape[i]) {
                 std::string coord_str("{ ");
                 for (auto const & coord : coordinates)
