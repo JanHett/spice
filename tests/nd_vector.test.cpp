@@ -483,16 +483,128 @@ TEST(nd_vector, operator_not_equals) {
     EXPECT_TRUE(ndv4 != ndv3);
 }
 
-TEST(nd_vector, operator_plus_equals) { GTEST_SKIP(); }
+TEST(nd_vector, operator_plus_equals) {
+    float data1[] = {
+         0,  1,  2,  3,
+         5,  6,  7,  8,
+        10, 11, 12, 13,
+        15, 16, 17, 18
+    };
+    nd_vector<3, float, false> ndv1(data1, {2, 2, 4});
+    float data2[] = {
+        15, 16, 17, 18, 19,
+        10, 11, 12, 13, 14,
+         5,  6,  7,  8,  9,
+         0,  1,  2,  3,  4
+    };
+    nd_vector<3, float, false> ndv2(data2, {2, 2, 5});
+
+    float data_result[] = {
+        15, 17, 19, 21,
+        15, 17, 19, 21,
+        15, 17, 19, 21,
+        15, 17, 19, 21
+    };
+    nd_vector<3, float, false> ndv_result(data_result, {2, 2, 4});
+
+    ndv1 += ndv2;
+
+    EXPECT_EQ(ndv_result, ndv1);
+    EXPECT_NE(ndv_result, ndv2);
+}
 TEST(nd_vector, operator_plus) { GTEST_SKIP(); }
 
-TEST(nd_vector, operator_minus_equals) { GTEST_SKIP(); }
+TEST(nd_vector, operator_minus_equals) {
+    float data1[] = {
+         0,  1,  2,  3,  4,
+         5,  6,  7,  8,  9,
+        10, 11, 12, 13, 14,
+        15, 16, 17, 18, 19
+    };
+    nd_vector<3, float, false> ndv1(data1, {2, 2, 5});
+    float data2[] = {
+        15, 16, 17, 18, 19,
+        10, 11, 12, 13, 14,
+         5,  6,  7,  8,  9,
+         0,  1,  2,  3,  4
+    };
+    nd_vector<3, float, false> ndv2(data2, {2, 2, 5});
+
+    float data_result[] = {
+        -15, -15, -15, -15, -15,
+        - 5, - 5, - 5, - 5, - 5,
+          5,   5,   5,   5,   5,
+         15,  15,  15,  15,  15
+    };
+    nd_vector<3, float, false> ndv_result(data_result, {2, 2, 5});
+
+    ndv1 -= ndv2;
+
+    EXPECT_EQ(ndv_result, ndv1);
+    EXPECT_NE(ndv_result, ndv2);
+}
 TEST(nd_vector, operator_minus) { GTEST_SKIP(); }
 
-TEST(nd_vector, operator_multiply_equals) { GTEST_SKIP(); }
+TEST(nd_vector, operator_multiply_equals) {
+    float data1[] = {
+         0,  1,  2,  3,  4,
+         5,  6,  7,  8,  9,
+        10, 11, 12, 13, 14,
+        15, 16, 17, 18, 19
+    };
+    nd_vector<3, float, false> ndv1(data1, {2, 2, 5});
+    float data2[] = {
+        15, 16, 17, 18, 19,
+        10, 11, 12, 13, 14,
+         5,  6,  7,  8,  9,
+         0,  1,  2,  3,  4
+    };
+    nd_vector<3, float, false> ndv2(data2, {2, 2, 5});
+
+    float data_result[] = {
+         0, 16, 34,  54,  76,
+        50, 66, 84, 104, 126,
+        50, 66, 84, 104, 126,
+         0, 16, 34,  54,  76
+    };
+    nd_vector<3, float, false> ndv_result(data_result, {2, 2, 5});
+
+    ndv1 *= ndv2;
+
+    EXPECT_EQ(ndv_result, ndv1);
+    EXPECT_NE(ndv_result, ndv2);
+}
 TEST(nd_vector, operator_multiply) { GTEST_SKIP(); }
 
-TEST(nd_vector, operator_divide_equals) { GTEST_SKIP(); }
+TEST(nd_vector, operator_divide_equals) {
+    float data1[] = {
+         0,  1,  2,  3,  4,
+         5,  6,  7,  8,  9,
+        10, 11, 12, 13, 14,
+        15, 16, 17, 18, 19
+    };
+    nd_vector<3, float, false> ndv1(data1, {2, 2, 5});
+    float data2[] = {
+        42,  1,  2,  3,
+         5,  6,  7,  8,
+        10, 11, 12, 13,
+        15, 16, 17, 18
+    };
+    nd_vector<3, float, false> ndv2(data2, {2, 2, 4});
+
+    float data_result[] = {
+        0, 1, 1, 1,  4,
+        1, 1, 1, 1,  9,
+        1, 1, 1, 1, 14,
+        1, 1, 1, 1, 19
+    };
+    nd_vector<3, float, false> ndv_result(data_result, {2, 2, 5});
+
+    ndv1 /= ndv2;
+
+    EXPECT_EQ(ndv_result, ndv1);
+    EXPECT_NE(ndv_result, ndv2);
+}
 TEST(nd_vector, operator_divide) { GTEST_SKIP(); }
 
 TEST(nd_vector, operator_plus_equals_scalar) { GTEST_SKIP(); }

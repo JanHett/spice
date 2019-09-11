@@ -551,6 +551,148 @@ public:
      */
     friend bool operator!=(T const * const lhs, nd_vector const & rhs)
     { return !(lhs == rhs); }
+
+    /**
+     * Adds the first nd_vector element-wise to the second.
+     * If the two nd_vectors have different dimensions, only the overlapping
+     * parts will be taken into account. The nd_vectors will be aligned by their
+     * top-left corners.
+     */
+    template<bool Owner_other>
+    nd_vector<Dimensions, T, Owner>& operator+=(
+        nd_vector<Dimensions, T, Owner_other> const & rhs)
+    {
+        size_t dim_magn = std::min(
+            m_shape[0],
+            rhs.m_shape[0]);
+        for (size_t i = 0; i < dim_magn; ++i)
+            (*this)[i] += rhs[i];
+
+        return *this;
+    }
+    /**
+     * Subtracts the first nd_vector element-wise from the second.
+     * If the two nd_vectors have different dimensions, only the overlapping
+     * parts will be taken into account. The nd_vectors will be aligned by their
+     * top-left corners.
+     */
+    template<bool Owner_other>
+    nd_vector<Dimensions, T, Owner>& operator-=(
+        nd_vector<Dimensions, T, Owner_other> const & rhs)
+    {
+        size_t dim_magn = std::min(
+            m_shape[0],
+            rhs.m_shape[0]);
+        for (size_t i = 0; i < dim_magn; ++i)
+            (*this)[i] -= rhs[i];
+
+        return *this;
+    }
+    /**
+     * Multiplies the first nd_vector element-wise with the second.
+     * If the two nd_vectors have different dimensions, only the overlapping
+     * parts will be taken into account. The nd_vectors will be aligned by their
+     * top-left corners.
+     */
+    template<bool Owner_other>
+    nd_vector<Dimensions, T, Owner>& operator*=(
+        nd_vector<Dimensions, T, Owner_other> const & rhs)
+    {
+        size_t dim_magn = std::min(
+            m_shape[0],
+            rhs.m_shape[0]);
+        for (size_t i = 0; i < dim_magn; ++i)
+            (*this)[i] *= rhs[i];
+
+        return *this;
+    }
+    /**
+     * Divides the first nd_vector element-wise from the second.
+     * If the two nd_vectors have different dimensions, only the overlapping
+     * parts will be taken into account. The nd_vectors will be aligned by their
+     * top-left corners.
+     */
+    template<bool Owner_other>
+    nd_vector<Dimensions, T, Owner>& operator/=(
+        nd_vector<Dimensions, T, Owner_other> const & rhs)
+    {
+        size_t dim_magn = std::min(
+            m_shape[0],
+            rhs.m_shape[0]);
+        for (size_t i = 0; i < dim_magn; ++i)
+            (*this)[i] /= rhs[i];
+
+        return *this;
+    }
+
+    /**
+     * Adds the two nd_vectors element-wise.
+     * If the two nd_vectors have different dimensions, only the overlapping
+     * parts will be taken into account. The nd_vectors will be aligned by their
+     * top-left corners.
+     */
+    template<bool Owner_lhs, bool Owner_rhs>
+    friend nd_vector<Dimensions, T, true> operator+(
+        nd_vector<Dimensions, T, Owner_lhs> lhs,
+        nd_vector<Dimensions, T, Owner_rhs> const & rhs)
+    {
+        lhs += rhs;
+        return lhs;
+    }
+    /**
+     * Subtracts the two nd_vectors element-wise.
+     * If the two nd_vectors have different dimensions, only the overlapping
+     * parts will be taken into account. The nd_vectors will be aligned by their
+     * top-left corners.
+     */
+    template<bool Owner_lhs, bool Owner_rhs>
+    friend nd_vector<Dimensions, T, true> operator-(
+        nd_vector<Dimensions, T, Owner_lhs> lhs,
+        nd_vector<Dimensions, T, Owner_rhs> const & rhs)
+    {
+        lhs -= rhs;
+        return lhs;
+    }
+    /**
+     * Multiplies the two nd_vectors element-wise.
+     * If the two nd_vectors have different dimensions, only the overlapping
+     * parts will be taken into account. The nd_vectors will be aligned by their
+     * top-left corners.
+     */
+    template<bool Owner_lhs, bool Owner_rhs>
+    friend nd_vector<Dimensions, T, true> operator*(
+        nd_vector<Dimensions, T, Owner_lhs> lhs,
+        nd_vector<Dimensions, T, Owner_rhs> const & rhs)
+    {
+        lhs *= rhs;
+        return lhs;
+    }
+    /**
+     * Divides the two nd_vectors element-wise.
+     * If the two nd_vectors have different dimensions, only the overlapping
+     * parts will be taken into account. The nd_vectors will be aligned by their
+     * top-left corners.
+     */
+    template<bool Owner_lhs, bool Owner_rhs>
+    friend nd_vector<Dimensions, T, true> operator/(
+        nd_vector<Dimensions, T, Owner_lhs> lhs,
+        nd_vector<Dimensions, T, Owner_rhs> const & rhs)
+    {
+        lhs /= rhs;
+        return lhs;
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, nd_vector const & vec)
+    {
+        os << std::string("nd_vector (");
+        for (size_t i = 0; i < Dimensions - 1; ++i)
+            os << vec.m_shape[i] << " x ";
+        os << vec.m_shape[Dimensions - 1] << ")[";
+        for (size_t i = 0; i < vec.size() - 1; ++i)
+            os << vec.m_data[i] << ", ";
+        os << vec.m_data[vec.size() - 1] << "]";
+        return os;
+    }
 };
 
 /**
