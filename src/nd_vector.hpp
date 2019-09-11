@@ -84,6 +84,14 @@ public:
     {}
 
     /**
+     * Constructs an nd_vector from another, reusing the other's buffer. This is
+     * overridden for owning nd_vectors to create a new buffer.
+     */
+    constexpr nd_vector(nd_vector const & other):
+    m_data(other.m_data), m_shape(other.m_shape)
+    {}
+
+    /**
      * Copies the values from `other` to `this`. Only values included in the
      * intersection of the shapes of `other` and `this` are copied, the shape
      * of `this` is not adjusted.
