@@ -638,10 +638,13 @@ public:
      * If the two nd_vectors have different dimensions, only the overlapping
      * parts will be taken into account. The nd_vectors will be aligned by their
      * top-left corners.
+     *
+     * \note The first operand will be copied as an owning nd_vector, even if
+     * it is merely a view.
      */
-    template<bool Owner_lhs, bool Owner_rhs>
+    template<bool Owner_rhs>
     friend nd_vector<Dimensions, T, true> operator+(
-        nd_vector<Dimensions, T, Owner_lhs> lhs,
+        nd_vector<Dimensions, T, true> lhs,
         nd_vector<Dimensions, T, Owner_rhs> const & rhs)
     {
         lhs += rhs;
@@ -652,10 +655,13 @@ public:
      * If the two nd_vectors have different dimensions, only the overlapping
      * parts will be taken into account. The nd_vectors will be aligned by their
      * top-left corners.
+     *
+     * \note The first operand will be copied as an owning nd_vector, even if
+     * it is merely a view.
      */
-    template<bool Owner_lhs, bool Owner_rhs>
+    template<bool Owner_rhs>
     friend nd_vector<Dimensions, T, true> operator-(
-        nd_vector<Dimensions, T, Owner_lhs> lhs,
+        nd_vector<Dimensions, T, true> lhs,
         nd_vector<Dimensions, T, Owner_rhs> const & rhs)
     {
         lhs -= rhs;
@@ -666,10 +672,13 @@ public:
      * If the two nd_vectors have different dimensions, only the overlapping
      * parts will be taken into account. The nd_vectors will be aligned by their
      * top-left corners.
+     *
+     * \note The first operand will be copied as an owning nd_vector, even if
+     * it is merely a view.
      */
-    template<bool Owner_lhs, bool Owner_rhs>
+    template<bool Owner_rhs>
     friend nd_vector<Dimensions, T, true> operator*(
-        nd_vector<Dimensions, T, Owner_lhs> lhs,
+        nd_vector<Dimensions, T, true> lhs,
         nd_vector<Dimensions, T, Owner_rhs> const & rhs)
     {
         lhs *= rhs;
@@ -680,10 +689,13 @@ public:
      * If the two nd_vectors have different dimensions, only the overlapping
      * parts will be taken into account. The nd_vectors will be aligned by their
      * top-left corners.
+     *
+     * \note The first operand will be copied as an owning nd_vector, even if
+     * it is merely a view.
      */
-    template<bool Owner_lhs, bool Owner_rhs>
+    template<bool Owner_rhs>
     friend nd_vector<Dimensions, T, true> operator/(
-        nd_vector<Dimensions, T, Owner_lhs> lhs,
+        nd_vector<Dimensions, T, true> lhs,
         nd_vector<Dimensions, T, Owner_rhs> const & rhs)
     {
         lhs /= rhs;

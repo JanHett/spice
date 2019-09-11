@@ -539,6 +539,7 @@ TEST(nd_vector, operator_plus) {
     auto ndv_result = ndv1 + ndv2;
 
     EXPECT_EQ(ndv_expected, ndv_result);
+    EXPECT_NE(ndv_expected, ndv1);
     EXPECT_NE(ndv_expected, ndv2);
 }
 
@@ -598,6 +599,7 @@ TEST(nd_vector, operator_minus) {
     auto ndv_result = ndv1 - ndv2;
 
     EXPECT_EQ(ndv_expected, ndv_result);
+    EXPECT_NE(ndv_expected, ndv1);
     EXPECT_NE(ndv_expected, ndv2);
 }
 
@@ -657,6 +659,7 @@ TEST(nd_vector, operator_multiply) {
     auto ndv_result = ndv1 * ndv2;
 
     EXPECT_EQ(ndv_expected, ndv_result);
+    EXPECT_NE(ndv_expected, ndv1);
     EXPECT_NE(ndv_expected, ndv2);
 }
 
@@ -716,6 +719,7 @@ TEST(nd_vector, operator_divide) {
     auto ndv_result = ndv1 / ndv2;
 
     EXPECT_EQ(ndv_expected, ndv_result);
+    EXPECT_NE(ndv_expected, ndv1);
     EXPECT_NE(ndv_expected, ndv2);
 }
 
