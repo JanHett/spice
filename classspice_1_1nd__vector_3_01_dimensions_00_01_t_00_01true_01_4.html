@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>spice::color struct | spice</title>
+  <title>spice::nd_vector&lt;Dimensions, T, true&gt; class | spice</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
   <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
   <link rel="icon" href="favicon-dark.png" type="image/png" />
@@ -44,8 +44,8 @@
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
         <h1>
-          <div class="m-doc-template">template&lt;typename T = float&gt;</div>
-          <span class="m-breadcrumb"><a href="namespacespice.html">spice</a>::<wbr/></span>color <span class="m-thin">struct</span>
+          <div class="m-doc-template">template&lt;size_t Dimensions, typename T&gt;</div>
+          <span class="m-breadcrumb"><a href="namespacespice.html">spice</a>::<wbr/></span>nd_vector&lt;Dimensions, T, true&gt; <span class="m-thin">class</span>
         </h1>
         <div class="m-block m-default">
           <h3>Contents</h3>
@@ -53,27 +53,47 @@
             <li>
               Reference
               <ul>
+                <li><a href="#base-classes">Base classes</a></li>
                 <li><a href="#typeless-methods">Constructors, destructors, conversion operators</a></li>
                 <li><a href="#pub-methods">Public functions</a></li>
               </ul>
             </li>
           </ul>
         </div>
-<p>Represents a color. Is considered <em>vector-like</em>.</p>
+<p>Specialisation of <a href="classspice_1_1nd__vector.html" class="m-doc">spice::<wbr />nd_vector</a> template class for owning vectors.</p>
+        <section id="base-classes">
+          <h2><a href="#base-classes">Base classes</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <div class="m-doc-template">template&lt;size_t Dimensions, typename T, bool Owner = true&gt;</div>
+              class <a href="classspice_1_1nd__vector.html" class="m-doc">nd_vector</a>
+            </dt>
+            <dd></dd>
+          </dl>
+        </section>
         <section id="typeless-methods">
           <h2><a href="#typeless-methods">Constructors, destructors, conversion operators</a></h2>
           <dl class="m-doc">
             <dt>
-              <span class="m-doc-wrap-bumper"><a href="#a9b1645e58eb11dd8e2565d2e6cb89e45" class="m-doc">color</a>(</span><span class="m-doc-wrap">)</span>
+              <span class="m-doc-wrap-bumper"><a href="#ac2969a8dbe047c13af12133ea3843ed1" class="m-doc">nd_vector</a>(</span><span class="m-doc-wrap">std::array&lt;size_t, Dimensions&gt; shape)</span>
             </dt>
             <dd></dd>
             <dt>
-              <span class="m-doc-wrap-bumper"><a href="#ab3ddfdb8b20b289d697b2874f0ae8199" class="m-doc">color</a>(</span><span class="m-doc-wrap">std::vector&lt;T&gt; data)</span>
+              <div class="m-doc-template">template&lt;bool Owner_other&gt;</div>
+              <span class="m-doc-wrap-bumper"><a href="#ab713a4591bb45507b1f8bf6d7a38322c" class="m-doc">nd_vector</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1nd__vector.html" class="m-doc">nd_<wbr />vector</a>&lt;Dimensions, T, Owner_other&gt; const&amp; other)</span>
             </dt>
             <dd></dd>
             <dt>
-              <div class="m-doc-template">template&lt;typename T_pv, std::enable_if_t&lt;std::is_convertible&lt;T_pv, T&gt;::value, int&gt; = 0&gt;</div>
-              <span class="m-doc-wrap-bumper"><a href="#a07b12e3360191d33e0ba73ae17d2b212" class="m-doc">color</a>(</span><span class="m-doc-wrap"><a href="structspice_1_1pixel__view.html" class="m-doc">pixel_<wbr />view</a>&lt;T_pv&gt; const&amp; view)</span>
+              <span class="m-doc-wrap-bumper"><a href="#ab9aa9f46d8ebcbef393be486790d2347" class="m-doc">nd_vector</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1nd__vector.html" class="m-doc">nd_<wbr />vector</a>&amp;&amp; other) <span class="m-label m-flat m-success">noexcept</span></span>
+            </dt>
+            <dd></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper"><a href="#ab6a8ba9a5db8f3e9a38ff26c5fba9d70" class="m-doc">nd_vector</a>(</span><span class="m-doc-wrap">std::initializer_list&lt;T&gt; data,
+              std::array&lt;size_t, Dimensions&gt; shape)</span>
+            </dt>
+            <dd></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper"><a href="#ac862975b9a25aafdb846fc7b88b2d770" class="m-doc">~nd_vector</a>(</span><span class="m-doc-wrap">)</span>
             </dt>
             <dd></dd>
           </dl>
@@ -82,75 +102,68 @@
           <h2><a href="#pub-methods">Public functions</a></h2>
           <dl class="m-doc">
             <dt>
-              <span class="m-doc-wrap-bumper">auto <a href="#ae7f01e649da000239b25afc68e93885c" class="m-doc">size</a>(</span><span class="m-doc-wrap">) const -&gt; size_t</span>
-            </dt>
-            <dd></dd>
-            <dt>
-              <span class="m-doc-wrap-bumper">auto <a href="#a1eb893933bee71cb68f799637a8b16d9" class="m-doc">operator[]</a>(</span><span class="m-doc-wrap">size_t channel) -&gt; T&amp;</span>
-            </dt>
-            <dd></dd>
-            <dt>
-              <span class="m-doc-wrap-bumper">auto <a href="#ab937834e8fff7fd8838b0756beec2e5d" class="m-doc">operator[]</a>(</span><span class="m-doc-wrap">size_t channel) const -&gt; const T&amp;</span>
+              <span class="m-doc-wrap-bumper">auto <a href="#a75c5dfe56b71ac8e92aba8de55bdc794" class="m-doc">operator=</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1nd__vector.html" class="m-doc">nd_<wbr />vector</a> const&amp; other) -&gt; <a href="classspice_1_1nd__vector.html" class="m-doc">nd_<wbr />vector</a>&amp;</span>
             </dt>
             <dd></dd>
           </dl>
         </section>
         <section>
           <h2>Function documentation</h2>
-          <section class="m-doc-details" id="a9b1645e58eb11dd8e2565d2e6cb89e45"><div>
+          <section class="m-doc-details" id="ac2969a8dbe047c13af12133ea3843ed1"><div>
             <h3>
               <div class="m-doc-template">
-                template&lt;typename T&gt;
+                template&lt;size_t Dimensions, typename T&gt;
               </div>
-              <span class="m-doc-wrap-bumper"> spice::<wbr />color&lt;T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a9b1645e58eb11dd8e2565d2e6cb89e45" class="m-doc-self">color</a>(</span><span class="m-doc-wrap">)</span></span>
+              <span class="m-doc-wrap-bumper"> spice::<wbr />nd_vector&lt;Dimensions, T, true&gt;&lt;Dimensions, T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ac2969a8dbe047c13af12133ea3843ed1" class="m-doc-self">nd_vector</a>(</span><span class="m-doc-wrap">std::array&lt;size_t, Dimensions&gt; shape)</span></span>
             </h3>
-<p>Constructs a color vector with zero elements and no semantics.</p>
+<p>Constructs a fresh <a href="classspice_1_1nd__vector.html" class="m-doc">nd_<wbr />vector</a> with the specified shape, initialising the data with <code>T{}</code>.</p>
           </div></section>
-          <section class="m-doc-details" id="ab3ddfdb8b20b289d697b2874f0ae8199"><div>
+          <section class="m-doc-details" id="ab713a4591bb45507b1f8bf6d7a38322c"><div>
             <h3>
               <div class="m-doc-template">
-                template&lt;typename T&gt;
+                template&lt;size_t Dimensions, typename T&gt;
+                template&lt;bool Owner_other&gt;
               </div>
-              <span class="m-doc-wrap-bumper"> spice::<wbr />color&lt;T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ab3ddfdb8b20b289d697b2874f0ae8199" class="m-doc-self">color</a>(</span><span class="m-doc-wrap">std::vector&lt;T&gt; data)</span></span>
+              <span class="m-doc-wrap-bumper"> spice::<wbr />nd_vector&lt;Dimensions, T, true&gt;&lt;Dimensions, T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ab713a4591bb45507b1f8bf6d7a38322c" class="m-doc-self">nd_vector</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1nd__vector.html" class="m-doc">nd_<wbr />vector</a>&lt;Dimensions, T, Owner_other&gt; const&amp; other)</span></span>
             </h3>
-<p>Constructs a color vector out of the passed list of values.</p>
+<p>Copies the values and shape from <code>other</code> to <code>this</code>.</p>
           </div></section>
-          <section class="m-doc-details" id="a07b12e3360191d33e0ba73ae17d2b212"><div>
+          <section class="m-doc-details" id="ab9aa9f46d8ebcbef393be486790d2347"><div>
             <h3>
               <div class="m-doc-template">
-                template&lt;typename T&gt;
-                template&lt;typename T_pv, std::enable_if_t&lt;std::is_convertible&lt;T_pv, T&gt;::value, int&gt; = 0&gt;
+                template&lt;size_t Dimensions, typename T&gt;
               </div>
-              <span class="m-doc-wrap-bumper"> spice::<wbr />color&lt;T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a07b12e3360191d33e0ba73ae17d2b212" class="m-doc-self">color</a>(</span><span class="m-doc-wrap"><a href="structspice_1_1pixel__view.html" class="m-doc">pixel_<wbr />view</a>&lt;T_pv&gt; const&amp; view)</span></span>
+              <span class="m-doc-wrap-bumper"> spice::<wbr />nd_vector&lt;Dimensions, T, true&gt;&lt;Dimensions, T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ab9aa9f46d8ebcbef393be486790d2347" class="m-doc-self">nd_vector</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1nd__vector.html" class="m-doc">nd_<wbr />vector</a>&amp;&amp; other) <span class="m-label m-success">noexcept</span></span></span>
             </h3>
-<p>Constructs a color from a <a href="structspice_1_1pixel__view.html" class="m-doc">pixel_<wbr />view</a>, copying the values referenced by the view.</p><aside class="m-note m-info"><h4>Note</h4><p>The type referenced by the <code><a href="structspice_1_1pixel__view.html" class="m-doc">pixel_<wbr />view</a></code> may differ from the type of the <code>color</code> as long as the former is convertible to the latter.</p><p>Semantics are assumed to be RGB(A) for the first three or four channels and unknown for the rest.</p></aside>
+<p>Moves the data from <code>other</code> to <code>this</code>.</p>
           </div></section>
-          <section class="m-doc-details" id="ae7f01e649da000239b25afc68e93885c"><div>
+          <section class="m-doc-details" id="ab6a8ba9a5db8f3e9a38ff26c5fba9d70"><div>
             <h3>
               <div class="m-doc-template">
-                template&lt;typename T&gt;
+                template&lt;size_t Dimensions, typename T&gt;
               </div>
-              <span class="m-doc-wrap-bumper">size_t spice::<wbr />color&lt;T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ae7f01e649da000239b25afc68e93885c" class="m-doc-self">size</a>(</span><span class="m-doc-wrap">) const</span></span>
+              <span class="m-doc-wrap-bumper"> spice::<wbr />nd_vector&lt;Dimensions, T, true&gt;&lt;Dimensions, T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ab6a8ba9a5db8f3e9a38ff26c5fba9d70" class="m-doc-self">nd_vector</a>(</span><span class="m-doc-wrap">std::initializer_list&lt;T&gt; data,
+              std::array&lt;size_t, Dimensions&gt; shape)</span></span>
             </h3>
-<p>Constructs a color object from a hex code. 3, 4, 6 and 8 character codes are supported. Semantics are automatically assumed to be RGB(A). /returns The size of the color vector</p>
+<p>Constructs a fresh <a href="classspice_1_1nd__vector.html" class="m-doc">nd_<wbr />vector</a> with the supplied data and shape.</p>
           </div></section>
-          <section class="m-doc-details" id="a1eb893933bee71cb68f799637a8b16d9"><div>
+          <section class="m-doc-details" id="ac862975b9a25aafdb846fc7b88b2d770"><div>
             <h3>
               <div class="m-doc-template">
-                template&lt;typename T&gt;
+                template&lt;size_t Dimensions, typename T&gt;
               </div>
-              <span class="m-doc-wrap-bumper">T&amp; spice::<wbr />color&lt;T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a1eb893933bee71cb68f799637a8b16d9" class="m-doc-self">operator[]</a>(</span><span class="m-doc-wrap">size_t channel)</span></span>
+              <span class="m-doc-wrap-bumper"> spice::<wbr />nd_vector&lt;Dimensions, T, true&gt;&lt;Dimensions, T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ac862975b9a25aafdb846fc7b88b2d770" class="m-doc-self">~nd_vector</a>(</span><span class="m-doc-wrap">)</span></span>
             </h3>
-<p>Copies values referenced by <code>other</code> to this color object.</p><aside class="m-note m-info"><h4>Note</h4><p>This will adjust the size of the color object to equal that of the pixel view. Returns a channel from this color vector with the provided offeset</p></aside>
+<p>Destructor. Deletes data array only if this <a href="classspice_1_1nd__vector.html" class="m-doc">nd_<wbr />vector</a> owns it (i.e. if the template argument <code>Owner</code> is <code>true</code>).</p>
           </div></section>
-          <section class="m-doc-details" id="ab937834e8fff7fd8838b0756beec2e5d"><div>
+          <section class="m-doc-details" id="a75c5dfe56b71ac8e92aba8de55bdc794"><div>
             <h3>
               <div class="m-doc-template">
-                template&lt;typename T&gt;
+                template&lt;size_t Dimensions, typename T&gt;
               </div>
-              <span class="m-doc-wrap-bumper">const T&amp; spice::<wbr />color&lt;T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ab937834e8fff7fd8838b0756beec2e5d" class="m-doc-self">operator[]</a>(</span><span class="m-doc-wrap">size_t channel) const</span></span>
+              <span class="m-doc-wrap-bumper"><a href="classspice_1_1nd__vector.html" class="m-doc">nd_<wbr />vector</a>&amp; spice::<wbr />nd_vector&lt;Dimensions, T, true&gt;&lt;Dimensions, T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a75c5dfe56b71ac8e92aba8de55bdc794" class="m-doc-self">operator=</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1nd__vector.html" class="m-doc">nd_<wbr />vector</a> const&amp; other)</span></span>
             </h3>
-<p>Returns a channel from this color vector with the provided offeset</p>
+<p>Copies the values from <code>other</code> to <code>this</code>. Only values included in the intersection of the shapes of <code>other</code> and <code>this</code> are copied, the shape of <code>this</code> is not adjusted.</p><aside class="m-note m-dim"><h4><a href="todo.html#_todo000004" class="m-doc">Todo</a></h4><p>avoid duplication of this function between owning and non-owning nd_vectors</p></aside>
           </div></section>
         </section>
       </div>

@@ -82,7 +82,13 @@
             </dt>
             <dd></dd>
             <dt>
-              <span class="m-doc-wrap-bumper">auto <a href="#a586d5f52bb528cdb8f9b02d085a6cb49" class="m-doc">operator=</a>(</span><span class="m-doc-wrap"><a href="structspice_1_1pixel__view.html" class="m-doc">pixel_<wbr />view</a>&lt;T const&gt; const&amp; other) -&gt; <a href="structspice_1_1pixel__view.html" class="m-doc">pixel_<wbr />view</a>&lt;T&gt;&amp;</span>
+              <div class="m-doc-template">template&lt;typename T_other&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="#a7b42e3de856b49cea7a0629dbe7f8f51" class="m-doc">operator=</a>(</span><span class="m-doc-wrap"><a href="structspice_1_1pixel__view.html" class="m-doc">pixel_<wbr />view</a>&lt;T_other&gt; const&amp; other) -&gt; <a href="structspice_1_1pixel__view.html" class="m-doc">pixel_<wbr />view</a>&lt;T&gt;&amp;</span>
+            </dt>
+            <dd></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T_other&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="#a0b16798b09646d4e2cc26e329f57e006" class="m-doc">operator=</a>(</span><span class="m-doc-wrap"><a href="structspice_1_1color.html" class="m-doc">color</a>&lt;T_other&gt; const&amp; other) -&gt; <a href="structspice_1_1pixel__view.html" class="m-doc">pixel_<wbr />view</a>&lt;T&gt;&amp;</span>
             </dt>
             <dd></dd>
             <dt>
@@ -90,7 +96,7 @@
             </dt>
             <dd></dd>
             <dt>
-              <span class="m-doc-wrap-bumper">auto <a href="#ae61b68a9f607f983a7039d754f81264d" class="m-doc">operator[]</a>(</span><span class="m-doc-wrap">size_t channel) const -&gt; T const &amp;</span>
+              <span class="m-doc-wrap-bumper">auto <a href="#a008947e8ed52cb484f90497eb14803d6" class="m-doc">operator[]</a>(</span><span class="m-doc-wrap">size_t channel) const -&gt; const T&amp;</span>
             </dt>
             <dd></dd>
           </dl>
@@ -151,14 +157,25 @@
             </h3>
 <p>/returns The number of channels of the pixel</p>
           </div></section>
-          <section class="m-doc-details" id="a586d5f52bb528cdb8f9b02d085a6cb49"><div>
+          <section class="m-doc-details" id="a7b42e3de856b49cea7a0629dbe7f8f51"><div>
             <h3>
               <div class="m-doc-template">
                 template&lt;typename T&gt;
+                template&lt;typename T_other&gt;
               </div>
-              <span class="m-doc-wrap-bumper"><a href="structspice_1_1pixel__view.html" class="m-doc">pixel_<wbr />view</a>&lt;T&gt;&amp; spice::<wbr />pixel_view&lt;T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a586d5f52bb528cdb8f9b02d085a6cb49" class="m-doc-self">operator=</a>(</span><span class="m-doc-wrap"><a href="structspice_1_1pixel__view.html" class="m-doc">pixel_<wbr />view</a>&lt;T const&gt; const&amp; other)</span></span>
+              <span class="m-doc-wrap-bumper"><a href="structspice_1_1pixel__view.html" class="m-doc">pixel_<wbr />view</a>&lt;T&gt;&amp; spice::<wbr />pixel_view&lt;T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a7b42e3de856b49cea7a0629dbe7f8f51" class="m-doc-self">operator=</a>(</span><span class="m-doc-wrap"><a href="structspice_1_1pixel__view.html" class="m-doc">pixel_<wbr />view</a>&lt;T_other&gt; const&amp; other)</span></span>
             </h3>
-<p>Copies values referenced by <code>other</code> to data array referenced by this <code><a href="structspice_1_1pixel__view.html" class="m-doc">pixel_<wbr />view</a></code>.</p><aside class="m-note m-info"><h4>Note</h4><p>This will copy the first <em>n</em> channels, where <em>n = max(this-&gt;size, other.size())</em>.</p></aside>
+<p>Copies values referenced by <code>other</code> to data array referenced by this <code><a href="structspice_1_1pixel__view.html" class="m-doc">pixel_<wbr />view</a></code>.</p><aside class="m-note m-info"><h4>Note</h4><p>This will copy the first <em>n</em> channels, where <em>n = min(this-&gt;size, other.size())</em>.</p></aside>
+          </div></section>
+          <section class="m-doc-details" id="a0b16798b09646d4e2cc26e329f57e006"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename T&gt;
+                template&lt;typename T_other&gt;
+              </div>
+              <span class="m-doc-wrap-bumper"><a href="structspice_1_1pixel__view.html" class="m-doc">pixel_<wbr />view</a>&lt;T&gt;&amp; spice::<wbr />pixel_view&lt;T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a0b16798b09646d4e2cc26e329f57e006" class="m-doc-self">operator=</a>(</span><span class="m-doc-wrap"><a href="structspice_1_1color.html" class="m-doc">color</a>&lt;T_other&gt; const&amp; other)</span></span>
+            </h3>
+<p>Copies values referenced by <code>other</code> to data array referenced by this <code><a href="structspice_1_1pixel__view.html" class="m-doc">pixel_<wbr />view</a></code>.</p><aside class="m-note m-info"><h4>Note</h4><p>This will copy the first <em>n</em> channels, where <em>n = min(this-&gt;size, other.size())</em>.</p></aside>
           </div></section>
           <section class="m-doc-details" id="a574f775cf158ecdd05fe460435e27506"><div>
             <h3>
@@ -186,12 +203,12 @@
             </table>
 <p>Allows accessing pixel data with subscript notation. No bounds checking is performed (use <code><a href="classspice_1_1image.html#a08f05471a1e0b1185a76b08a701c8da9" class="m-doc">image::<wbr />at</a></code> for this purpose).</p><aside class="m-note m-info"><h4>Note</h4><p>Accessing pixel values via <code>image::operator()</code> is slightly faster since no intermediate objects have to be constructed. Iterating over <code><a href="classspice_1_1image.html#aecf267b0a756bd09b7de8b8a150e7609" class="m-doc">image::<wbr />data</a></code> is faster still.</p></aside><p>Calling <code>my_image[42][47][2]</code> on an RGB image would return the blue channel value in column 43 (index 42), row 48 of the image.</p>
           </div></section>
-          <section class="m-doc-details" id="ae61b68a9f607f983a7039d754f81264d"><div>
+          <section class="m-doc-details" id="a008947e8ed52cb484f90497eb14803d6"><div>
             <h3>
               <div class="m-doc-template">
                 template&lt;typename T&gt;
               </div>
-              <span class="m-doc-wrap-bumper">T const &amp; spice::<wbr />pixel_view&lt;T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ae61b68a9f607f983a7039d754f81264d" class="m-doc-self">operator[]</a>(</span><span class="m-doc-wrap">size_t channel) const</span></span>
+              <span class="m-doc-wrap-bumper">const T&amp; spice::<wbr />pixel_view&lt;T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a008947e8ed52cb484f90497eb14803d6" class="m-doc-self">operator[]</a>(</span><span class="m-doc-wrap">size_t channel) const</span></span>
             </h3>
             <table class="m-table m-fullwidth m-flat">
               <thead>
@@ -258,7 +275,7 @@
   <div class="m-container">
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
-        <p>spice. Created by <a href="https://doxygen.org/">Doxygen</a> 1.8.15 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+        <p>spice. Created by <a href="https://doxygen.org/">Doxygen</a> 1.8.16 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
       </div>
     </div>
   </div>

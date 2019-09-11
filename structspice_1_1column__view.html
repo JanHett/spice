@@ -82,7 +82,7 @@
             </dt>
             <dd></dd>
             <dt>
-              <span class="m-doc-wrap-bumper">auto <a href="#ae56d4d9995b2d99c0e088a0c3c1c9966" class="m-doc">operator[]</a>(</span><span class="m-doc-wrap">size_t row) const -&gt; const <a href="structspice_1_1pixel__view.html" class="m-doc">pixel_<wbr />view</a>&lt;T&gt;</span>
+              <span class="m-doc-wrap-bumper">auto <a href="#accf63da79cee135aab88be78c167324d" class="m-doc">operator[]</a>(</span><span class="m-doc-wrap">size_t row) const -&gt; <a href="structspice_1_1pixel__view.html" class="m-doc">pixel_<wbr />view</a>&lt;T const &gt;</span>
             </dt>
             <dd></dd>
           </dl>
@@ -160,12 +160,12 @@
             </table>
 <p>Allows accessing pixel data with subscript notation. No bounds checking is performed (use <code><a href="classspice_1_1image.html#a08f05471a1e0b1185a76b08a701c8da9" class="m-doc">image::<wbr />at</a></code> for this purpose).</p><aside class="m-note m-info"><h4>Note</h4><p>Accessing pixel values via <code>image::operator()</code> is slightly faster since no intermediate objects have to be constructed. Iterating over <code><a href="classspice_1_1image.html#aecf267b0a756bd09b7de8b8a150e7609" class="m-doc">image::<wbr />data</a></code> is faster still.</p></aside><p>Calling <code>my_image[42][47][2]</code> on an RGB image would return the blue channel value in column 43 (index 42), row 48 of the image.</p>
           </div></section>
-          <section class="m-doc-details" id="ae56d4d9995b2d99c0e088a0c3c1c9966"><div>
+          <section class="m-doc-details" id="accf63da79cee135aab88be78c167324d"><div>
             <h3>
               <div class="m-doc-template">
                 template&lt;typename T&gt;
               </div>
-              <span class="m-doc-wrap-bumper">const <a href="structspice_1_1pixel__view.html" class="m-doc">pixel_<wbr />view</a>&lt;T&gt; spice::<wbr />column_view&lt;T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ae56d4d9995b2d99c0e088a0c3c1c9966" class="m-doc-self">operator[]</a>(</span><span class="m-doc-wrap">size_t row) const</span></span>
+              <span class="m-doc-wrap-bumper"><a href="structspice_1_1pixel__view.html" class="m-doc">pixel_<wbr />view</a>&lt;T const &gt; spice::<wbr />column_view&lt;T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#accf63da79cee135aab88be78c167324d" class="m-doc-self">operator[]</a>(</span><span class="m-doc-wrap">size_t row) const</span></span>
             </h3>
             <table class="m-table m-fullwidth m-flat">
               <thead>
@@ -232,7 +232,7 @@
   <div class="m-container">
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
-        <p>spice. Created by <a href="https://doxygen.org/">Doxygen</a> 1.8.15 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+        <p>spice. Created by <a href="https://doxygen.org/">Doxygen</a> 1.8.16 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
       </div>
     </div>
   </div>
