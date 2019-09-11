@@ -23,6 +23,7 @@ TEST(nd_vector, copy_constructor) {
 
     // create non-owning nd_vector and make an owning copy of it
     nd_vector<2, float, false> non_owning_ndv(non_owned_data, {2, 5});
+    nd_vector<2, float, false> copied_non_owning_ndv(non_owning_ndv);
     nd_vector<2, float> copied_owning_ndv(non_owning_ndv);
 
     // check if shape is correct
@@ -30,9 +31,14 @@ TEST(nd_vector, copy_constructor) {
     EXPECT_EQ(copied_owning_ndv.shape()[0], 2);
     EXPECT_EQ(copied_owning_ndv.shape()[1], 5);
 
+    EXPECT_EQ(copied_non_owning_ndv.shape().size(), 2);
+    EXPECT_EQ(copied_non_owning_ndv.shape()[0], 2);
+    EXPECT_EQ(copied_non_owning_ndv.shape()[1], 5);
+
     // check if the contained data is correct
     for (int i = 0; i < 10; ++i)
         EXPECT_EQ(copied_owning_ndv.data()[i], i);
+    EXPECT_EQ(non_owning_ndv.data(), copied_non_owning_ndv.data());
 
     // clean up
     delete[] non_owned_data;
