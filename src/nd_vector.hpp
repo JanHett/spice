@@ -16,7 +16,7 @@ namespace spice
  * higher-dimensional collection of elements.
  */
 template<size_t Dimensions, typename T, bool Owner = true>
-class nd_vector
+class nd_vector_impl
 {
 protected:
     T * m_data;
@@ -72,14 +72,15 @@ public:
      * Constructs an nd_vector measuring 0 in every dimension, thus containing
      * no values.
      */
-    constexpr nd_vector(): m_data(nullptr), m_shape{} {}
+    constexpr nd_vector_impl(): m_data(nullptr), m_shape{} {}
 
     /**
      * Constructs a fresh nd_vector with the supplied data and shape. Owning
      * nd_vectors will take ownership of the pointer, non-owning nd_vectors will
      * leave resource management to the caller.
      */
-    constexpr nd_vector(T * const data, std::array<size_t, Dimensions> shape):
+    constexpr nd_vector_impl(T * const data,
+        std::array<size_t, Dimensions> shape):
     m_data(data), m_shape(shape)
     {}
 
@@ -87,7 +88,7 @@ public:
      * Constructs an nd_vector from another, reusing the other's buffer. This is
      * overridden for owning nd_vectors to create a new buffer.
      */
-    constexpr nd_vector(nd_vector const & other):
+    constexpr nd_vector_impl(nd_vector_impl const & other):
     m_data(other.m_data), m_shape(other.m_shape)
     {}
 
@@ -96,7 +97,7 @@ public:
      * intersection of the shapes of `other` and `this` are copied, the shape
      * of `this` is not adjusted.
      */
-    nd_vector & operator=(nd_vector const & other)
+    nd_vector_impl & operator=(nd_vector_impl const & other)
     {
         if (this != &other) {
             size_t smaller_dim = std::min(m_shape[0], other.m_shape[0]);
@@ -110,13 +111,13 @@ public:
     /**
      * Moves the data from `other` to `this`, resizing the object as necessary.
      */
-    nd_vector & operator=(nd_vector && other);
+    nd_vector_impl & operator=(nd_vector_impl && other);
 
     /**
      * Sets all values of `this` equal to `value`. The current shape is
      * retained.
      */
-    nd_vector & operator=(T const & value)
+    nd_vector_impl & operator=(T const & value)
     {
         for (size_t offset = 0; offset < size(); ++offset)
             m_data[offset] = value;
@@ -193,7 +194,7 @@ public:
      */
     template<bool Enabled = (Dimensions > 1),
         std::enable_if_t<Enabled, int> = 0>
-    nd_vector<Dimensions - 1, T, false> operator[](size_t index)
+    nd_vector_impl<Dimensions - 1, T, false> operator[](size_t index)
     {
         size_t data_offset = index * std::reduce(
             std::begin(m_shape) + 2,
@@ -207,7 +208,7 @@ public:
             std::end(m_shape),
             std::begin(new_shape));
 
-        return nd_vector<Dimensions - 1, T, false>(
+        return nd_vector_impl<Dimensions - 1, T, false>(
             &m_data[data_offset],
             new_shape);
     }
@@ -233,7 +234,8 @@ public:
      */
     template<bool Enabled = (Dimensions > 1),
         std::enable_if_t<Enabled, int> = 0>
-    nd_vector<Dimensions - 1, T, false> const operator[](size_t index) const
+    nd_vector_impl<Dimensions - 1, T, false> const
+    operator[](size_t index) const
     {
         size_t data_offset = index * std::reduce(
             std::begin(m_shape) + 2,
@@ -247,7 +249,7 @@ public:
             std::end(m_shape),
             std::begin(new_shape));
 
-        return nd_vector<Dimensions - 1, T, false>(
+        return nd_vector_impl<Dimensions - 1, T, false>(
             &m_data[data_offset],
             new_shape);
     }
@@ -266,7 +268,8 @@ public:
      */
     template<typename ...Ts,
         std::enable_if_t<(sizeof...(Ts) < Dimensions), int> = 0>
-    nd_vector<Dimensions - sizeof...(Ts), T, false> operator()(Ts... indeces)
+    nd_vector_impl<Dimensions - sizeof...(Ts), T, false>
+    operator()(Ts... indeces)
     {
         // take the rear part of the current shape as the shape of the slice
         std::array<size_t, Dimensions - sizeof...(Ts)> sub_shape;
@@ -287,7 +290,7 @@ public:
         }
         T * sub_data = &m_data[idx];
 
-        return nd_vector<Dimensions - sizeof...(Ts), T, false>(
+        return nd_vector_impl<Dimensions - sizeof...(Ts), T, false>(
             sub_data,
             sub_shape);
     }
@@ -306,7 +309,7 @@ public:
      */
     template<typename ...Ts,
         std::enable_if_t<(sizeof...(Ts) < Dimensions), int> = 0>
-    nd_vector<Dimensions - sizeof...(Ts), T, false> const
+    nd_vector_impl<Dimensions - sizeof...(Ts), T, false> const
     operator()(Ts... indeces) const
     {
         // take the rear part of the current shape as the shape of the slice
@@ -328,7 +331,7 @@ public:
         }
         T * sub_data = &m_data[idx];
 
-        return nd_vector<Dimensions - sizeof...(Ts), T, false>(
+        return nd_vector_impl<Dimensions - sizeof...(Ts), T, false>(
             sub_data,
             sub_shape);
     }
@@ -401,7 +404,7 @@ public:
     template<typename ...Ts,
         class = std::common_type_t<Ts...>,
         std::enable_if_t<(sizeof...(Ts) < Dimensions), int> = 0>
-    nd_vector<Dimensions - sizeof...(Ts), T, false> at(Ts... indeces)
+    nd_vector_impl<Dimensions - sizeof...(Ts), T, false> at(Ts... indeces)
     {
         size_t coordinates[] = {static_cast<size_t>(indeces)...};
         for (size_t i = 0; i < sizeof...(Ts); ++i)
@@ -434,7 +437,7 @@ public:
     template<typename ...Ts,
         class = std::common_type_t<Ts...>,
         std::enable_if_t<(sizeof...(Ts) < Dimensions), int> = 0>
-    nd_vector<Dimensions - sizeof...(Ts), T, false> const
+    nd_vector_impl<Dimensions - sizeof...(Ts), T, false> const
     at(Ts... indeces) const
     {
         size_t coordinates[] = {static_cast<size_t>(indeces)...};
@@ -516,7 +519,8 @@ public:
      * Compares two nd_vectors with one another. Two nd_vectors are considered
      * to be equal if they have the same shape and contain the same data.
      */
-    friend bool operator==(nd_vector const & lhs, nd_vector const & rhs)
+    friend bool operator==(nd_vector_impl const & lhs,
+        nd_vector_impl const & rhs)
     {
         if (lhs.m_shape != rhs.m_shape) return false;
         for (size_t i = 0; i < lhs.size(); ++i)
@@ -529,35 +533,36 @@ public:
      * Compares two nd_vectors with one another. `operator!=` is implemented as
      * the negation of `nd_vector::operator==`.
      */
-    friend bool operator!=(nd_vector const & lhs, nd_vector const & rhs)
+    friend bool operator!=(nd_vector_impl const & lhs,
+        nd_vector_impl const & rhs)
     { return !(lhs == rhs); }
 
     /**
      * Compares an nd_vector with a pointer type. They are considered
      * to be equal if the pointer points to the same address as the nd_vector.
      */
-    friend bool operator==(nd_vector const & lhs, T const * const rhs)
+    friend bool operator==(nd_vector_impl const & lhs, T const * const rhs)
     { return lhs.m_data == rhs; }
 
     /**
      * Compares an nd_vector with a pointer type. `operator!=` is implemented as
      * the negation of `nd_vector::operator==`.
      */
-    friend bool operator!=(nd_vector const & lhs, T const * const rhs)
+    friend bool operator!=(nd_vector_impl const & lhs, T const * const rhs)
     { return !(lhs == rhs); }
 
     /**
      * Compares an nd_vector with a pointer type. They are considered
      * to be equal if the pointer points to the same address as the nd_vector.
      */
-    friend bool operator==(T const * const lhs, nd_vector const & rhs)
+    friend bool operator==(T const * const lhs, nd_vector_impl const & rhs)
     { return lhs == rhs.m_data; }
 
     /**
      * Compares an nd_vector with a pointer type. `operator!=` is implemented as
      * the negation of `nd_vector::operator==`.
      */
-    friend bool operator!=(T const * const lhs, nd_vector const & rhs)
+    friend bool operator!=(T const * const lhs, nd_vector_impl const & rhs)
     { return !(lhs == rhs); }
 
     /**
@@ -567,8 +572,8 @@ public:
      * top-left corners.
      */
     template<bool Owner_other>
-    nd_vector<Dimensions, T, Owner>& operator+=(
-        nd_vector<Dimensions, T, Owner_other> const & rhs)
+    nd_vector_impl<Dimensions, T, Owner>& operator+=(
+            nd_vector_impl<Dimensions, T, Owner_other> const & rhs)
     {
         size_t dim_magn = std::min(
             m_shape[0],
@@ -585,8 +590,8 @@ public:
      * top-left corners.
      */
     template<bool Owner_other>
-    nd_vector<Dimensions, T, Owner>& operator-=(
-        nd_vector<Dimensions, T, Owner_other> const & rhs)
+    nd_vector_impl<Dimensions, T, Owner>& operator-=(
+            nd_vector_impl<Dimensions, T, Owner_other> const & rhs)
     {
         size_t dim_magn = std::min(
             m_shape[0],
@@ -603,8 +608,8 @@ public:
      * top-left corners.
      */
     template<bool Owner_other>
-    nd_vector<Dimensions, T, Owner>& operator*=(
-        nd_vector<Dimensions, T, Owner_other> const & rhs)
+    nd_vector_impl<Dimensions, T, Owner>& operator*=(
+            nd_vector_impl<Dimensions, T, Owner_other> const & rhs)
     {
         size_t dim_magn = std::min(
             m_shape[0],
@@ -621,8 +626,8 @@ public:
      * top-left corners.
      */
     template<bool Owner_other>
-    nd_vector<Dimensions, T, Owner>& operator/=(
-        nd_vector<Dimensions, T, Owner_other> const & rhs)
+    nd_vector_impl<Dimensions, T, Owner>& operator/=(
+            nd_vector_impl<Dimensions, T, Owner_other> const & rhs)
     {
         size_t dim_magn = std::min(
             m_shape[0],
@@ -643,9 +648,9 @@ public:
      * it is merely a view.
      */
     template<bool Owner_rhs>
-    friend nd_vector<Dimensions, T, true> operator+(
-        nd_vector<Dimensions, T, true> lhs,
-        nd_vector<Dimensions, T, Owner_rhs> const & rhs)
+    friend nd_vector_impl<Dimensions, T, true> operator+(
+            nd_vector_impl<Dimensions, T, true> lhs,
+            nd_vector_impl<Dimensions, T, Owner_rhs> const & rhs)
     {
         lhs += rhs;
         return lhs;
@@ -660,9 +665,9 @@ public:
      * it is merely a view.
      */
     template<bool Owner_rhs>
-    friend nd_vector<Dimensions, T, true> operator-(
-        nd_vector<Dimensions, T, true> lhs,
-        nd_vector<Dimensions, T, Owner_rhs> const & rhs)
+    friend nd_vector_impl<Dimensions, T, true> operator-(
+            nd_vector_impl<Dimensions, T, true> lhs,
+            nd_vector_impl<Dimensions, T, Owner_rhs> const & rhs)
     {
         lhs -= rhs;
         return lhs;
@@ -677,9 +682,9 @@ public:
      * it is merely a view.
      */
     template<bool Owner_rhs>
-    friend nd_vector<Dimensions, T, true> operator*(
-        nd_vector<Dimensions, T, true> lhs,
-        nd_vector<Dimensions, T, Owner_rhs> const & rhs)
+    friend nd_vector_impl<Dimensions, T, true> operator*(
+            nd_vector_impl<Dimensions, T, true> lhs,
+            nd_vector_impl<Dimensions, T, Owner_rhs> const & rhs)
     {
         lhs *= rhs;
         return lhs;
@@ -694,17 +699,18 @@ public:
      * it is merely a view.
      */
     template<bool Owner_rhs>
-    friend nd_vector<Dimensions, T, true> operator/(
-        nd_vector<Dimensions, T, true> lhs,
-        nd_vector<Dimensions, T, Owner_rhs> const & rhs)
+    friend nd_vector_impl<Dimensions, T, true> operator/(
+            nd_vector_impl<Dimensions, T, true> lhs,
+            nd_vector_impl<Dimensions, T, Owner_rhs> const & rhs)
     {
         lhs /= rhs;
         return lhs;
     }
 
-    friend std::ostream& operator<<(std::ostream& os, nd_vector const & vec)
+    friend std::ostream& operator<<(std::ostream& os,
+        nd_vector_impl const & vec)
     {
-        os << std::string("nd_vector (");
+        os << std::string("nd_vector_impl (");
         for (size_t i = 0; i < Dimensions - 1; ++i)
             os << vec.m_shape[i] << " x ";
         os << vec.m_shape[Dimensions - 1] << ")[";
@@ -719,21 +725,21 @@ public:
  * Specialisation of spice::nd_vector template class for owning vectors.
  */
 template<size_t Dimensions, typename T>
-class nd_vector<Dimensions, T, true>:
-public nd_vector<Dimensions, T, false>
+class nd_vector_impl<Dimensions, T, true>:
+public nd_vector_impl<Dimensions, T, false>
 {
 public:
-    using nd_vector<Dimensions, T, false>::nd_vector;
-    using nd_vector<Dimensions, T, false>::operator=;
+    using nd_vector_impl<Dimensions, T, false>::nd_vector_impl;
+    using nd_vector_impl<Dimensions, T, false>::operator=;
 
     /**
      * Constructs a fresh nd_vector with the specified shape, initialising the
      * data with `T{}`.
      */
-    nd_vector(std::array<size_t, Dimensions> shape):
-    // initialise superclass with `nd_vector(T*, array<size_t, Dimensions>)`
+    nd_vector_impl(std::array<size_t, Dimensions> shape):
+    // initialise superclass with `nd_vector_impl(T*, array<size_t, Dimensions>)`
     // size of data array has to be calculated from shape
-    nd_vector<Dimensions, T, false>(new T[std::reduce(
+    nd_vector_impl<Dimensions, T, false>(new T[std::reduce(
             std::next(std::begin(shape)),
             std::end(shape),
             *std::begin(shape),
@@ -748,10 +754,10 @@ public:
      * Copies the values and shape from `other` to `this`.
      */
     template<bool Owner_other>
-    nd_vector(nd_vector<Dimensions, T, Owner_other> const & other):
-    // initialise superclass with `nd_vector(T*, array<size_t, Dimensions>)`
+    nd_vector_impl(nd_vector_impl<Dimensions, T, Owner_other> const & other):
+    // initialise superclass with `nd_vector_impl(T*, array<size_t, Dimensions>)`
     // size of data array has to be calculated from other's shape
-    nd_vector<Dimensions, T, false>(new T[other.size()], other.shape())
+    nd_vector_impl<Dimensions, T, false>(new T[other.size()], other.shape())
     {
         // copy values over
         for (size_t i = 0; i < this->size(); ++i)
@@ -761,20 +767,23 @@ public:
     /**
      * Moves the data from `other` to `this`.
      */
-    nd_vector(nd_vector && other) noexcept:
-    nd_vector(std::exchange(other.m_data, nullptr), std::move(other.shape())) {}
+    nd_vector_impl(nd_vector_impl && other) noexcept:
+            nd_vector_impl(
+                std::exchange(other.m_data, nullptr),
+                std::move(other.shape()))
+    {}
 
     /**
      * Constructs a fresh nd_vector with the supplied data and shape.
      */
-    nd_vector(std::initializer_list<T> data,
-        std::array<size_t, Dimensions> shape);
+    nd_vector_impl(std::initializer_list<T> data,
+                   std::array<size_t, Dimensions> shape);
 
     /**
      * Destructor. Deletes data array only if this nd_vector owns it (i.e. if
      * the template argument `Owner` is `true`).
      */
-    ~nd_vector()
+    ~nd_vector_impl()
     {
         delete[] this->m_data;
     }
@@ -787,7 +796,7 @@ public:
      * \todo avoid duplication of this function between owning and non-owning
      * nd_vectors
      */
-    nd_vector & operator=(nd_vector const & other)
+    nd_vector_impl & operator=(nd_vector_impl const & other)
     {
         if (this != &other) {
             size_t smaller_dim = std::min(this->m_shape[0], other.m_shape[0]);
@@ -801,8 +810,14 @@ public:
     /**
      * Moves the data from `other` to `this`, resizing the object as necessary.
      */
-    // nd_vector & operator=(nd_vector && other);
+    // nd_vector_impl & operator=(nd_vector_impl && other);
 };
+
+template<typename T, size_t Dimensions>
+using nd_span = nd_vector_impl<Dimensions, T, false>;
+
+template<typename T, size_t Dimensions>
+using nd_vector = nd_vector_impl<Dimensions, T, true>;
 
 }
 
