@@ -9,6 +9,80 @@
 
 #import <OpenImageIO/imageio.h>
 
+#import "./nd_vector.hpp"
+
+/**
+ * WIP features of the spice library meant to supersede existing features.
+ */
+namespace spice_future
+{
+
+/**
+ * Alias for convenience and forwards compatibility (channel_list might pack
+ * much more information in the future: channel to index mapping etc...).
+ */
+using channel_list = std::vector<std::string>;
+
+/**
+ * Describes a range of grey values of the particular type.
+ */
+template<typename T>
+struct range {
+    /** The low end of the range. */
+    T min;
+    /** The high end of the range. */
+    T max;
+
+    /**
+     * Two ranges are equal if and only if both their min and their max are
+     * equal as determined by comparison with `==`.
+     */
+    friend bool operator==(range<T> const & lhs, range<T> const & rhs)
+    {
+        return lhs.min == rhs.min && lhs.max == rhs.max;
+    }
+};
+
+template<typename T>
+class image: public spice::nd_vector<T, 3>
+{
+    channel_list m_channel_semantics;
+public:
+    image():
+    spice::nd_vector<T, 3>(),
+    m_channel_semantics{}
+    {}
+
+    image(size_t width, size_t height, channel_list channels):
+    spice::nd_vector<T, 3>({width, height, channels.size()}),
+    m_channel_semantics(channels)
+    {}
+
+    /**
+     * The width of the image.
+     */
+    [[nodiscard]] size_t width() const
+    { return this->m_shape[0]; }
+    /**
+     * The height of the image.
+     */
+    [[nodiscard]] size_t height() const
+    { return this->m_shape[1]; }
+    /**
+     * The number of channels in the image.
+     */
+    [[nodiscard]] size_t channels() const
+    { return this->m_shape[0]; }
+
+    /**
+     * The meaning assigned to the individual channels.
+     */
+    [[nodiscard]] channel_list const & channel_semantics() const
+    { return m_channel_semantics; }
+};
+
+}
+
 /**
  * Contains the entire public interface of the library.
  */

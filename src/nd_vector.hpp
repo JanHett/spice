@@ -6,6 +6,7 @@
 #include <type_traits>
 #include <string>
 #include <numeric>
+#include <span>
 
 namespace spice
 {
@@ -25,7 +26,7 @@ public:
     /**
      * \returns The number of dimensions as specified by the template
      */
-    constexpr size_t dimensions() const
+    [[nodiscard]] constexpr size_t dimensions() const
     { return Dimensions; }
 
     /**
@@ -34,7 +35,7 @@ public:
      *
      * \returns The shape array describing this nd_vector
      */
-    std::array<size_t, Dimensions> const & shape() const
+    [[nodiscard]] std::array<size_t, Dimensions> const & shape() const
     { return m_shape; }
 
     /**
@@ -46,7 +47,7 @@ public:
      *
      * \returns The total number of elements
      */
-    size_t size() const
+    [[nodiscard]] size_t size() const
     {
         return std::reduce(
             std::next(std::begin(m_shape)),
@@ -58,15 +59,15 @@ public:
     /**
      * Allows accessing the underlying data directly.
      */
-    constexpr T * const data()
-    { return m_data; }
+    [[nodiscard]] constexpr std::span<T> data()
+    { return std::span<T>(m_data, size()); }
 
     /**
      * Allows accessing the underlying data directly. The data is returned in
      * terms of a one-dimensional, non-owning nd_vector.
      */
-    constexpr T const * data() const
-    { return m_data; }
+    [[nodiscard]] constexpr std::span<T const> data() const
+    { return std::span<T const>(m_data, size()); }
 
     /**
      * Constructs an nd_vector measuring 0 in every dimension, thus containing
@@ -145,7 +146,7 @@ public:
      */
     template<bool Enabled = Dimensions == 1,
         std::enable_if_t<Enabled, int> = 0>
-    T & operator[](size_t index) {
+    [[nodiscard]] T & operator[](size_t index) {
         return m_data[index];
     }
 
@@ -170,7 +171,7 @@ public:
      */
     template<bool Enabled = Dimensions == 1,
         std::enable_if_t<Enabled, int> = 0>
-    T const & operator[](size_t index) const
+    [[nodiscard]] T const & operator[](size_t index) const
     { return m_data[index]; }
 
     /**
@@ -194,7 +195,8 @@ public:
      */
     template<bool Enabled = (Dimensions > 1),
         std::enable_if_t<Enabled, int> = 0>
-    nd_vector_impl<Dimensions - 1, T, false> operator[](size_t index)
+    [[nodiscard]] nd_vector_impl<Dimensions - 1, T, false>
+    operator[](size_t index)
     {
         size_t data_offset = index * std::reduce(
             std::begin(m_shape) + 2,
@@ -234,7 +236,7 @@ public:
      */
     template<bool Enabled = (Dimensions > 1),
         std::enable_if_t<Enabled, int> = 0>
-    nd_vector_impl<Dimensions - 1, T, false> const
+    [[nodiscard]] nd_vector_impl<Dimensions - 1, T, false> const
     operator[](size_t index) const
     {
         size_t data_offset = index * std::reduce(
@@ -268,7 +270,7 @@ public:
      */
     template<typename ...Ts,
         std::enable_if_t<(sizeof...(Ts) < Dimensions), int> = 0>
-    nd_vector_impl<Dimensions - sizeof...(Ts), T, false>
+    [[nodiscard]] nd_vector_impl<Dimensions - sizeof...(Ts), T, false>
     operator()(Ts... indeces)
     {
         // take the rear part of the current shape as the shape of the slice
@@ -309,7 +311,7 @@ public:
      */
     template<typename ...Ts,
         std::enable_if_t<(sizeof...(Ts) < Dimensions), int> = 0>
-    nd_vector_impl<Dimensions - sizeof...(Ts), T, false> const
+    [[nodiscard]] nd_vector_impl<Dimensions - sizeof...(Ts), T, false> const
     operator()(Ts... indeces) const
     {
         // take the rear part of the current shape as the shape of the slice
@@ -348,7 +350,7 @@ public:
     template<typename ...Ts,
         class = std::common_type_t<Ts...>,
         std::enable_if_t<sizeof...(Ts) == Dimensions, int> = 0>
-    T & operator()(Ts... indeces)
+    [[nodiscard]] T & operator()(Ts... indeces)
     {
         size_t indeces_arr[] = {static_cast<size_t>(indeces)...};
         size_t idx = 0;
@@ -374,7 +376,7 @@ public:
     template<typename ...Ts,
         class = std::common_type_t<Ts...>,
         std::enable_if_t<sizeof...(Ts) == Dimensions, int> = 0>
-    T const & operator()(Ts... indeces) const
+    [[nodiscard]] T const & operator()(Ts... indeces) const
     {
         size_t indeces_arr[] = {static_cast<size_t>(indeces)...};
         size_t idx = 0;
@@ -404,7 +406,8 @@ public:
     template<typename ...Ts,
         class = std::common_type_t<Ts...>,
         std::enable_if_t<(sizeof...(Ts) < Dimensions), int> = 0>
-    nd_vector_impl<Dimensions - sizeof...(Ts), T, false> at(Ts... indeces)
+    [[nodiscard]] nd_vector_impl<Dimensions - sizeof...(Ts), T, false>
+    at(Ts... indeces)
     {
         size_t coordinates[] = {static_cast<size_t>(indeces)...};
         for (size_t i = 0; i < sizeof...(Ts); ++i)
@@ -437,7 +440,7 @@ public:
     template<typename ...Ts,
         class = std::common_type_t<Ts...>,
         std::enable_if_t<(sizeof...(Ts) < Dimensions), int> = 0>
-    nd_vector_impl<Dimensions - sizeof...(Ts), T, false> const
+    [[nodiscard]] nd_vector_impl<Dimensions - sizeof...(Ts), T, false> const
     at(Ts... indeces) const
     {
         size_t coordinates[] = {static_cast<size_t>(indeces)...};
@@ -468,7 +471,7 @@ public:
     template<typename ...Ts,
         class = std::common_type_t<Ts...>,
         std::enable_if_t<sizeof...(Ts) == Dimensions, int> = 0>
-    T & at(Ts... indeces)
+    [[nodiscard]] T & at(Ts... indeces)
     {
         size_t coordinates[] = {static_cast<size_t>(indeces)...};
         for (size_t i = 0; i < sizeof...(Ts); ++i)
@@ -498,7 +501,7 @@ public:
     template<typename ...Ts,
         class = std::common_type_t<Ts...>,
         std::enable_if_t<sizeof...(Ts) == Dimensions, int> = 0>
-    T const & at(Ts... indeces) const
+    [[nodiscard]] T const & at(Ts... indeces) const
     {
         size_t coordinates[] = {static_cast<size_t>(indeces)...};
         for (size_t i = 0; i < sizeof...(Ts); ++i)

@@ -11,7 +11,7 @@ TEST(nd_vector, default_constructor) {
     for (auto const & dim_s : ndv.shape())
         EXPECT_EQ(0, dim_s);
 
-    EXPECT_EQ(nullptr, ndv.data());
+    EXPECT_EQ(nullptr, ndv.data().data());
 }
 TEST(nd_vector, copy_constructor) {
     // create data array
@@ -140,7 +140,7 @@ TEST(nd_vector, copy_assignment_owner) {
     EXPECT_EQ(2, ndv_1d_1.data()[2]);
     EXPECT_EQ(3, ndv_1d_1.data()[3]);
     EXPECT_EQ(4, ndv_1d_1.data()[4]);
-    EXPECT_NE(ndv_1d_2.data(), ndv_1d_1.data());
+    EXPECT_NE(ndv_1d_2.data().data(), ndv_1d_1.data().data());
 
    float * data1 = new float[10]{
        0, 1, 2, 3, 4,
@@ -164,7 +164,7 @@ TEST(nd_vector, copy_assignment_owner) {
    EXPECT_EQ(17, ndv1.data()[7]);
    EXPECT_EQ(18, ndv1.data()[8]);
    EXPECT_EQ(19, ndv1.data()[9]);
-   EXPECT_NE(ndv2.data(), ndv1.data());
+   EXPECT_NE(ndv2.data().data(), ndv1.data().data());
 }
 TEST(nd_vector, move_assignment_owner) { GTEST_SKIP(); }
 
@@ -181,7 +181,7 @@ TEST(nd_vector, copy_assignment_non_owner) {
     EXPECT_EQ(2, ndv_1d_1.data()[2]);
     EXPECT_EQ(3, ndv_1d_1.data()[3]);
     EXPECT_EQ(4, ndv_1d_1.data()[4]);
-    EXPECT_NE(ndv_1d_2.data(), ndv_1d_1.data());
+    EXPECT_NE(ndv_1d_2.data().data(), ndv_1d_1.data().data());
 
    float data1[] = {
        0, 1, 2, 3, 4,
@@ -205,7 +205,7 @@ TEST(nd_vector, copy_assignment_non_owner) {
    EXPECT_EQ(17, ndv1.data()[7]);
    EXPECT_EQ(18, ndv1.data()[8]);
    EXPECT_EQ(19, ndv1.data()[9]);
-   EXPECT_NE(ndv2.data(), ndv1.data());
+   EXPECT_NE(ndv2.data().data(), ndv1.data().data());
 }
 TEST(nd_vector, move_assignment_non_owner) { GTEST_SKIP(); }
 
@@ -222,7 +222,7 @@ TEST(nd_vector, copy_assignment_mixed) {
     EXPECT_EQ(2, ndv_1d_1.data()[2]);
     EXPECT_EQ(3, ndv_1d_1.data()[3]);
     EXPECT_EQ(4, ndv_1d_1.data()[4]);
-    EXPECT_NE(ndv_1d_2.data(), ndv_1d_1.data());
+    EXPECT_NE(ndv_1d_2.data().data(), ndv_1d_1.data().data());
 
    float data1[] = {
        0, 1, 2, 3, 4,
@@ -246,7 +246,7 @@ TEST(nd_vector, copy_assignment_mixed) {
    EXPECT_EQ(17, ndv1.data()[7]);
    EXPECT_EQ(18, ndv1.data()[8]);
    EXPECT_EQ(19, ndv1.data()[9]);
-   EXPECT_NE(ndv2.data(), ndv1.data());
+   EXPECT_NE(ndv2.data().data(), ndv1.data().data());
 }
 TEST(nd_vector, move_assignment_mixed) { GTEST_SKIP(); }
 
