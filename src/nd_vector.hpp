@@ -816,9 +816,17 @@ public:
     // nd_vector_impl & operator=(nd_vector_impl && other);
 };
 
+/**
+ * Non-owning ``nd_vector_impl`` providing a view over a slice of an 
+ * ``nd_vector``. Can also be used to wrap a raw pointer representing the start
+ * of a multidimensional buffer.
+ */
 template<typename T, size_t Dimensions>
 using nd_span = nd_vector_impl<Dimensions, T, false>;
 
+/**
+ * Owning ``nd_vector_impl`` managing its own buffer.
+ */
 template<typename T, size_t Dimensions>
 using nd_vector = nd_vector_impl<Dimensions, T, true>;
 
