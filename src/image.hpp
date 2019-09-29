@@ -72,7 +72,7 @@ public:
      * The number of channels in the image.
      */
     [[nodiscard]] size_t channels() const
-    { return this->m_shape[0]; }
+    { return this->m_shape[2]; }
 
     /**
      * The meaning assigned to the individual channels.

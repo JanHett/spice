@@ -38,7 +38,8 @@ TEST(nd_vector, copy_constructor) {
     // check if the contained data is correct
     for (int i = 0; i < 10; ++i)
         EXPECT_EQ(copied_owning_ndv.data()[i], i);
-    EXPECT_EQ(non_owning_ndv.data(), copied_non_owning_ndv.data());
+    EXPECT_EQ(non_owning_ndv.data().data(),
+        copied_non_owning_ndv.data().data());
 
     // clean up
     delete[] non_owned_data;
@@ -403,7 +404,7 @@ TEST(nd_vector, at_intermediate_dim) {
     };
     nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
 
-    EXPECT_THROW(ndv1.at(42), std::out_of_range);
+    EXPECT_THROW(auto fail = ndv1.at(42), std::out_of_range);
 
     EXPECT_EQ(ndv1.at(0, 0), ndv1(0, 0));
     EXPECT_EQ(ndv1.at(0, 1), ndv1(0, 1));
@@ -419,7 +420,7 @@ TEST(nd_vector, at_intermediate_dim_const) {
     };
     const nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
 
-    EXPECT_THROW(ndv1.at(42), std::out_of_range);
+    EXPECT_THROW(auto fail = ndv1.at(42), std::out_of_range);
 
     EXPECT_EQ(ndv1.at(0, 0), ndv1(0, 0));
     EXPECT_EQ(ndv1.at(0, 1), ndv1(0, 1));
@@ -436,7 +437,7 @@ TEST(nd_vector, at_lowest_dim) {
     };
     nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
 
-    EXPECT_THROW(ndv1.at(42), std::out_of_range);
+    EXPECT_THROW(auto fail = ndv1.at(42), std::out_of_range);
 
     EXPECT_EQ(ndv1.at(0, 0, 0), ndv1(0, 0, 0));
     EXPECT_EQ(ndv1.at(0, 1, 1), ndv1(0, 1, 1));
@@ -452,7 +453,7 @@ TEST(nd_vector, at_lowest_dim_const) {
     };
     const nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
 
-    EXPECT_THROW(ndv1.at(42), std::out_of_range);
+    EXPECT_THROW(auto fail = ndv1.at(42), std::out_of_range);
 
     EXPECT_EQ(ndv1.at(0, 0, 4), ndv1(0, 0, 4));
     EXPECT_EQ(ndv1.at(0, 1, 2), ndv1(0, 1, 2));
