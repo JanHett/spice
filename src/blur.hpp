@@ -64,7 +64,7 @@ namespace blur {
             auto diameter = radius * 2 + 1;
             for (size_t column = 0; column < img.width(); ++column)
             {
-                const column_view col_original = img[column];
+                const column_view<T> col_original = img[column];
                 auto col_blurred  = blurred[column];
                 // accumulator initialised with vector of min-values
                 color<T> accumulator(std::vector<T>(img.channels(),

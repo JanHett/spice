@@ -94,6 +94,21 @@ public:
     {}
 
     /**
+     * Creates an nd_vector and initialises it with the values found in the
+     * passed data array.
+     *
+     * \note The `data` array should be structured in column-major order.
+     *
+     * \param data The raw image data
+     * \param shape The shape of the nd_vector
+     */
+    // bd_vector_impl(
+    //     T data[],
+    //     std::array<size_t, Dimensions> shape):
+    // m_data(data),
+    // m_shape(shape) {}
+
+    /**
      * Copies the values from `other` to `this`. Only values included in the
      * intersection of the shapes of `other` and `this` are copied, the shape
      * of `this` is not adjusted.
@@ -754,10 +769,23 @@ public:
     }
 
     /**
+     * Copy constructor.
      * Copies the values and shape from `other` to `this`.
      */
-    template<bool Owner_other>
-    nd_vector_impl(nd_vector_impl<Dimensions, T, Owner_other> const & other):
+    nd_vector_impl(nd_vector_impl<Dimensions, T, true> const & other):
+    // initialise superclass with `nd_vector_impl(T*, array<size_t, Dimensions>)`
+    // size of data array has to be calculated from other's shape
+    nd_vector_impl<Dimensions, T, false>(new T[other.size()], other.shape())
+    {
+        // copy values over
+        for (size_t i = 0; i < this->size(); ++i)
+            this->m_data[i] = other.data()[i];
+    }
+
+    /**
+     * Copies the values and shape from `other` to `this`.
+     */
+    nd_vector_impl(nd_vector_impl<Dimensions, T, false> const & other):
     // initialise superclass with `nd_vector_impl(T*, array<size_t, Dimensions>)`
     // size of data array has to be calculated from other's shape
     nd_vector_impl<Dimensions, T, false>(new T[other.size()], other.shape())
@@ -775,6 +803,24 @@ public:
                 std::exchange(other.m_data, nullptr),
                 std::move(other.shape()))
     {}
+
+    /**
+     * Creates an nd_vector and initialises it with the values found in the
+     * passed data array.
+     *
+     * \note The `data` array should be structured in column-major order.
+     *
+     * \param data The raw image data
+     * \param shape The shape of the nd_vector
+     */
+    // bd_vector_impl(
+    //     T data[],
+    //     std::array<size_t, Dimensions> shape):
+    // m_data(data),
+    // m_shape(shape)
+    // {
+    //     ...
+    // }
 
     /**
      * Constructs a fresh nd_vector with the supplied data and shape.
