@@ -23,12 +23,53 @@ namespace spice
  */
 using channel_list = std::vector<std::string>;
 
+/**
+ * Represents a color. Type alias for convenience and forwards compatibility.
+ */
 template<typename T = float>
 using color = nd_vector<T, 1>;
 
+/**
+ * Specialized formatter for `spice::color`.
+ */
+template<typename T>
+std::ostream& operator<<(std::ostream& os, color<T> const & pxl)
+{
+    os << "color(";
+    for (size_t idx = 0; idx < pxl.size() - 1; ++idx)
+        os << pxl[idx] << ", ";
+    os << pxl[pxl.size() - 1];
+    os << ")";
+    return os;
+}
+
+/**
+ * Refers to a single pixel in a `spice::image`. Note that this class has no
+ * information about the size of the image it is referring to and thus
+ * cannot perform bounds checking. Use `image::at` for that.
+ */
 template<typename T = float>
 using pixel_view = nd_span<T, 1>;
 
+/**
+ * Specialized formatter for `spice::pixel_view`.
+ */
+template<typename T>
+std::ostream& operator<<(std::ostream& os, pixel_view<T> const & pxl)
+{
+    os << "pixel_view(";
+    for (size_t idx = 0; idx < pxl.size() - 1; ++idx)
+        os << pxl[idx] << ", ";
+    os << pxl[pxl.size() - 1];
+    os << ")";
+    return os;
+}
+
+/**
+ * Refers to a column of pixel data in a `spice::image`. Note that this
+ * class has no information about the size of the image it is referring to
+ * and thus cannot perform bounds checking. Use `image::at` for that.
+ */
 template<typename T = float>
 using column_view = nd_vector<T, 2>;
 
@@ -52,16 +93,45 @@ struct range {
     }
 };
 
+/**
+ * spice's `image` class stores pixel data of arbitrary channel order and
+ * arbitrary channel semantics in channel, column, row order.
+ *
+ * Thus, a 3x2 pixel BGR image would be stored in an 18 element vector
+ * where the first element represents the blue channel of the top left
+ * pixel, the second the green, the third the red and the fourth element
+ * would be the blue channel of the leftmost pixel of the second row.
+ */
 template<typename T>
 class image: public spice::nd_vector<T, 3>
 {
     channel_list m_channel_semantics;
 public:
+    /**
+     * Constructs an empty image.
+     */
     image():
     spice::nd_vector<T, 3>(),
     m_channel_semantics{}
     {}
 
+    /**
+     * Copy constructor. Performs a deep copy of the passed image.
+     * \param other The image to copy
+     */
+    image(image const & other):
+    spice::nd_vector<T, 3>(other),
+    m_channel_semantics(other.m_channel_semantics)
+    {}
+
+    /**
+     * Constructs an image with a given `width`, `height` and
+     * `channel_semantics`, initialising the data with `T{}`.
+     *
+     * \param width The width of the image
+     * \param height The height of the image
+     * \param channel_semantics The meaning to assign to the channels
+     */
     image(
         size_t width,
         size_t height,
@@ -70,14 +140,16 @@ public:
     m_channel_semantics(channel_semantics)
     {}
 
-    image(image const & other):
-    spice::nd_vector<T, 3>(other),
-    m_channel_semantics(other.m_channel_semantics)
-    {}
-
     /**
      * Constructs a fresh image with the supplied data and shape. Will take
      * ownership of the pointer.
+     *
+     * \note The `data` vector should be structured in column-major order.
+     *
+     * \param data The raw image data
+     * \param width The width of the image
+     * \param height The height of the image
+     * \param channel_semantics The meaning to assign to the channels
      */
     image(T * const data,
         size_t width,
@@ -181,6 +253,9 @@ namespace helpers
     }
 }
 
+/**
+ * Rotates the passed image 90 degrees clockwise.
+ */
 template<typename T>
 image<T> transpose (const image<T> & v)
 {

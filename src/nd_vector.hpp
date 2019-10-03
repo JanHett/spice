@@ -805,24 +805,6 @@ public:
     {}
 
     /**
-     * Creates an nd_vector and initialises it with the values found in the
-     * passed data array.
-     *
-     * \note The `data` array should be structured in column-major order.
-     *
-     * \param data The raw image data
-     * \param shape The shape of the nd_vector
-     */
-    // bd_vector_impl(
-    //     T data[],
-    //     std::array<size_t, Dimensions> shape):
-    // m_data(data),
-    // m_shape(shape)
-    // {
-    //     ...
-    // }
-
-    /**
      * Constructs a fresh nd_vector with the supplied data and shape.
      */
     nd_vector_impl(std::initializer_list<T> data,
