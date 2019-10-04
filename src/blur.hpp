@@ -53,8 +53,8 @@ namespace blur {
         image<T> fast_gaussian_vertical_box_blur(image<T> const & img,
             size_t radius)
         {
-            std::cout << "\nBefore:\n";
-            print::image(img, 6);
+            // // std::cout << "\nBefore:\n";
+            // print::image(img, 6);
 
             image<std::remove_const_t<T>> blurred(img);
 
@@ -67,18 +67,18 @@ namespace blur {
                 const column_view<T> col_original = img[column];
                 auto col_blurred  = blurred[column];
                 // accumulator initialised with vector of min-values
-                color<T> accumulator(std::vector<T>(img.channels(),
-                    image<T>::intensity_range.min));
+                color<T> accumulator(std::array<size_t, 1>{img.shape().back()},
+                    image<T>::intensity_range.min);
 
-                std::cout << "\nAccumulating, base pixel is " << col_original[0] << " ";
-                std::cout << "- " << accumulator << " -";
+                // std::cout << "\nAccumulating, base pixel is " << col_original[0] << " ";
+                // std::cout << "- " << accumulator << " -";
                 // calculate initial average
                 accumulator = (col_original[0] * (radius)) / diameter;
                 for (size_t offset = 0; offset < radius; ++offset) {
-                    std::cout << "- " << accumulator << " -";
+                    // std::cout << "- " << accumulator << " -";
                     accumulator += (col_original[offset] / diameter);
                 }
-                std::cout << "- " << accumulator << " -";
+                // std::cout << "- " << accumulator << " -";
 
                 // accumulator /= radius;
                 col_blurred[0] = accumulator;
@@ -88,8 +88,8 @@ namespace blur {
                 // for each of the remaining pixels of the column.
                 for (size_t row = 1; row < img.height(); ++row)
                 {
-                    // std::cout << "Subtracting value at " << std::max(0ll, static_cast<long long>(row - radius)) << "\n";
-                    // std::cout << "Adding value at " << std::min(img.height() - 1, row + radius) << "\n";
+                    // // std::cout << "Subtracting value at " << std::max(0ll, static_cast<long long>(row - radius)) << "\n";
+                    // // std::cout << "Adding value at " << std::min(img.height() - 1, row + radius) << "\n";
                     accumulator = accumulator -
                     (col_original[std::max(0ll, static_cast<long long>(row - radius))] /
                         diameter) +
@@ -98,8 +98,8 @@ namespace blur {
                 }
             }
 
-            std::cout << "\nAfter:\n";
-            print::image(img, 6);
+            // // std::cout << "\nAfter:\n";
+            // print::image(img, 6);
 
             return blurred;
         }
@@ -136,13 +136,16 @@ namespace blur {
             blurred = fast_gaussian_vertical_box_blur(blurred, radii[radius_i]);
         }
 
+        print::image(blurred, 6);
         // blur the other way
-        blurred = blurred.transpose();
+        blurred = transpose(blurred);
+        print::image(blurred, 6);
         for (size_t radius_i = 0; radius_i < radii.size(); ++radius_i) {
             fast_gaussian_vertical_box_blur(blurred, radii[radius_i]);
         }
+        print::image(blurred, 6);
 
-        return blurred.transpose();
+        return transpose(blurred);
     }
 
     /**
