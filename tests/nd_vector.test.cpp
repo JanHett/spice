@@ -126,6 +126,10 @@ TEST(nd_vector, size) {
     nd_vector_impl<3, float> ndv({1, 2, 3});
 
     EXPECT_EQ(ndv.size(), 6);
+
+    nd_vector_impl<1, float> ndv_1d({1});
+
+    EXPECT_EQ(ndv_1d.size(), 1);
 }
 
 TEST(nd_vector, copy_assignment_owner) {
@@ -730,14 +734,42 @@ TEST(nd_vector, operator_divide) {
     EXPECT_NE(ndv_expected, ndv2);
 }
 
-TEST(nd_vector, operator_plus_equals_scalar) { GTEST_SKIP(); }
-TEST(nd_vector, operator_plus_scalar) { GTEST_SKIP(); }
+TEST(nd_vector, operator_equal_scalar) { GTEST_SKIP(); }
+TEST(nd_vector, operator_not_equal_scalar) { GTEST_SKIP(); }
+
+TEST(nd_vector, operator_equal_raw_array) { GTEST_SKIP(); }
+TEST(nd_vector, operator_not_equal_raw_array) { GTEST_SKIP(); }
+
+TEST(nd_vector, operator_plus_equals_scalar) {
+    float data1[] = {
+         0,  1,  2,  3,  4,
+         5,  6,  7,  8,  9,
+        10, 11, 12, 13, 14,
+        15, 16, 17, 18, 19
+    };
+    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+
+    ndv1 += 42;
+
+    float data_plus_42[] = {
+        42.f, 43.f, 44.f, 45.f, 46.f,
+        47.f, 48.f, 49.f, 50.f, 51.f,
+        52.f, 53.f, 54.f, 55.f, 56.f,
+        57.f, 58.f, 59.f, 60.f, 61.f
+    }; 
+
+    EXPECT_EQ(data_plus_42,
+        ndv1);
+}
+TEST(nd_vector, operator_plus_scalar_nd_vector) { GTEST_SKIP(); }
+TEST(nd_vector, operator_plus_nd_vector_scalar) { GTEST_SKIP(); }
 
 TEST(nd_vector, operator_minus_equals_scalar) { GTEST_SKIP(); }
 TEST(nd_vector, operator_minus_scalar) { GTEST_SKIP(); }
 
 TEST(nd_vector, operator_multiply_equals_scalar) { GTEST_SKIP(); }
-TEST(nd_vector, operator_multiply_scalar) { GTEST_SKIP(); }
+TEST(nd_vector, operator_multuply_scalar_nd_vector) { GTEST_SKIP(); }
+TEST(nd_vector, operator_multuply_nd_vector_scalar) { GTEST_SKIP(); }
 
 TEST(nd_vector, operator_divide_equals_scalar) { GTEST_SKIP(); }
 TEST(nd_vector, operator_divide_scalar) { GTEST_SKIP(); }

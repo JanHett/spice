@@ -559,8 +559,16 @@ public:
      * Compares an nd_vector with a pointer type. They are considered
      * to be equal if the pointer points to the same address as the nd_vector.
      */
+    // friend bool operator==(nd_vector_impl const & lhs, T const * const rhs)
+    // { return lhs.m_data == rhs; }
     friend bool operator==(nd_vector_impl const & lhs, T const * const rhs)
-    { return lhs.m_data == rhs; }
+    {
+        size_t sz = lhs.size();
+        for (size_t i = 0; i < sz; ++i)
+            if (lhs.m_data[i] != rhs[i])
+                return false;
+        return true;
+    }
 
     /**
      * Compares an nd_vector with a pointer type. `operator!=` is implemented as
@@ -574,7 +582,7 @@ public:
      * to be equal if the pointer points to the same address as the nd_vector.
      */
     friend bool operator==(T const * const lhs, nd_vector_impl const & rhs)
-    { return lhs == rhs.m_data; }
+    { return rhs == lhs; }
 
     /**
      * Compares an nd_vector with a pointer type. `operator!=` is implemented as
@@ -601,6 +609,22 @@ public:
 
         return *this;
     }
+
+    /**
+     * Adds the scalar `rhs` argument to each element of the nd_vector.
+     */
+    template<typename T_scalar,
+        typename = std::enable_if_t<std::is_arithmetic<T_scalar>::value>>
+    nd_vector_impl<Dimensions, T, Owner>& operator+=(
+            T_scalar const & rhs)
+    {
+        size_t sz = size();
+        for (size_t i = 0; i < sz; ++i)
+            this->m_data[i] += rhs;
+
+        return *this;
+    }
+
     /**
      * Subtracts the first nd_vector element-wise from the second.
      * If the two nd_vectors have different dimensions, only the overlapping
@@ -619,6 +643,22 @@ public:
 
         return *this;
     }
+
+    /**
+     * Subtracts the scalar `rhs` argument from each element of the nd_vector.
+     */
+    template<typename T_scalar,
+        typename = std::enable_if_t<std::is_arithmetic<T_scalar>::value>>
+    nd_vector_impl<Dimensions, T, Owner>& operator-=(
+            T_scalar const & rhs)
+    {
+        size_t sz = size();
+        for (size_t i = 0; i < sz; ++i)
+            this->m_data[i] -= rhs;
+
+        return *this;
+    }
+
     /**
      * Multiplies the first nd_vector element-wise with the second.
      * If the two nd_vectors have different dimensions, only the overlapping
@@ -637,6 +677,22 @@ public:
 
         return *this;
     }
+
+    /**
+     * Multiplies each element of the nd_vector with the scalar `rhs` argument.
+     */
+    template<typename T_scalar,
+        typename = std::enable_if_t<std::is_arithmetic<T_scalar>::value>>
+    nd_vector_impl<Dimensions, T, Owner>& operator*=(
+            T_scalar const & rhs)
+    {
+        size_t sz = size();
+        for (size_t i = 0; i < sz; ++i)
+            this->m_data[i] *= rhs;
+
+        return *this;
+    }
+
     /**
      * Divides the first nd_vector element-wise from the second.
      * If the two nd_vectors have different dimensions, only the overlapping
@@ -652,6 +708,21 @@ public:
             rhs.m_shape[0]);
         for (size_t i = 0; i < dim_magn; ++i)
             (*this)[i] /= rhs[i];
+
+        return *this;
+    }
+
+    /**
+     * Divides each element of the nd_vector by the scalar `rhs` argument.
+     */
+    template<typename T_scalar,
+        typename = std::enable_if_t<std::is_arithmetic<T_scalar>::value>>
+    nd_vector_impl<Dimensions, T, Owner>& operator/=(
+            T_scalar const & rhs)
+    {
+        size_t sz = size();
+        for (size_t i = 0; i < sz; ++i)
+            this->m_data[i] /= rhs;
 
         return *this;
     }
@@ -673,6 +744,39 @@ public:
         lhs += rhs;
         return lhs;
     }
+
+    /**
+     * Adds the scalar `rhs` argument to each element of the nd_vector.
+     *
+     * \note The first operand will be copied as an owning nd_vector, even if
+     * it is merely a view.
+     */
+    template<typename T_scalar,
+        typename = std::enable_if_t<std::is_arithmetic<T_scalar>::value>>
+    friend nd_vector_impl<Dimensions, T, true> operator+(
+            nd_vector_impl<Dimensions, T, true> lhs,
+            T_scalar const & rhs)
+    {
+        lhs += rhs;
+        return lhs;
+    }
+
+    /**
+     * Adds the scalar `lhs` argument to each element of the nd_vector.
+     *
+     * \note The second operand will be copied as an owning nd_vector, even if
+     * it is merely a view.
+     */
+    template<typename T_scalar,
+        typename = std::enable_if_t<std::is_arithmetic<T_scalar>::value>>
+    friend nd_vector_impl<Dimensions, T, true> operator+(
+            T_scalar const & lhs,
+            nd_vector_impl<Dimensions, T, true> rhs)
+    {
+        rhs += lhs;
+        return rhs;
+    }
+
     /**
      * Subtracts the two nd_vectors element-wise.
      * If the two nd_vectors have different dimensions, only the overlapping
@@ -690,6 +794,23 @@ public:
         lhs -= rhs;
         return lhs;
     }
+
+    /**
+     * Subtracts the scalar `rhs` argument from each element of the nd_vector.
+     *
+     * \note The first operand will be copied as an owning nd_vector, even if
+     * it is merely a view.
+     */
+    template<typename T_scalar,
+        typename = std::enable_if_t<std::is_arithmetic<T_scalar>::value>>
+    friend nd_vector_impl<Dimensions, T, true> operator-(
+            nd_vector_impl<Dimensions, T, true> lhs,
+            T_scalar const & rhs)
+    {
+        lhs -= rhs;
+        return lhs;
+    }
+
     /**
      * Multiplies the two nd_vectors element-wise.
      * If the two nd_vectors have different dimensions, only the overlapping
@@ -707,6 +828,39 @@ public:
         lhs *= rhs;
         return lhs;
     }
+
+    /**
+     * Multiplies each element of the nd_vector with the scalar `rhs` argument.
+     *
+     * \note The first operand will be copied as an owning nd_vector, even if
+     * it is merely a view.
+     */
+    template<typename T_scalar,
+        typename = std::enable_if_t<std::is_arithmetic<T_scalar>::value>>
+    friend nd_vector_impl<Dimensions, T, true> operator*(
+            nd_vector_impl<Dimensions, T, true> lhs,
+            T_scalar const & rhs)
+    {
+        lhs *= rhs;
+        return lhs;
+    }
+
+    /**
+     * Multiplies each element of the nd_vector with the scalar `lhs` argument.
+     *
+     * \note The second operand will be copied as an owning nd_vector, even if
+     * it is merely a view.
+     */
+    template<typename T_scalar,
+        typename = std::enable_if_t<std::is_arithmetic<T_scalar>::value>>
+    friend nd_vector_impl<Dimensions, T, true> operator*(
+            T_scalar const & lhs,
+            nd_vector_impl<Dimensions, T, true> rhs)
+    {
+        rhs *= lhs;
+        return rhs;
+    }
+
     /**
      * Divides the two nd_vectors element-wise.
      * If the two nd_vectors have different dimensions, only the overlapping
@@ -720,6 +874,22 @@ public:
     friend nd_vector_impl<Dimensions, T, true> operator/(
             nd_vector_impl<Dimensions, T, true> lhs,
             nd_vector_impl<Dimensions, T, Owner_rhs> const & rhs)
+    {
+        lhs /= rhs;
+        return lhs;
+    }
+
+    /**
+     * Divides each element of the nd_vector by the scalar `rhs` argument.
+     *
+     * \note The first operand will be copied as an owning nd_vector, even if
+     * it is merely a view.
+     */
+    template<typename T_scalar,
+        typename = std::enable_if_t<std::is_arithmetic<T_scalar>::value>>
+    friend nd_vector_impl<Dimensions, T, true> operator/(
+            nd_vector_impl<Dimensions, T, true> lhs,
+            T_scalar const & rhs)
     {
         lhs /= rhs;
         return lhs;
@@ -752,9 +922,9 @@ public:
 
     /**
      * Constructs a fresh nd_vector with the specified shape, initialising the
-     * data with `T{}`.
+     * data with the provided default value (or `T{}` if none is passed).
      */
-    nd_vector_impl(std::array<size_t, Dimensions> shape):
+    nd_vector_impl(std::array<size_t, Dimensions> shape, T default_value = T{}):
     // initialise superclass with `nd_vector_impl(T*, array<size_t, Dimensions>)`
     // size of data array has to be calculated from shape
     nd_vector_impl<Dimensions, T, false>(new T[std::reduce(
@@ -765,7 +935,7 @@ public:
     {
         // initialise with 0 (or equivalent value)
         for (size_t i = 0; i < this->size(); ++i)
-            this->m_data[i] = T{};
+            this->m_data[i] = default_value;
     }
 
     /**

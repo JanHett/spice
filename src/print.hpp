@@ -72,7 +72,7 @@ namespace print {
         for (size_t x = 0; x < img.height(); x += stride){
             for (size_t y = 0; y < img.width(); y += stride)
                 stream << print::color_escape_string<float,
-                    pixel_view<float const>>(
+                    const pixel_view<float>>(
                     "  ", img(y, x), img(y, x));
             stream << "\n";
         }
