@@ -231,6 +231,58 @@ TEST(image_helpers, type_to_typedesc) {
         "type_to_typedesc does not return UINT8 for input of uint8_t");
 }
 
+TEST(image_support, transpose) {
+    int * data_horizontal = new int[18] {
+         0,  1,  2,
+         3,  4,  5,
+         6,  7,  8,
+         9, 10, 11,
+        12, 13, 14,
+        15, 16, 17,
+    };
+    int * data_vertical = new int[18] {
+         0,  1,  2,
+         3,  4,  5,
+         6,  7,  8,
+         9, 10, 11,
+        12, 13, 14,
+        15, 16, 17,
+    };
+    image<int> i_horizontal(data_horizontal, 3,2, {"R","G","B"});
+    image<int> i_vertical(data_vertical, 2,3, {"R","G","B"});
+
+    auto tp_horizontal = transpose(i_horizontal);
+    auto tp_vertical = transpose(i_vertical);
+
+    EXPECT_EQ(2, tp_horizontal.width());
+    EXPECT_EQ(3, tp_horizontal.height());
+
+    EXPECT_EQ(3, tp_vertical.width());
+    EXPECT_EQ(2, tp_vertical.height());
+    
+    int * tp_data_horizontal = new int[18] {
+         0,  1,  2,
+         6,  7,  8,
+        12, 13, 14,
+         3,  4,  5,
+         9, 10, 11,
+        15, 16, 17
+    };
+    int * tp_data_vertical = new int[18] {
+         0,  1,  2,
+         9, 10, 11,
+         3,  4,  5,
+        12, 13, 14,
+         6,  7,  8,
+        15, 16, 17
+    };
+    image<int> i_control_horizontal(tp_data_horizontal, 2,3, {"R","G","B"});
+    image<int> i_control_vertical(tp_data_vertical, 3,2, {"R","G","B"});
+
+    EXPECT_EQ(i_control_horizontal, tp_horizontal);
+    EXPECT_EQ(i_control_vertical, tp_vertical);
+}
+
 TEST(image_support, load_image) {
     auto boat = load_image<float>("../data/testing/boat.jpg");
 

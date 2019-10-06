@@ -136,14 +136,11 @@ namespace blur {
             blurred = fast_gaussian_vertical_box_blur(blurred, radii[radius_i]);
         }
 
-        print::image(blurred, 6);
         // blur the other way
         blurred = transpose(blurred);
-        print::image(blurred, 6);
         for (size_t radius_i = 0; radius_i < radii.size(); ++radius_i) {
-            fast_gaussian_vertical_box_blur(blurred, radii[radius_i]);
+            blurred = fast_gaussian_vertical_box_blur(blurred, radii[radius_i]);
         }
-        print::image(blurred, 6);
 
         return transpose(blurred);
     }

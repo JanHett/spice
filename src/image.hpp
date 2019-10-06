@@ -254,16 +254,19 @@ namespace helpers
 }
 
 /**
- * Rotates the passed image 90 degrees clockwise.
+ * Transposes the image pixel-wise
+ *
+ * \param img The image to be rotated
+ * \returns a transposed copy of the image
  */
 template<typename T>
-image<T> transpose (const image<T> & v)
+image<T> transpose (image<T> const & img)
 {
-    image<T> new_i(v.height(), v.width(), v.channel_semantics());
+    image<T> new_i(img.height(), img.width(), img.channel_semantics());
 
-    for (size_t x = 0; x < v.width(); ++x)
-        for (size_t y = 0; y < v.height(); ++y)
-            new_i(y, x) = v(x, y);
+    for (size_t x = 0; x < img.width(); ++x)
+        for (size_t y = 0; y < img.height(); ++y)
+            new_i(y, x) = img(x, y);
 
     return new_i;
 }

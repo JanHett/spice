@@ -768,8 +768,8 @@ TEST(nd_vector, operator_minus_equals_scalar) { GTEST_SKIP(); }
 TEST(nd_vector, operator_minus_scalar) { GTEST_SKIP(); }
 
 TEST(nd_vector, operator_multiply_equals_scalar) { GTEST_SKIP(); }
-TEST(nd_vector, operator_multuply_scalar_nd_vector) { GTEST_SKIP(); }
-TEST(nd_vector, operator_multuply_nd_vector_scalar) { GTEST_SKIP(); }
+TEST(nd_vector, operator_multiply_scalar_nd_vector) { GTEST_SKIP(); }
+TEST(nd_vector, operator_multiply_nd_vector_scalar) { GTEST_SKIP(); }
 
 TEST(nd_vector, operator_divide_equals_scalar) { GTEST_SKIP(); }
 TEST(nd_vector, operator_divide_scalar) { GTEST_SKIP(); }

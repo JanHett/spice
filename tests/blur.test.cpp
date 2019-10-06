@@ -10,19 +10,14 @@ TEST(fast_gaussian, normal_call) {
     // GTEST_SKIP();
     auto boat = load_image<float>("../data/testing/boat.jpg");
 
-    print::image(boat, 6);
+    // print::image(boat, 6);
     auto b_boat = blur::fast_gaussian(boat, 10);
-    print::image(b_boat, 6);
+    // print::image(b_boat, 6);
+    // write_image("../data/testing/boat_blurred.jpg", b_boat);
 
-    // for (size_t x = 0; x < boat.width(); x += 10) {
-    //     for (size_t y = 0; y < boat.height(); y += 10) {
-    //         std::cout << "{" <<
-    //         boat(x, y, 0) << "|" <<
-    //         boat(x, y, 1) << "|" <<
-    //         boat(x, y, 2) << "}";
-    //     }
-    //     std::cout << "---\n";
-    // }
+    EXPECT_EQ(boat.width(), b_boat.width());
+    EXPECT_EQ(boat.height(), b_boat.height());
+    // TODO: check if the image is actually blurred in a realistic way.
 }
 
 TEST(fast_gaussian, radius_larger_than_image) {

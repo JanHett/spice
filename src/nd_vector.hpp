@@ -990,20 +990,18 @@ public:
     }
 
     /**
-     * Copies the values from `other` to `this`. Only values included in the
-     * intersection of the shapes of `other` and `this` are copied, the shape
-     * of `this` is not adjusted.
-     *
-     * \todo avoid duplication of this function between owning and non-owning
-     * nd_vectors
+     * Copies the values from `other` to `this`. Unlike the copy assignment
+     * operator of `nd_span`, this copies the entire `nd_vector` and also
+     * modifies the size of it.
      */
     nd_vector_impl & operator=(nd_vector_impl const & other)
     {
         if (this != &other) {
-            size_t smaller_dim = std::min(this->m_shape[0], other.m_shape[0]);
-            for (size_t entry = 0; entry < smaller_dim; ++entry) {
-                (*this)[entry] = other[entry];
-            }
+            delete this->m_data;
+            auto buf_size = other.size();
+            this->m_data = new T[buf_size];
+            std::memcpy(this->m_data, other.m_data, buf_size * sizeof(T));
+            this->m_shape = other.m_shape;
         }
         return *this;
     }
@@ -1011,7 +1009,16 @@ public:
     /**
      * Moves the data from `other` to `this`, resizing the object as necessary.
      */
-    // nd_vector_impl & operator=(nd_vector_impl && other);
+    nd_vector_impl & operator=(nd_vector_impl && other)
+    {
+        // std::cout << "Moving nd_vector...\n";
+        if (this != &other) {
+            delete this->m_data;
+            this->m_data = std::exchange(other.m_data, nullptr);
+            this->m_shape = std::exchange(other.m_shape, {});
+        }
+        return *this;
+    }
 };
 
 /**
