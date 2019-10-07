@@ -260,7 +260,7 @@ namespace helpers
  * \returns a transposed copy of the image
  */
 template<typename T>
-image<T> transpose (image<T> const & img)
+[[nodiscard]] image<T> transpose (image<T> const & img)
 {
     image<T> new_i(img.height(), img.width(), img.channel_semantics());
 
@@ -281,7 +281,7 @@ image<T> transpose (image<T> const & img)
  * \returns An image object representing the file contents
  */
 template<typename T>
-image<T> load_image(char const * filename)
+[[nodiscard]] image<T> load_image(char const * filename)
 {
     auto file = OIIO::ImageInput::open(filename);
     // TODO more expressive error handling

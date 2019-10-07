@@ -537,7 +537,7 @@ public:
      * Compares two nd_vectors with one another. Two nd_vectors are considered
      * to be equal if they have the same shape and contain the same data.
      */
-    friend bool operator==(nd_vector_impl const & lhs,
+    [[nodiscard]] friend bool operator==(nd_vector_impl const & lhs,
         nd_vector_impl const & rhs)
     {
         if (lhs.m_shape != rhs.m_shape) return false;
@@ -551,7 +551,7 @@ public:
      * Compares two nd_vectors with one another. `operator!=` is implemented as
      * the negation of `nd_vector::operator==`.
      */
-    friend bool operator!=(nd_vector_impl const & lhs,
+    [[nodiscard]] friend bool operator!=(nd_vector_impl const & lhs,
         nd_vector_impl const & rhs)
     { return !(lhs == rhs); }
 
@@ -561,7 +561,8 @@ public:
      */
     // friend bool operator==(nd_vector_impl const & lhs, T const * const rhs)
     // { return lhs.m_data == rhs; }
-    friend bool operator==(nd_vector_impl const & lhs, T const * const rhs)
+    [[nodiscard]] friend bool operator==(nd_vector_impl const & lhs,
+        T const * const rhs)
     {
         size_t sz = lhs.size();
         for (size_t i = 0; i < sz; ++i)
@@ -574,21 +575,24 @@ public:
      * Compares an nd_vector with a pointer type. `operator!=` is implemented as
      * the negation of `nd_vector::operator==`.
      */
-    friend bool operator!=(nd_vector_impl const & lhs, T const * const rhs)
+    [[nodiscard]] friend bool operator!=(nd_vector_impl const & lhs,
+        T const * const rhs)
     { return !(lhs == rhs); }
 
     /**
      * Compares an nd_vector with a pointer type. They are considered
      * to be equal if the pointer points to the same address as the nd_vector.
      */
-    friend bool operator==(T const * const lhs, nd_vector_impl const & rhs)
+    [[nodiscard]] friend bool operator==(T const * const lhs,
+        nd_vector_impl const & rhs)
     { return rhs == lhs; }
 
     /**
      * Compares an nd_vector with a pointer type. `operator!=` is implemented as
      * the negation of `nd_vector::operator==`.
      */
-    friend bool operator!=(T const * const lhs, nd_vector_impl const & rhs)
+    [[nodiscard]] friend bool operator!=(T const * const lhs,
+        nd_vector_impl const & rhs)
     { return !(lhs == rhs); }
 
     /**
@@ -737,7 +741,7 @@ public:
      * it is merely a view.
      */
     template<bool Owner_rhs>
-    friend nd_vector_impl<Dimensions, T, true> operator+(
+    [[nodiscard]] friend nd_vector_impl<Dimensions, T, true> operator+(
             nd_vector_impl<Dimensions, T, true> lhs,
             nd_vector_impl<Dimensions, T, Owner_rhs> const & rhs)
     {
@@ -753,7 +757,7 @@ public:
      */
     template<typename T_scalar,
         typename = std::enable_if_t<std::is_arithmetic<T_scalar>::value>>
-    friend nd_vector_impl<Dimensions, T, true> operator+(
+    [[nodiscard]] friend nd_vector_impl<Dimensions, T, true> operator+(
             nd_vector_impl<Dimensions, T, true> lhs,
             T_scalar const & rhs)
     {
@@ -769,7 +773,7 @@ public:
      */
     template<typename T_scalar,
         typename = std::enable_if_t<std::is_arithmetic<T_scalar>::value>>
-    friend nd_vector_impl<Dimensions, T, true> operator+(
+    [[nodiscard]] friend nd_vector_impl<Dimensions, T, true> operator+(
             T_scalar const & lhs,
             nd_vector_impl<Dimensions, T, true> rhs)
     {
@@ -787,7 +791,7 @@ public:
      * it is merely a view.
      */
     template<bool Owner_rhs>
-    friend nd_vector_impl<Dimensions, T, true> operator-(
+    [[nodiscard]] friend nd_vector_impl<Dimensions, T, true> operator-(
             nd_vector_impl<Dimensions, T, true> lhs,
             nd_vector_impl<Dimensions, T, Owner_rhs> const & rhs)
     {
@@ -803,7 +807,7 @@ public:
      */
     template<typename T_scalar,
         typename = std::enable_if_t<std::is_arithmetic<T_scalar>::value>>
-    friend nd_vector_impl<Dimensions, T, true> operator-(
+    [[nodiscard]] friend nd_vector_impl<Dimensions, T, true> operator-(
             nd_vector_impl<Dimensions, T, true> lhs,
             T_scalar const & rhs)
     {
@@ -821,7 +825,7 @@ public:
      * it is merely a view.
      */
     template<bool Owner_rhs>
-    friend nd_vector_impl<Dimensions, T, true> operator*(
+    [[nodiscard]] friend nd_vector_impl<Dimensions, T, true> operator*(
             nd_vector_impl<Dimensions, T, true> lhs,
             nd_vector_impl<Dimensions, T, Owner_rhs> const & rhs)
     {
@@ -837,7 +841,7 @@ public:
      */
     template<typename T_scalar,
         typename = std::enable_if_t<std::is_arithmetic<T_scalar>::value>>
-    friend nd_vector_impl<Dimensions, T, true> operator*(
+    [[nodiscard]] friend nd_vector_impl<Dimensions, T, true> operator*(
             nd_vector_impl<Dimensions, T, true> lhs,
             T_scalar const & rhs)
     {
@@ -853,7 +857,7 @@ public:
      */
     template<typename T_scalar,
         typename = std::enable_if_t<std::is_arithmetic<T_scalar>::value>>
-    friend nd_vector_impl<Dimensions, T, true> operator*(
+    [[nodiscard]] friend nd_vector_impl<Dimensions, T, true> operator*(
             T_scalar const & lhs,
             nd_vector_impl<Dimensions, T, true> rhs)
     {
@@ -871,7 +875,7 @@ public:
      * it is merely a view.
      */
     template<bool Owner_rhs>
-    friend nd_vector_impl<Dimensions, T, true> operator/(
+    [[nodiscard]] friend nd_vector_impl<Dimensions, T, true> operator/(
             nd_vector_impl<Dimensions, T, true> lhs,
             nd_vector_impl<Dimensions, T, Owner_rhs> const & rhs)
     {
@@ -887,7 +891,7 @@ public:
      */
     template<typename T_scalar,
         typename = std::enable_if_t<std::is_arithmetic<T_scalar>::value>>
-    friend nd_vector_impl<Dimensions, T, true> operator/(
+    [[nodiscard]] friend nd_vector_impl<Dimensions, T, true> operator/(
             nd_vector_impl<Dimensions, T, true> lhs,
             T_scalar const & rhs)
     {
