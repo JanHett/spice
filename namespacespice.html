@@ -80,33 +80,18 @@
           <h2><a href="#nested-classes">Classes</a></h2>
           <dl class="m-doc">
             <dt>
-              <div class="m-doc-template">template&lt;typename T = float&gt;</div>
-              struct <a href="structspice_1_1color.html" class="m-doc">color</a>
-            </dt>
-            <dd></dd>
-            <dt>
-              <div class="m-doc-template">template&lt;typename T&gt;</div>
-              struct <a href="structspice_1_1column__view.html" class="m-doc">column_view</a>
-            </dt>
-            <dd></dd>
-            <dt>
               <div class="m-doc-template">template&lt;typename T&gt;</div>
               class <a href="classspice_1_1image.html" class="m-doc">image</a>
             </dt>
             <dd></dd>
             <dt>
               <div class="m-doc-template">template&lt;size_t Dimensions, typename T, bool Owner = true&gt;</div>
-              class <a href="classspice_1_1nd__vector.html" class="m-doc">nd_vector</a>
+              class <a href="classspice_1_1nd__vector__impl.html" class="m-doc">nd_vector_impl</a>
             </dt>
             <dd></dd>
             <dt>
               <div class="m-doc-template">template&lt;size_t Dimensions, typename T&gt;</div>
-              class <a href="classspice_1_1nd__vector_3_01_dimensions_00_01_t_00_01true_01_4.html" class="m-doc">nd_vector&lt;Dimensions, T, true&gt;</a>
-            </dt>
-            <dd></dd>
-            <dt>
-              <div class="m-doc-template">template&lt;typename T&gt;</div>
-              struct <a href="structspice_1_1pixel__view.html" class="m-doc">pixel_view</a>
+              class <a href="classspice_1_1nd__vector__impl_3_01_dimensions_00_01_t_00_01true_01_4.html" class="m-doc">nd_vector_impl&lt;Dimensions, T, true&gt;</a>
             </dt>
             <dd></dd>
             <dt>
@@ -123,93 +108,51 @@
               using <a href="#a91b8eb720ae1ff96ba0a76cc852f3139" class="m-doc">channel_list</a> = std::vector&lt;std::string&gt;
             </dt>
             <dd></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T = float&gt;</div>
+              using <a href="#a3298381bfef4f5a53aad5ae5052a168f" class="m-doc">color</a> = <a href="namespacespice.html#ac761d09e52b646b59aabe97d13cd663f" class="m-doc">nd_<wbr />vector</a>&lt;T, 1&gt;
+            </dt>
+            <dd></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T = float&gt;</div>
+              using <a href="#aeae8f6cbafa76129d382207efb155641" class="m-doc">pixel_view</a> = <a href="namespacespice.html#adf79eecedf0b9190c4d209e71e68cf7c" class="m-doc">nd_<wbr />span</a>&lt;T, 1&gt;
+            </dt>
+            <dd></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T = float&gt;</div>
+              using <a href="#ace84c6772dcff24fa938d576db8bdb85" class="m-doc">column_view</a> = <a href="namespacespice.html#ac761d09e52b646b59aabe97d13cd663f" class="m-doc">nd_<wbr />vector</a>&lt;T, 2&gt;
+            </dt>
+            <dd></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T, size_t Dimensions&gt;</div>
+              using <a href="#adf79eecedf0b9190c4d209e71e68cf7c" class="m-doc">nd_span</a> = <a href="classspice_1_1nd__vector__impl.html" class="m-doc">nd_<wbr />vector_<wbr />impl</a>&lt;Dimensions, T, false&gt;
+            </dt>
+            <dd></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T, size_t Dimensions&gt;</div>
+              using <a href="#ac761d09e52b646b59aabe97d13cd663f" class="m-doc">nd_vector</a> = <a href="classspice_1_1nd__vector__impl.html" class="m-doc">nd_<wbr />vector_<wbr />impl</a>&lt;Dimensions, T, true&gt;
+            </dt>
+            <dd></dd>
           </dl>
         </section>
         <section id="func-members">
           <h2><a href="#func-members">Functions</a></h2>
           <dl class="m-doc">
             <dt>
-              <div class="m-doc-template">template&lt;typename T_lhs, typename T_rhs&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#a8b26a7c9e12ae2b3bc1f280b95e518bb" class="m-doc">operator==</a>(</span><span class="m-doc-wrap">T_lhs const&amp; lhs,
-              T_rhs const&amp; rhs) -&gt; bool</span>
+              <div class="m-doc-template">template&lt;typename T&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="#a660abe4353d9707068b4d911a73c36c6" class="m-doc">operator&lt;&lt;</a>(</span><span class="m-doc-wrap">std::ostream&amp; os,
+              <a href="namespacespice.html#a3298381bfef4f5a53aad5ae5052a168f" class="m-doc">color</a>&lt;T&gt; const&amp; pxl) -&gt; std::ostream&amp;</span>
             </dt>
             <dd></dd>
             <dt>
-              <div class="m-doc-template">template&lt;typename T_lhs, typename T_rhs&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#a1f508679bbcee74b7756fbc3bb3c8851" class="m-doc">operator!=</a>(</span><span class="m-doc-wrap">T_lhs const&amp; lhs,
-              T_rhs const&amp; rhs) -&gt; bool</span>
+              <div class="m-doc-template">template&lt;typename T&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="#a904c40af3c4339828e9d5752e39d7c5d" class="m-doc">operator&lt;&lt;</a>(</span><span class="m-doc-wrap">std::ostream&amp; os,
+              <a href="namespacespice.html#aeae8f6cbafa76129d382207efb155641" class="m-doc">pixel_<wbr />view</a>&lt;T&gt; const&amp; pxl) -&gt; std::ostream&amp;</span>
             </dt>
             <dd></dd>
             <dt>
-              <div class="m-doc-template">template&lt;typename T_lhs, typename T_rhs&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#a73bb1f72040813810304c13bff847c9b" class="m-doc">operator+=</a>(</span><span class="m-doc-wrap">T_lhs&amp; lhs,
-              T_rhs const&amp; rhs) -&gt; std::enable_if_t&lt;!std::is_arithmetic&lt;T_rhs&gt;::value, T_lhs&amp;&gt;</span>
-            </dt>
-            <dd></dd>
-            <dt>
-              <div class="m-doc-template">template&lt;typename T_lhs, typename T_rhs&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#ab4c7236c7e62e3ab21f8e8335f94191c" class="m-doc">operator+=</a>(</span><span class="m-doc-wrap">T_lhs&amp; lhs,
-              T_rhs const&amp; rhs) -&gt; std::enable_if_t&lt;std::is_arithmetic&lt;T_rhs&gt;::value, T_lhs&amp;&gt;</span>
-            </dt>
-            <dd></dd>
-            <dt>
-              <div class="m-doc-template">template&lt;typename T_lhs, typename T_rhs&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#a9785c41d58ad394236db56962f8273e4" class="m-doc">operator+</a>(</span><span class="m-doc-wrap">T_lhs lhs,
-              T_rhs const&amp; rhs) -&gt; T_lhs</span>
-            </dt>
-            <dd></dd>
-            <dt>
-              <div class="m-doc-template">template&lt;typename T_lhs, typename T_rhs&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#afe1f198bf4911e2d15285d674286069e" class="m-doc">operator-=</a>(</span><span class="m-doc-wrap">T_lhs&amp; lhs,
-              T_rhs const&amp; rhs) -&gt; std::enable_if_t&lt;!std::is_arithmetic&lt;T_rhs&gt;::value, T_lhs&amp;&gt;</span>
-            </dt>
-            <dd></dd>
-            <dt>
-              <div class="m-doc-template">template&lt;typename T_lhs, typename T_rhs&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#a630d5c2030a1504cb3f9f0676341cc05" class="m-doc">operator-=</a>(</span><span class="m-doc-wrap">T_lhs&amp; lhs,
-              T_rhs const&amp; rhs) -&gt; std::enable_if_t&lt;std::is_arithmetic&lt;T_rhs&gt;::value, T_lhs&amp;&gt;</span>
-            </dt>
-            <dd></dd>
-            <dt>
-              <div class="m-doc-template">template&lt;typename T_lhs, typename T_rhs&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#a9a5d7e4d8d7e098893d5d90ec8b04a17" class="m-doc">operator-</a>(</span><span class="m-doc-wrap">T_lhs lhs,
-              T_rhs const&amp; rhs) -&gt; T_lhs</span>
-            </dt>
-            <dd></dd>
-            <dt>
-              <div class="m-doc-template">template&lt;typename T_lhs, typename T_rhs&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#a69f8c13cf4aef7cdb837e7234b755130" class="m-doc">operator*=</a>(</span><span class="m-doc-wrap">T_lhs&amp; lhs,
-              T_rhs const&amp; rhs) -&gt; std::enable_if_t&lt;!std::is_arithmetic&lt;T_rhs&gt;::value, T_lhs&amp;&gt;</span>
-            </dt>
-            <dd></dd>
-            <dt>
-              <div class="m-doc-template">template&lt;typename T_lhs, typename T_rhs&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#a1c7515266a41aac5c088155bb3726d8a" class="m-doc">operator*=</a>(</span><span class="m-doc-wrap">T_lhs&amp; lhs,
-              T_rhs const&amp; rhs) -&gt; std::enable_if_t&lt;std::is_arithmetic&lt;T_rhs&gt;::value, T_lhs&amp;&gt;</span>
-            </dt>
-            <dd></dd>
-            <dt>
-              <div class="m-doc-template">template&lt;typename T_lhs, typename T_rhs&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#a4f5cdc23150db6304658e3c80f507c26" class="m-doc">operator*</a>(</span><span class="m-doc-wrap">T_lhs lhs,
-              T_rhs const&amp; rhs) -&gt; T_lhs</span>
-            </dt>
-            <dd></dd>
-            <dt>
-              <div class="m-doc-template">template&lt;typename T_lhs, typename T_rhs&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#ab82dbfa1d7318ec99105c5ea6cef928b" class="m-doc">operator/=</a>(</span><span class="m-doc-wrap">T_lhs&amp; lhs,
-              T_rhs const&amp; rhs) -&gt; std::enable_if_t&lt;!std::is_arithmetic&lt;T_rhs&gt;::value, T_lhs&amp;&gt;</span>
-            </dt>
-            <dd></dd>
-            <dt>
-              <div class="m-doc-template">template&lt;typename T_lhs, typename T_rhs&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#aa7ff34ff96b2817c884dd32a95c18091" class="m-doc">operator/=</a>(</span><span class="m-doc-wrap">T_lhs&amp; lhs,
-              T_rhs const&amp; rhs) -&gt; std::enable_if_t&lt;std::is_arithmetic&lt;T_rhs&gt;::value, T_lhs&amp;&gt;</span>
-            </dt>
-            <dd></dd>
-            <dt>
-              <div class="m-doc-template">template&lt;typename T_lhs, typename T_rhs&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#a92f20075ff4ce579d46b7b343edce04a" class="m-doc">operator/</a>(</span><span class="m-doc-wrap">T_lhs lhs,
-              T_rhs const&amp; rhs) -&gt; T_lhs</span>
+              <div class="m-doc-template">template&lt;typename T&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="#a3570049a208efa78d3e0011b7e41a367" class="m-doc">transpose</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt; const&amp; img) -&gt; <a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt;</span>
             </dt>
             <dd></dd>
             <dt>
@@ -234,148 +177,99 @@
             </h3>
 <p>Alias for convenience and forwards compatibility (channel_list might pack much more information in the future: channel to index mapping etc...).</p>
           </div></section>
+          <section class="m-doc-details" id="a3298381bfef4f5a53aad5ae5052a168f"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename T = float&gt;
+              </div>
+              using spice::<wbr /><a href="#a3298381bfef4f5a53aad5ae5052a168f" class="m-doc-self">color</a> = <a href="namespacespice.html#ac761d09e52b646b59aabe97d13cd663f" class="m-doc">nd_<wbr />vector</a>&lt;T, 1&gt;
+            </h3>
+<p>Represents a color. Type alias for convenience and forwards compatibility.</p>
+          </div></section>
+          <section class="m-doc-details" id="aeae8f6cbafa76129d382207efb155641"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename T = float&gt;
+              </div>
+              using spice::<wbr /><a href="#aeae8f6cbafa76129d382207efb155641" class="m-doc-self">pixel_view</a> = <a href="namespacespice.html#adf79eecedf0b9190c4d209e71e68cf7c" class="m-doc">nd_<wbr />span</a>&lt;T, 1&gt;
+            </h3>
+<p>Refers to a single pixel in a <code><a href="classspice_1_1image.html" class="m-doc">spice::<wbr />image</a></code>. Note that this class has no information about the size of the image it is referring to and thus cannot perform bounds checking. Use <code><a href="classspice_1_1nd__vector__impl.html#af546dad706984807318ee5fb32316fc7" class="m-doc">image::<wbr />at</a></code> for that.</p>
+          </div></section>
+          <section class="m-doc-details" id="ace84c6772dcff24fa938d576db8bdb85"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename T = float&gt;
+              </div>
+              using spice::<wbr /><a href="#ace84c6772dcff24fa938d576db8bdb85" class="m-doc-self">column_view</a> = <a href="namespacespice.html#ac761d09e52b646b59aabe97d13cd663f" class="m-doc">nd_<wbr />vector</a>&lt;T, 2&gt;
+            </h3>
+<p>Refers to a column of pixel data in a <code><a href="classspice_1_1image.html" class="m-doc">spice::<wbr />image</a></code>. Note that this class has no information about the size of the image it is referring to and thus cannot perform bounds checking. Use <code><a href="classspice_1_1nd__vector__impl.html#af546dad706984807318ee5fb32316fc7" class="m-doc">image::<wbr />at</a></code> for that.</p>
+          </div></section>
+          <section class="m-doc-details" id="adf79eecedf0b9190c4d209e71e68cf7c"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename T, size_t Dimensions&gt;
+              </div>
+              using spice::<wbr /><a href="#adf79eecedf0b9190c4d209e71e68cf7c" class="m-doc-self">nd_span</a> = <a href="classspice_1_1nd__vector__impl.html" class="m-doc">nd_<wbr />vector_<wbr />impl</a>&lt;Dimensions, T, false&gt;
+            </h3>
+<p>Non-owning <code><a href="classspice_1_1nd__vector__impl.html" class="m-doc">nd_<wbr />vector_<wbr />impl</a></code> providing a view over a slice of an <code>nd_vector</code>. Can also be used to wrap a raw pointer representing the start of a multidimensional buffer.</p>
+          </div></section>
+          <section class="m-doc-details" id="ac761d09e52b646b59aabe97d13cd663f"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename T, size_t Dimensions&gt;
+              </div>
+              using spice::<wbr /><a href="#ac761d09e52b646b59aabe97d13cd663f" class="m-doc-self">nd_vector</a> = <a href="classspice_1_1nd__vector__impl.html" class="m-doc">nd_<wbr />vector_<wbr />impl</a>&lt;Dimensions, T, true&gt;
+            </h3>
+<p>Owning <code><a href="classspice_1_1nd__vector__impl.html" class="m-doc">nd_<wbr />vector_<wbr />impl</a></code> managing its own buffer.</p>
+          </div></section>
         </section>
         <section>
           <h2>Function documentation</h2>
-          <section class="m-doc-details" id="a8b26a7c9e12ae2b3bc1f280b95e518bb"><div>
+          <section class="m-doc-details" id="a660abe4353d9707068b4d911a73c36c6"><div>
             <h3>
               <div class="m-doc-template">
-                template&lt;typename T_lhs, typename T_rhs&gt;
+                template&lt;typename T&gt;
               </div>
-              <span class="m-doc-wrap-bumper">bool spice::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a8b26a7c9e12ae2b3bc1f280b95e518bb" class="m-doc-self">operator==</a>(</span><span class="m-doc-wrap">T_lhs const&amp; lhs,
-              T_rhs const&amp; rhs)</span></span>
+              <span class="m-doc-wrap-bumper">std::ostream&amp; spice::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a660abe4353d9707068b4d911a73c36c6" class="m-doc-self">operator&lt;&lt;</a>(</span><span class="m-doc-wrap">std::ostream&amp; os,
+              <a href="namespacespice.html#a3298381bfef4f5a53aad5ae5052a168f" class="m-doc">color</a>&lt;T&gt; const&amp; pxl)</span></span>
             </h3>
-<p>Compares two vector-like types (e.g. <code><a href="structspice_1_1color.html" class="m-doc">spice::<wbr />color</a></code> or <code><a href="structspice_1_1pixel__view.html" class="m-doc">spice::<wbr />pixel_view</a></code>). Two vector-like types are equal if they are of the same size and all of their elements are equal as determined by comparison with <code>==</code>.</p>
+<p>Specialized formatter for <code><a href="namespacespice.html#a3298381bfef4f5a53aad5ae5052a168f" class="m-doc">spice::<wbr />color</a></code>.</p>
           </div></section>
-          <section class="m-doc-details" id="a1f508679bbcee74b7756fbc3bb3c8851"><div>
+          <section class="m-doc-details" id="a904c40af3c4339828e9d5752e39d7c5d"><div>
             <h3>
               <div class="m-doc-template">
-                template&lt;typename T_lhs, typename T_rhs&gt;
+                template&lt;typename T&gt;
               </div>
-              <span class="m-doc-wrap-bumper">bool spice::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a1f508679bbcee74b7756fbc3bb3c8851" class="m-doc-self">operator!=</a>(</span><span class="m-doc-wrap">T_lhs const&amp; lhs,
-              T_rhs const&amp; rhs)</span></span>
+              <span class="m-doc-wrap-bumper">std::ostream&amp; spice::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a904c40af3c4339828e9d5752e39d7c5d" class="m-doc-self">operator&lt;&lt;</a>(</span><span class="m-doc-wrap">std::ostream&amp; os,
+              <a href="namespacespice.html#aeae8f6cbafa76129d382207efb155641" class="m-doc">pixel_<wbr />view</a>&lt;T&gt; const&amp; pxl)</span></span>
             </h3>
-<p>Compares two vector-like types (e.g. <code><a href="structspice_1_1color.html" class="m-doc">spice::<wbr />color</a></code> or <code><a href="structspice_1_1pixel__view.html" class="m-doc">spice::<wbr />pixel_view</a></code>). Two vector-like types are not equal if they are either of different sizes or any of their elements are not equal as determined by comparison with <code>==</code>.</p>
+<p>Specialized formatter for <code><a href="namespacespice.html#aeae8f6cbafa76129d382207efb155641" class="m-doc">spice::<wbr />pixel_view</a></code>.</p>
           </div></section>
-          <section class="m-doc-details" id="a73bb1f72040813810304c13bff847c9b"><div>
+          <section class="m-doc-details" id="a3570049a208efa78d3e0011b7e41a367"><div>
             <h3>
               <div class="m-doc-template">
-                template&lt;typename T_lhs, typename T_rhs&gt;
+                template&lt;typename T&gt;
               </div>
-              <span class="m-doc-wrap-bumper">std::enable_if_t&lt;!std::is_arithmetic&lt;T_rhs&gt;::value, T_lhs&amp;&gt; spice::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a73bb1f72040813810304c13bff847c9b" class="m-doc-self">operator+=</a>(</span><span class="m-doc-wrap">T_lhs&amp; lhs,
-              T_rhs const&amp; rhs)</span></span>
+              <span class="m-doc-wrap-bumper"><a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt; spice::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a3570049a208efa78d3e0011b7e41a367" class="m-doc-self">transpose</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt; const&amp; img)</span></span>
             </h3>
-<p>Adds two vector-like types component-wise. The vectors are assumed to be of equal size - no bounds checking is performed.</p>
-          </div></section>
-          <section class="m-doc-details" id="ab4c7236c7e62e3ab21f8e8335f94191c"><div>
-            <h3>
-              <div class="m-doc-template">
-                template&lt;typename T_lhs, typename T_rhs&gt;
-              </div>
-              <span class="m-doc-wrap-bumper">std::enable_if_t&lt;std::is_arithmetic&lt;T_rhs&gt;::value, T_lhs&amp;&gt; spice::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ab4c7236c7e62e3ab21f8e8335f94191c" class="m-doc-self">operator+=</a>(</span><span class="m-doc-wrap">T_lhs&amp; lhs,
-              T_rhs const&amp; rhs)</span></span>
-            </h3>
-<p>Adds an arithmetic type to a vector-like type.</p>
-          </div></section>
-          <section class="m-doc-details" id="a9785c41d58ad394236db56962f8273e4"><div>
-            <h3>
-              <div class="m-doc-template">
-                template&lt;typename T_lhs, typename T_rhs&gt;
-              </div>
-              <span class="m-doc-wrap-bumper">T_lhs spice::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a9785c41d58ad394236db56962f8273e4" class="m-doc-self">operator+</a>(</span><span class="m-doc-wrap">T_lhs lhs,
-              T_rhs const&amp; rhs)</span></span>
-            </h3>
-<p>Adds two vector-like types component-wise. The vectors are assumed to be of equal size - no bounds checking is performed.</p>
-          </div></section>
-          <section class="m-doc-details" id="afe1f198bf4911e2d15285d674286069e"><div>
-            <h3>
-              <div class="m-doc-template">
-                template&lt;typename T_lhs, typename T_rhs&gt;
-              </div>
-              <span class="m-doc-wrap-bumper">std::enable_if_t&lt;!std::is_arithmetic&lt;T_rhs&gt;::value, T_lhs&amp;&gt; spice::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#afe1f198bf4911e2d15285d674286069e" class="m-doc-self">operator-=</a>(</span><span class="m-doc-wrap">T_lhs&amp; lhs,
-              T_rhs const&amp; rhs)</span></span>
-            </h3>
-<p>Subtracts two vector-like types component-wise. The vectors are assumed to be of equal size - no bounds checking is performed.</p>
-          </div></section>
-          <section class="m-doc-details" id="a630d5c2030a1504cb3f9f0676341cc05"><div>
-            <h3>
-              <div class="m-doc-template">
-                template&lt;typename T_lhs, typename T_rhs&gt;
-              </div>
-              <span class="m-doc-wrap-bumper">std::enable_if_t&lt;std::is_arithmetic&lt;T_rhs&gt;::value, T_lhs&amp;&gt; spice::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a630d5c2030a1504cb3f9f0676341cc05" class="m-doc-self">operator-=</a>(</span><span class="m-doc-wrap">T_lhs&amp; lhs,
-              T_rhs const&amp; rhs)</span></span>
-            </h3>
-<p>Subtracts an arithmetic type from a vector-like type.</p>
-          </div></section>
-          <section class="m-doc-details" id="a9a5d7e4d8d7e098893d5d90ec8b04a17"><div>
-            <h3>
-              <div class="m-doc-template">
-                template&lt;typename T_lhs, typename T_rhs&gt;
-              </div>
-              <span class="m-doc-wrap-bumper">T_lhs spice::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a9a5d7e4d8d7e098893d5d90ec8b04a17" class="m-doc-self">operator-</a>(</span><span class="m-doc-wrap">T_lhs lhs,
-              T_rhs const&amp; rhs)</span></span>
-            </h3>
-<p>Subtracts two vector-like types component-wise. The vectors are assumed to be of equal size - no bounds checking is performed.</p>
-          </div></section>
-          <section class="m-doc-details" id="a69f8c13cf4aef7cdb837e7234b755130"><div>
-            <h3>
-              <div class="m-doc-template">
-                template&lt;typename T_lhs, typename T_rhs&gt;
-              </div>
-              <span class="m-doc-wrap-bumper">std::enable_if_t&lt;!std::is_arithmetic&lt;T_rhs&gt;::value, T_lhs&amp;&gt; spice::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a69f8c13cf4aef7cdb837e7234b755130" class="m-doc-self">operator*=</a>(</span><span class="m-doc-wrap">T_lhs&amp; lhs,
-              T_rhs const&amp; rhs)</span></span>
-            </h3>
-<p>Multiplies two vector-like types component-wise. The vectors are assumed to be of equal size - no bounds checking is performed.</p>
-          </div></section>
-          <section class="m-doc-details" id="a1c7515266a41aac5c088155bb3726d8a"><div>
-            <h3>
-              <div class="m-doc-template">
-                template&lt;typename T_lhs, typename T_rhs&gt;
-              </div>
-              <span class="m-doc-wrap-bumper">std::enable_if_t&lt;std::is_arithmetic&lt;T_rhs&gt;::value, T_lhs&amp;&gt; spice::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a1c7515266a41aac5c088155bb3726d8a" class="m-doc-self">operator*=</a>(</span><span class="m-doc-wrap">T_lhs&amp; lhs,
-              T_rhs const&amp; rhs)</span></span>
-            </h3>
-<p>Multiplies an arithmetic type with a vector-like type.</p>
-          </div></section>
-          <section class="m-doc-details" id="a4f5cdc23150db6304658e3c80f507c26"><div>
-            <h3>
-              <div class="m-doc-template">
-                template&lt;typename T_lhs, typename T_rhs&gt;
-              </div>
-              <span class="m-doc-wrap-bumper">T_lhs spice::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a4f5cdc23150db6304658e3c80f507c26" class="m-doc-self">operator*</a>(</span><span class="m-doc-wrap">T_lhs lhs,
-              T_rhs const&amp; rhs)</span></span>
-            </h3>
-<p>Multiplies two vector-like types component-wise. The vectors are assumed to be of equal size - no bounds checking is performed.</p>
-          </div></section>
-          <section class="m-doc-details" id="ab82dbfa1d7318ec99105c5ea6cef928b"><div>
-            <h3>
-              <div class="m-doc-template">
-                template&lt;typename T_lhs, typename T_rhs&gt;
-              </div>
-              <span class="m-doc-wrap-bumper">std::enable_if_t&lt;!std::is_arithmetic&lt;T_rhs&gt;::value, T_lhs&amp;&gt; spice::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ab82dbfa1d7318ec99105c5ea6cef928b" class="m-doc-self">operator/=</a>(</span><span class="m-doc-wrap">T_lhs&amp; lhs,
-              T_rhs const&amp; rhs)</span></span>
-            </h3>
-<p>Divides two vector-like types component-wise. The vectors are assumed to be of equal size - no bounds checking is performed.</p>
-          </div></section>
-          <section class="m-doc-details" id="aa7ff34ff96b2817c884dd32a95c18091"><div>
-            <h3>
-              <div class="m-doc-template">
-                template&lt;typename T_lhs, typename T_rhs&gt;
-              </div>
-              <span class="m-doc-wrap-bumper">std::enable_if_t&lt;std::is_arithmetic&lt;T_rhs&gt;::value, T_lhs&amp;&gt; spice::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aa7ff34ff96b2817c884dd32a95c18091" class="m-doc-self">operator/=</a>(</span><span class="m-doc-wrap">T_lhs&amp; lhs,
-              T_rhs const&amp; rhs)</span></span>
-            </h3>
-<p>Divides a vector-like type by a primitive.</p>
-          </div></section>
-          <section class="m-doc-details" id="a92f20075ff4ce579d46b7b343edce04a"><div>
-            <h3>
-              <div class="m-doc-template">
-                template&lt;typename T_lhs, typename T_rhs&gt;
-              </div>
-              <span class="m-doc-wrap-bumper">T_lhs spice::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a92f20075ff4ce579d46b7b343edce04a" class="m-doc-self">operator/</a>(</span><span class="m-doc-wrap">T_lhs lhs,
-              T_rhs const&amp; rhs)</span></span>
-            </h3>
-<p>Divides two vector-like types component-wise. The vectors are assumed to be of equal size - no bounds checking is performed.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">img</td>
+                  <td>The image to be rotated</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>a transposed copy of the image</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>Transposes the image pixel-wise</p>
           </div></section>
           <section class="m-doc-details" id="a38e9d87858c0be01a3b242c24514dacf"><div>
             <h3>
