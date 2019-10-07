@@ -44,6 +44,16 @@ for (int x = 0; x < three_d.shape[0]; ++x)
       std::cout << three_d(x, y, z);
 ```
 
+#### A note on the name
+
+I named this structure `nd_vector` because it's closer to a `std::vector` than a `std::array` in that it is a dynamically allocated data structure. I don't love it, though, since vector implies a one-dimensional data structure. Suggestions are welcome.
+
+### View over N-Dimensional slices of `nd_vector`s
+
+Indexing into an `nd_vector` either returns a reference to the stored element (if a full set of coordinates was specified) or a `spice::nd_span` representing a slice of the data.
+
+In beautiful ASCII art, the functioning of a three dimensional `nd_vector<T, 3>`'s `operator[]` might be visualised like this:
+
 ```
    _________
   /__/__/__/|
@@ -52,26 +62,17 @@ for (int x = 0; x < three_d.shape[0]; ++x)
 |__|__|__|||/
 |__|__|__||/
 |__|__|__|/
-^
 |
-|--------->    ___
-              /__/|
-             /__/||
-            /__/|||
-            |__|||/
-            |__||/
-            |__|/
+|---> ___
+     /__/|
+    /__/||       ___
+   /__/|||      /__/|
+   |__|||/     /__/|/      __
+   |__||/     /__/|/     /__/|
+   |__|/ ---> |__|/ ---> |__|/
 ```
 
-
-
-#### A note on the name
-
-I named this structure `nd_vector` because it's closer to a `std::vector` than a `std::array` in that it is a dynamically allocated data structure. I don't love it, though, since vector implies a one-dimensional data structure. Suggestions are welcome.
-
-### View over N-Dimensional slices of `nd_vector`s
-
-Indexing into an `nd_vector` either returns a reference to the stored element (if a full set of coordinates was specified) or a `spice::nd_span` representing a slice of the data.
+The first invokation returns a two dimensional `nd_span<T, 2>`, the second a one dimensional `nd_span<T, 1>` and the last returns a `T&`, a reference to the actual element.
 
 ### [ Future ] Iterators and ranges
 
@@ -83,34 +84,78 @@ Since an image is essentially a three-dimensional array of values (the dimension
 
 ### Image processing and analysis tools
 
-#### Blur
+#### [Blur](https://janhett.github.io/spice/namespacespice_1_1blur.html)
 
 ##### Fast gaussian blur approximation
 ![fast_gaussian](./data/showcase/fast_gaussian.jpg)
 
 Performs a series of box blurs to approximate a true gaussian in linear time. The number of passes is adjustable.
 
-#### Noise
+#### [Noise](https://janhett.github.io/spice/namespacespice_1_1noise.html)
 
 ##### Salt and Pepper
 
+> Not yet implemented
+
 ##### Uniform
+
+> Not yet implemented
 
 ##### Gaussian
 
-#### Statistics
+> Not yet implemented
+
+#### [Statistics](https://janhett.github.io/spice/namespacespice_1_1statistics.html)
 
 ##### Histogram
 
+Calculates a histogram of the provided image. Since floating point images are pseudo-continuous and often the full precision of integer types is not needed in a histogram, the `samples` argument specifies the number of "buckets" image values are to be sorted into.
+
+#### [Debugging Tools](https://janhett.github.io/spice/namespacespice_1_1print.html)
+
+##### Printing images to out-streams
+
+On terminals that can display full 8bpc colour, the `spice::print::image(image<T> img, size_t stride, std::ostream& os)` function will print an approximation of the image to the provided stream using RGB colour escape codes to display the image.
+
+![print_image_to_stdout](./data/showcase/print_image_to_stdout.png)
+
+Not glamorous, but for retro-cool and debugging it does the job.
+
+##### Printing histograms to out-streams
+
+> Note: this function is currently broken.
+
+Analogous to images, histograms can also be printed to any arbitrary stream.
+
 ## Building
 
-spice has been tested to build with clang on macOS. It also requires C++17. I plan on extending support to other operating systems, GCC and eventually MSVC, but for now, features are the primary focus. For these early days, the library will also remain dependent on the most recent C++ standard (read: I will jump up to C++20 as soon as it's ready and if you have standards that require you to stick to a specific C++ version, this library probably fails more than just this test).
+In a nutshell:
+
+```bash
+python3 tools/build.py <Debug | Release>
+```
+
+### Prerequisites
+
+#### For the library
+
+- C++17
+- [OpenImageIO](https://github.com/OpenImageIO/oiio)
+- [Guideline Support Library](https://github.com/microsoft/GSL)
+- [Google Test](https://github.com/google/googletest) (technically only needed for building tests)
+
+#### For the documentation
+
+- [Doxygen](http://www.doxygen.nl/)
+- [m.css](https://github.com/mosra/m.css) (available as a git submodule, pull with `git submodule update --recursive --remote --init`)
+
+### Notes
 
 spice does not yet have a fully fledged cmake/make setup. Setting this up is part of getting the library to a usable state and will happen before a proper release.
 
-For now, there is a Python build script called `./tools/build`. Please run it with `-h` to find out how to use it, it is changing much too frequently to keep this README up to date.
+For now, there is a Python build script called `./tools/build`. Run it with `-h` for details on how to use it.
 
-The main library depends on OpenImageIO, the guideline support library (GSL) and nothing else. For unit testing, Google Test is required and to build the documentation, you need Doxygen and m.css.
+spice has been tested to build with clang on macOS and may or may not build in other configurations. I plan to extend support to other operating systems, GCC and eventually MSVC, but for now, features are the primary focus. For these early days, the library will also remain dependent on the most recent C++ standard (read: I will jump up to C++20 as soon as it's ready and if you have standards that require you to stick to a specific C++ version, this library probably fails more than just this test).
 
 ## Contributing
 
