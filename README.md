@@ -4,7 +4,7 @@
 
 [![Build Status](https://travis-ci.org/JanHett/spice.svg?branch=master)](https://travis-ci.org/JanHett/spice)
 
-This is an attempt to provide a set of generic tools for image processing. At the core of the library is a type for storing n-dimensional data. It intends to translate the flexibility of NumPy's and Julia's Arrays into a low-overhead structure matching the design of the existing C++ standard library.
+This is an attempt to provide a set of generic tools for image processing. At the core of the library is a type for storing n-dimensional data. It intends to translate the flexibility of [NumPy's](https://docs.scipy.org/doc/numpy/reference/generated/numpy.array.html) and [Julia's](https://docs.julialang.org/en/v1/manual/arrays/) Arrays into a low-overhead structure imitating the design of the existing C++ standard library.
 
 Building on this type, a number of more image-specific types are provided.
 
@@ -26,7 +26,7 @@ Instead, here's how to create a 3D `nd_vector`:
 spice::nd_vector<float, 3> three_d({100, 200, 100});
 ```
 
-You can access elements via the subscript operator or the call operator or the `at` member function:
+You can access elements via the subscript operator, the call operator or the `at` member function:
 
 ```c++
 //                           x   y   z
@@ -62,14 +62,13 @@ In beautiful ASCII art, the functioning of a three dimensional `nd_vector<T, 3>`
 |__|__|__|||/
 |__|__|__||/
 |__|__|__|/
-|
-|---> ___
-     /__/|
-    /__/||       ___
-   /__/|||      /__/|
-   |__|||/     /__/|/      __
-   |__||/     /__/|/     /__/|
-   |__|/ ---> |__|/ ---> |__|/
+ │      ___
+ └───> /__/|
+      /__/||       ___
+     /__/|||      /__/|
+     |__|||/     /__/|/      __
+     |__||/     /__/|/     /__/|
+     |__|/ ───> |__|/ ───> |__|/
 ```
 
 The first invokation returns a two dimensional `nd_span<T, 2>`, the second a one dimensional `nd_span<T, 1>` and the last returns a `T&`, a reference to the actual element.
@@ -140,6 +139,7 @@ python3 tools/build.py <Debug | Release>
 #### For the library
 
 - C++17
+- [CMake 3.10](https://cmake.org/)
 - [OpenImageIO](https://github.com/OpenImageIO/oiio)
 - [Guideline Support Library](https://github.com/microsoft/GSL)
 - [Google Test](https://github.com/google/googletest) (technically only needed for building tests)

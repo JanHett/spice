@@ -1,3 +1,6 @@
 [submodule "external/m.css"]
 	path = external/m.css
 	url = https://github.com/mosra/m.css.git
+[submodule "external/gsl"]
+	path = external/gsl
+	url = https://github.com/microsoft/GSL.git

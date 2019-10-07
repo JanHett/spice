@@ -1,11 +1,11 @@
 include(GoogleTest)
 
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.10)
 
 project(spice LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 
@@ -15,18 +15,32 @@ if(APPLE)
     LINK_DIRECTORIES(/usr/local/lib)
 endif()
 
-#####################
+############################
 # Google Test
-#####################
+############################
 
 set(GTEST_ROOT "/usr/local/include/gtest" CACHE PATH "Path to googletest")
 find_package(GTest REQUIRED)
 
-#####################
+############################
 # OpenImageIO
-#####################
+############################
 
 find_package(OpenImageIO REQUIRED)
+
+############################
+# Guideline Support Library
+############################
+
+if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/external/gsl/include/")
+    # we couldn't find the header files for GSL or they don't exist
+    message("Unable to find Guideline Support Library")
+
+    # we have a submodule setup for gsl, so we clone it
+    execute_process(COMMAND git submodule update --init -- external/gsl
+                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+endif()
+add_subdirectory(external/gsl)
 
 # Main executable config
 file(GLOB SRC
@@ -36,6 +50,7 @@ file(GLOB SRC
 )
 add_executable(${PROJECT_NAME} "src/main.cpp" ${SRC})
 target_link_libraries(${PROJECT_NAME} OpenImageIO ${CMAKE_DL_LIBS})
+target_link_libraries(${PROJECT_NAME} GSL)
 
 # Test executable config
 file(GLOB TESTS
@@ -45,6 +60,7 @@ file(GLOB TESTS
 add_executable(tests ${TESTS})
 target_link_libraries(tests GTest::GTest)
 target_link_libraries(tests OpenImageIO ${CMAKE_DL_LIBS})
+target_link_libraries(tests GSL)
 gtest_discover_tests(tests)
 
 if(MSVC)
