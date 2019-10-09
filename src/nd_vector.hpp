@@ -924,7 +924,8 @@ public:
      * Constructs a fresh nd_vector with the specified shape, initialising the
      * data with the provided default value (or `T{}` if none is passed).
      */
-    nd_vector_impl(std::array<size_t, Dimensions> shape, T default_value = T{}):
+    nd_vector_impl(std::array<size_t, Dimensions> shape,
+        T const & default_value = T{}):
     // initialise superclass with `nd_vector_impl(T*, array<size_t, Dimensions>)`
     // size of data array has to be calculated from shape
     nd_vector_impl<Dimensions, T, false>(new T[std::reduce(

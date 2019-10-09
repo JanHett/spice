@@ -135,8 +135,10 @@ public:
     image(
         size_t width,
         size_t height,
-        channel_list channel_semantics = {}):
-    spice::nd_vector<T, 3>({width, height, channel_semantics.size()}),
+        channel_list channel_semantics = {},
+        T const & default_value = T{}):
+    spice::nd_vector<T, 3>({width, height, channel_semantics.size()},
+        default_value),
     m_channel_semantics(channel_semantics)
     {}
 
