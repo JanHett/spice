@@ -5,7 +5,7 @@
 #ifndef SPICE_BLUR
 #define SPICE_BLUR
 
-#import "image.hpp"
+#include "image.hpp"
 #include "print.hpp"
 
 namespace spice {

@@ -6,10 +6,10 @@
 #ifndef SPICE_STATISTICS
 #define SPICE_STATISTICS
 
-#import <vector>
-#import <cmath>
+#include <vector>
+#include <cmath>
 
-#import "image.hpp"
+#include "image.hpp"
 
 namespace spice {
 /**

@@ -17,7 +17,8 @@ TEST(fast_gaussian, normal_call) {
 
     EXPECT_EQ(boat.width(), b_boat.width());
     EXPECT_EQ(boat.height(), b_boat.height());
-    // TODO: check if the image is actually blurred in a realistic way.
+    // TODO: check if the image is actually blurred in a realistic way
+    // (e.g. subtract from model image and check if difference is small enough).
 }
 
 TEST(fast_gaussian, radius_larger_than_image) {

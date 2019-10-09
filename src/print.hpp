@@ -5,10 +5,10 @@
 #ifndef SPICE_PRINT
 #define SPICE_PRINT
 
-#import <vector>
-#import <cmath>
+#include <vector>
+#include <cmath>
 
-#import "image.hpp"
+#include "image.hpp"
 
 namespace spice {
 /**

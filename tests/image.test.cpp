@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
 #include <type_traits>
-#import <limits>
-#import <numeric>
-#import <cstdint>
+#include <limits>
+#include <numeric>
+#include <cstdint>
 #include "../src/image.hpp"
 #include "../src/statistics.hpp"
 #include "../src/print.hpp"

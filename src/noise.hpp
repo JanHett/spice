@@ -6,7 +6,7 @@
 #ifndef SPICE_NOISE
 #define SPICE_NOISE
 
-#import "image.hpp"
+#include "image.hpp"
 
 namespace spice {
 /**

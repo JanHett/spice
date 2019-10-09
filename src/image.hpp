@@ -1,15 +1,15 @@
 #ifndef SPICE_IMAGE
 #define SPICE_IMAGE
 
-#import <vector>
-#import <array>
-#import <stdexcept>
-#import <type_traits>
-#import <limits>
+#include <vector>
+#include <array>
+#include <stdexcept>
+#include <type_traits>
+#include <limits>
 
-#import <OpenImageIO/imageio.h>
+#include <OpenImageIO/imageio.h>
 
-#import "./nd_vector.hpp"
+#include "./nd_vector.hpp"
 
 /**
  * Contains the entire public interface of the library.
