@@ -94,7 +94,9 @@ Performs a series of box blurs to approximate a true gaussian in linear time. Th
 
 ##### Salt and Pepper
 
-> Not yet implemented
+![noise_salt_and_pepper](./data/showcase/noise_salt_and_pepper.jpg)
+
+Adds salt-and-pepper noise with a given density to the image passed as the first argument.
 
 ##### Uniform
 

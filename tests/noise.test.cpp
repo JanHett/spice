@@ -23,6 +23,10 @@ TEST(noise, salt_and_pepper) {
     auto large = std::max(hist[0][0], hist[0].back());
     auto small = std::min(hist[0][0], hist[0].back());
     EXPECT_GT(11, large - small);
+
+    // auto boat = load_image<float>("../data/testing/boat.jpg");
+    // noise::salt_and_pepper(boat, 0.05);
+    // write_image("../data/testing/boat_sp.jpg", boat, OIIO::TypeDesc::UINT8);
 }
 
 TEST(noise, uniform) {
