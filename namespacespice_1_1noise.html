@@ -70,12 +70,6 @@
             <dd></dd>
             <dt>
               <div class="m-doc-template">template&lt;typename T&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#a99c14f8b71afede3fa3964520b61e5a7" class="m-doc">salt_and_pepper</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt; source,
-              float density) -&gt; <a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt;</span>
-            </dt>
-            <dd></dd>
-            <dt>
-              <div class="m-doc-template">template&lt;typename T&gt;</div>
               <span class="m-doc-wrap-bumper">void <a href="#afc4d82583885bf79d6287eefb6fb5534" class="m-doc">uniform</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt;&amp; source,
               float sigma,
               T const&amp; mean)</span>
@@ -131,37 +125,6 @@
             </table>
 <p>Adds salt and pepper noise to the input image.</p>
           </div></section>
-          <section class="m-doc-details" id="a99c14f8b71afede3fa3964520b61e5a7"><div>
-            <h3>
-              <div class="m-doc-template">
-                template&lt;typename T&gt;
-              </div>
-              <span class="m-doc-wrap-bumper"><a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt; spice::<wbr />noise::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a99c14f8b71afede3fa3964520b61e5a7" class="m-doc-self">salt_and_pepper</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt; source,
-              float density)</span></span>
-            </h3>
-            <table class="m-table m-fullwidth m-flat">
-              <thead>
-                <tr><th colspan="2">Parameters</th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style="width: 1%">source</td>
-                  <td>The image to modify</td>
-                </tr>
-                <tr>
-                  <td>density</td>
-                  <td>The probability of a pixel being either white or black</td>
-                </tr>
-              </tbody>
-              <tfoot>
-                <tr>
-                  <th>Returns</th>
-                  <td>The modified image</td>
-                </tr>
-              </tfoot>
-            </table>
-<p>Adds salt and pepper noise to a copy of the input image.</p>
-          </div></section>
           <section class="m-doc-details" id="afc4d82583885bf79d6287eefb6fb5534"><div>
             <h3>
               <div class="m-doc-template">
@@ -189,8 +152,14 @@
                   <td>The mean of the noise distribution</td>
                 </tr>
               </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>The modified image Adds uniform noise to the input image.</td>
+                </tr>
+              </tfoot>
             </table>
-<p>Adds uniform noise to the input image.</p>
+<p>Adds salt and pepper noise to a copy of the input image.</p>
           </div></section>
           <section class="m-doc-details" id="a177d345a34dc65a213952463e739b601"><div>
             <h3>

@@ -93,9 +93,10 @@
             </dt>
             <dd></dd>
             <dt>
-              <span class="m-doc-wrap-bumper"><a href="#a4a21eb7bd9c3165383c412c4e1dc502d" class="m-doc">image</a>(</span><span class="m-doc-wrap">size_t width,
+              <span class="m-doc-wrap-bumper"><a href="#a26553eeb4830fec5b56084a162e73cb0" class="m-doc">image</a>(</span><span class="m-doc-wrap">size_t width,
               size_t height,
-              <a href="namespacespice.html#a91b8eb720ae1ff96ba0a76cc852f3139" class="m-doc">channel_<wbr />list</a> channel_semantics = {})</span>
+              <a href="namespacespice.html#a91b8eb720ae1ff96ba0a76cc852f3139" class="m-doc">channel_<wbr />list</a> channel_semantics = {},
+              T const&amp; default_value = T{})</span>
             </dt>
             <dd></dd>
             <dt>
@@ -159,14 +160,15 @@
             </table>
 <p>Copy constructor. Performs a deep copy of the passed image.</p>
           </div></section>
-          <section class="m-doc-details" id="a4a21eb7bd9c3165383c412c4e1dc502d"><div>
+          <section class="m-doc-details" id="a26553eeb4830fec5b56084a162e73cb0"><div>
             <h3>
               <div class="m-doc-template">
                 template&lt;typename T&gt;
               </div>
-              <span class="m-doc-wrap-bumper"> spice::<wbr />image&lt;T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a4a21eb7bd9c3165383c412c4e1dc502d" class="m-doc-self">image</a>(</span><span class="m-doc-wrap">size_t width,
+              <span class="m-doc-wrap-bumper"> spice::<wbr />image&lt;T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a26553eeb4830fec5b56084a162e73cb0" class="m-doc-self">image</a>(</span><span class="m-doc-wrap">size_t width,
               size_t height,
-              <a href="namespacespice.html#a91b8eb720ae1ff96ba0a76cc852f3139" class="m-doc">channel_<wbr />list</a> channel_semantics = {})</span></span>
+              <a href="namespacespice.html#a91b8eb720ae1ff96ba0a76cc852f3139" class="m-doc">channel_<wbr />list</a> channel_semantics = {},
+              T const&amp; default_value = T{})</span></span>
             </h3>
             <table class="m-table m-fullwidth m-flat">
               <thead>
@@ -184,6 +186,10 @@
                 <tr>
                   <td>channel_semantics</td>
                   <td>The meaning to assign to the channels</td>
+                </tr>
+                <tr>
+                  <td>default_value</td>
+                  <td></td>
                 </tr>
               </tbody>
             </table>
