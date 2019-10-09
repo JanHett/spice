@@ -6,7 +6,7 @@
 #include <type_traits>
 #include <string>
 #include <numeric>
-#include <span>
+#include <gsl/gsl>
 
 namespace spice
 {
@@ -59,15 +59,15 @@ public:
     /**
      * Allows accessing the underlying data directly.
      */
-    [[nodiscard]] constexpr std::span<T> data()
-    { return std::span<T>(m_data, size()); }
+    [[nodiscard]] constexpr gsl::span<T> data()
+    { return gsl::span<T>(m_data, size()); }
 
     /**
      * Allows accessing the underlying data directly. The data is returned in
      * terms of a one-dimensional, non-owning nd_vector.
      */
-    [[nodiscard]] constexpr std::span<T const> data() const
-    { return std::span<T const>(m_data, size()); }
+    [[nodiscard]] constexpr gsl::span<T const> data() const
+    { return gsl::span<T const>(m_data, size()); }
 
     /**
      * Constructs an nd_vector measuring 0 in every dimension, thus containing
