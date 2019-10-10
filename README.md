@@ -2,7 +2,7 @@
 
 # spice. An image processing library.
 
-[![Build Status](https://travis-ci.org/JanHett/spice.svg?branch=master)](https://travis-ci.org/JanHett/spice)
+[![Build Status](https://travis-ci.org/JanHett/spice.svg?branch=master)](https://travis-ci.org/JanHett/spice)[![Coverage Status](https://coveralls.io/repos/github/JanHett/spice/badge.svg?branch=master)](https://coveralls.io/github/JanHett/spice?branch=master)[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/3262/badge)](https://bestpractices.coreinfrastructure.org/projects/3262)
 
 This is an attempt to provide a set of generic tools for image processing. At the core of the library is a type for storing n-dimensional data. It intends to translate the flexibility of [NumPy's](https://docs.scipy.org/doc/numpy/reference/generated/numpy.array.html) and [Julia's](https://docs.julialang.org/en/v1/manual/arrays/) Arrays into a low-overhead structure imitating the design of the existing C++ standard library.
 
@@ -166,6 +166,7 @@ If you found this project useful enough to add your two cents (or lines of code)
 Here's a few ways you can have a part in driving this library forward:
 
 - use it, note what's working and what isn't and tell me about it
+- review the code
 - propose a specific fix or - even better...
 - submit a pull request
 
@@ -173,6 +174,8 @@ If you're extremely motivated, here's a list of things I think are in need of at
 
 - the build system
 - the inheritance structure of `image`, `nd_vector` and `nd_span`
+
+If you submit a pull request, make sure all added functionality is thoroughly (unit) tested.
 
 ## History
 
