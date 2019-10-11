@@ -3,6 +3,7 @@
 # spice. An image processing library.
 
 [![Build Status](https://travis-ci.org/JanHett/spice.svg?branch=master)](https://travis-ci.org/JanHett/spice)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FJanHett%2Fspice.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FJanHett%2Fspice?ref=badge_shield)
 
 This is an attempt to provide a set of generic tools for image processing. At the core of the library is a type for storing n-dimensional data. It intends to translate the flexibility of [NumPy's](https://docs.scipy.org/doc/numpy/reference/generated/numpy.array.html) and [Julia's](https://docs.julialang.org/en/v1/manual/arrays/) Arrays into a low-overhead structure imitating the design of the existing C++ standard library.
 
@@ -183,3 +184,6 @@ In the process of writing spice as it exists today, I have also published an [ar
 ## Credits
 
 Backing image of spice splash screen and favicon: Crab Nebula by NASA/STScI: https://hubblesite.org/contents/media/images/2005/37/1823-Image.html?news=true
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FJanHett%2Fspice.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FJanHett%2Fspice?ref=badge_large)
