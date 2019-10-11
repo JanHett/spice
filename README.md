@@ -2,9 +2,10 @@
 
 # spice. An image processing library.
 
-[![Build Status](https://travis-ci.org/JanHett/spice.svg?branch=master)](https://travis-ci.org/JanHett/spice)[![Coverage Status](https://coveralls.io/repos/github/JanHett/spice/badge.svg?branch=master)](https://coveralls.io/github/JanHett/spice?branch=master)[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/3262/badge)](https://bestpractices.coreinfrastructure.org/projects/3262)
+[![Build Status](https://travis-ci.org/JanHett/spice.svg?branch=master)](https://travis-ci.org/JanHett/spice) [![Coverage Status](https://coveralls.io/repos/github/JanHett/spice/badge.svg?branch=master)](https://coveralls.io/github/JanHett/spice?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1b7aafabf21e47e8ade8eba647589e67)](https://www.codacy.com/manual/JanHett/spice?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=JanHett/spice&amp;utm_campaign=Badge_Grade) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/3262/badge)](https://bestpractices.coreinfrastructure.org/projects/3262)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FJanHett%2Fspice.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FJanHett%2Fspice?ref=badge_shield)
 
-This is an attempt to provide a set of generic tools for image processing. At the core of the library is a type for storing n-dimensional data. It intends to translate the flexibility of [NumPy's](https://docs.scipy.org/doc/numpy/reference/generated/numpy.array.html) and [Julia's](https://docs.julialang.org/en/v1/manual/arrays/) Arrays into a low-overhead structure imitating the design of the existing C++ standard library.
+This is an attempt to provide a set of generic tools for image processing. At the core of the library is a type for storing n-dimensional data which intends to translate the flexibility of [NumPy's](https://docs.scipy.org/doc/numpy/reference/generated/numpy.array.html) and [Julia's](https://docs.julialang.org/en/v1/manual/arrays/) Arrays into a low-overhead structure imitating the design of the existing C++ standard library (and also being compatible with it where applicable).
 
 Building on this type, a number of more image-specific types are provided.
 
@@ -16,7 +17,7 @@ With that being said, here's what spice does do:
 
 > This section is meant to provide a quick introduction to what can be done with this library. Please refer to the [documentation](https://janhett.github.io/spice/) for more a complete reference and details on the individual types' properties.
 
-### N-Dimensional Container `nd_vector`
+### N-Dimensional Container [`nd_vector`](https://janhett.github.io/spice/classspice_1_1nd__vector__impl_3_01_dimensions_00_01_t_00_01true_01_4.html)
 
 Imagine a version of `std::vector` made for storing multidimensional data. Sure, you can nest classic vectors, but each level of nesting will incur an overhead of indirection. The other alternative is to use a single vector and access elements like this: `vec[x + y * line_length]`. Maybe that's fine for 2D structures if you're used to it, but (IMHO) it gets unwieldy and error-prone quickly. Imagine having to index into a three dimensional structure with `vec[x * pixel_size + y * line_length * pixel_size + z]`.
 
@@ -44,11 +45,15 @@ for (int x = 0; x < three_d.shape[0]; ++x)
       std::cout << three_d(x, y, z);
 ```
 
+#### Inheritance structure
+
+Note that `nd_vector` is implemented as a non-virtual subclass of `nd_span` to avoid re-implementation of comment functionality. Since the inheritance is non-virtual, though, an `nd_span` cannot safely be substituted with an `nd_vector`.
+
 #### A note on the name
 
 I named this structure `nd_vector` because it's closer to a `std::vector` than a `std::array` in that it is a dynamically allocated data structure. I don't love it, though, since vector implies a one-dimensional data structure. Suggestions are welcome.
 
-### View over N-Dimensional slices of `nd_vector`s
+### View over N-Dimensional slices of `nd_vector`s: [`nd_span`](https://janhett.github.io/spice/classspice_1_1nd__vector__impl.html)
 
 Indexing into an `nd_vector` either returns a reference to the stored element (if a full set of coordinates was specified) or a `spice::nd_span` representing a slice of the data.
 
@@ -77,9 +82,11 @@ The first invokation returns a two dimensional `nd_span<T, 2>`, the second a one
 
 Continuously creating and destroying `nd_span` instances is inefficient. To alleviate that, I plan  to implement an iterator type for these multidimensional structures as well as C++20-style ranges.
 
-### Image data structure based on `nd_vector`
+### [`image`](https://janhett.github.io/spice/classspice_1_1image.html) type, based on `nd_vector`
 
-Since an image is essentially a three-dimensional array of values (the dimensions being width, height and colour), spice's `image` type is implemented as a subclass of `nd_vector`. It provides a set of additional properties and operations.
+Since an image is essentially a three-dimensional array of values (the dimensions being width, height and colour channels), spice's `image` type is implemented as a subclass of `nd_vector`. It provides additional, image-specific properties and operations such as a `constexpr static` member variable indicating the values representing unexposed or fully saturated pixels (`image<T>::range.min` and `image<T>::range.max`).
+
+Same as `nd_vector` extending `nd_span`, `image` is also a non-virtual subclass of `nd_vector`.
 
 ### Image processing and analysis tools
 
@@ -170,12 +177,9 @@ Here's a few ways you can have a part in driving this library forward:
 - propose a specific fix or - even better...
 - submit a pull request
 
-If you're extremely motivated, here's a list of things I think are in need of attention or review:
-
-- the build system
-- the inheritance structure of `image`, `nd_vector` and `nd_span`
-
 If you submit a pull request, make sure all added functionality is thoroughly (unit) tested.
+
+If you spot a bug or a vulnerability, please [create an issue](https://github.com/JanHett/spice/issues/new) describing the malfunction. I will do my best to look into it within a few days.
 
 ## History
 

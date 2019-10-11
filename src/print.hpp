@@ -94,7 +94,7 @@ namespace print {
     template<typename T = float>
     void histogram(std::vector<std::vector<size_t>> const & histogram,
         size_t max_amplitude,
-        std::vector<color<T>> colors,
+        std::vector<color<T>> const & colors,
         std::ostream & stream = std::cout)
     {
         // find the most common value class per channel

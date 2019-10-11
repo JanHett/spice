@@ -27,11 +27,11 @@ def p_warning(message):
 def p_fail(message):
     print(f"{colors.FAIL}{message}{colors.ENDC}")
 
-def p_format(message, *format):
+def p_format(message, *format_codes):
     """
     Prints `message` with all of the formatting escape codes applied.
     """
-    print(f"{''.join(format)}{message}{colors.ENDC}")
+    print(f"{''.join(format_codes)}{message}{colors.ENDC}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Build the spice library.')
@@ -113,5 +113,5 @@ if __name__ == "__main__":
         else:
             run_args = []
         run_cmd = [f'./{args.run}', *run_args]
-    
+
         subprocess.run(run_cmd, cwd=build_dir)
