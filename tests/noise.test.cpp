@@ -35,4 +35,7 @@ TEST(noise, uniform) {
 
 TEST(noise, gaussian) {
     GTEST_SKIP();
+    // auto boat = load_image<float>("../data/testing/boat.jpg");
+    // noise::gaussian(boat, 0.05f, 0.15f);
+    // write_image("../data/testing/boat_gaussian.jpg", boat, OIIO::TypeDesc::UINT8);
 }

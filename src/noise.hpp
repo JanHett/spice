@@ -82,28 +82,38 @@ namespace noise {
      * \param mean The mean of the noise distribution
      * \returns The modified image
      */
-    template<typename T>
-    image<T> uniform(
-        image<T> source,
-        float sigma,
-        T const & mean)
-    {
-        uniform(source, sigma, mean);
-        return source;
-    }
+    // template<typename T>
+    // image<T> uniform(
+    //     image<T> source,
+    //     float sigma,
+    //     T const & mean)
+    // {
+    //     uniform(source, sigma, mean);
+    //     return source;
+    // }
 
     /**
      * Adds gaussian noise to the input image.
      *
      * \param source The image to modify
-     * \param sigma The standard deviation
      * \param mean The mean of the noise distribution
+     * \param sigma The standard deviation
+     * \param operation The operation with which to combine the noise with the
+     * image. Please note that the image element will be the first operand and
+     * the noise sample the second (i.e. `element = operation(element, noise`).
      */
-    template<typename T>
+    template<typename T, typename Op = std::plus<T>>
     void gaussian(
         image<T> & source,
-        float sigma,
-        T const & mean);
+        T const & mean,
+        T const & sigma,
+        Op operation = Op())
+    {
+        std::mt19937 mersenne(rand_dev());
+        std::normal_distribution<float> normal_dist(mean, sigma);
+        for(auto & elem : source.data())
+            elem = operation(elem, normal_dist(mersenne));
+    }
 
     /**
      * Adds gaussian noise to a copy of the input image.
@@ -113,15 +123,15 @@ namespace noise {
      * \param mean The mean of the noise distribution
      * \returns The modified image
      */
-    template<typename T>
-    image<T> gaussian(
-        image<T> source,
-        float sigma,
-        T const & mean)
-    {
-        gaussian(source, sigma, mean);
-        return source;
-    }
+    // template<typename T>
+    // image<T> gaussian(
+    //     image<T> source,
+    //     float sigma,
+    //     T const & mean)
+    // {
+    //     gaussian(source, sigma, mean);
+    //     return source;
+    // }
 }
 }
 

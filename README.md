@@ -3,6 +3,7 @@
 # spice. An image processing library.
 
 [![Build Status](https://travis-ci.org/JanHett/spice.svg?branch=master)](https://travis-ci.org/JanHett/spice) [![Coverage Status](https://coveralls.io/repos/github/JanHett/spice/badge.svg?branch=master)](https://coveralls.io/github/JanHett/spice?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1b7aafabf21e47e8ade8eba647589e67)](https://www.codacy.com/manual/JanHett/spice?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=JanHett/spice&amp;utm_campaign=Badge_Grade) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/3262/badge)](https://bestpractices.coreinfrastructure.org/projects/3262)
+
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FJanHett%2Fspice.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FJanHett%2Fspice?ref=badge_shield)
 
 This is an attempt to provide a set of generic tools for image processing. At the core of the library is a type for storing n-dimensional data which intends to translate the flexibility of [NumPy's](https://docs.scipy.org/doc/numpy/reference/generated/numpy.array.html) and [Julia's](https://docs.julialang.org/en/v1/manual/arrays/) Arrays into a low-overhead structure imitating the design of the existing C++ standard library (and also being compatible with it where applicable).
@@ -19,15 +20,23 @@ With that being said, here's what spice does do:
 
 ### N-Dimensional Container [`nd_vector`](https://janhett.github.io/spice/classspice_1_1nd__vector__impl_3_01_dimensions_00_01_t_00_01true_01_4.html)
 
-Imagine a version of `std::vector` made for storing multidimensional data. Sure, you can nest classic vectors, but each level of nesting will incur an overhead of indirection. The other alternative is to use a single vector and access elements like this: `vec[x + y * line_length]`. Maybe that's fine for 2D structures if you're used to it, but (IMHO) it gets unwieldy and error-prone quickly. Imagine having to index into a three dimensional structure with `vec[x * pixel_size + y * line_length * pixel_size + z]`.
+Imagine a version of `std::vector` made for storing multidimensional data.
 
-Instead, here's how to create a 3D `nd_vector`:
+#### Motivation
+
+Sure, you can nest classic vectors, but each level of nesting will incur an overhead of indirection. The other alternative is to use a single vector and access elements like this: `vec[x + y * width]`. Maybe that's fine for 2D structures if you're used to it, but (IMHO) it gets unwieldy and error-prone quickly.
+
+With only one additional dimension (for a total of three, i.e. an image), the expression to index into the structure becomes `vec[x * pixel_size + y * width * pixel_size + z]` and with four (e.g. frame number, width, heigh, colour) this style produces this mad, 87 characters long expression: `vec[frame * width * height * pixel_size + x * pixel_size + y * width * pixel_size + z]`.
+
+#### Basic Usage
+
+Here's how to create a 3D `nd_vector` with spice:
 
 ```c++
 spice::nd_vector<float, 3> three_d({100, 200, 100});
 ```
 
-You can access elements via the subscript operator, the call operator or the `at` member function:
+You can access elements via the subscript operator, the call operator or the `at` member function (use the latter to get bounds checking):
 
 ```c++
 //                           x   y   z
@@ -36,7 +45,9 @@ float element2 = three_d   (42, 47,  0);
 float element2 = three_d.at(42, 47,  0);
 ```
 
-Note the order of the indices: x, y, and then z. Data in a `spice::nd_vector` is laid out in "column major" order as opposed to the row major order common in C++ and Python. This is to make accessing lower-dimensional slices of the data intuitive and efficient. It also has the nice side effect that loops nested in the  order that might be intuitive to beginners are cache-friendly:
+#### Data Layout
+
+Note the order of the indices in the above snippet: x, y, and then z. Data in a `spice::nd_vector` is laid out in "column major" order as opposed to the row major order common in C++ and Python. This is to make accessing lower-dimensional slices of the data intuitive and efficient. It also has the nice side effect that loops nested in the  order that might be intuitive to beginners are cache-friendly:
 
 ```c++
 for (int x = 0; x < three_d.shape[0]; ++x)
@@ -47,7 +58,7 @@ for (int x = 0; x < three_d.shape[0]; ++x)
 
 #### Inheritance structure
 
-Note that `nd_vector` is implemented as a non-virtual subclass of `nd_span` to avoid re-implementation of comment functionality. Since the inheritance is non-virtual, though, an `nd_span` cannot safely be substituted with an `nd_vector`.
+Note that `nd_vector` is implemented as a non-virtual subclass of `nd_span` to avoid re-implementation of comment functionality. Since the inheritance is non-virtual, though, an `nd_span` cannot safely be substituted with an `nd_vector`. Use a template if you want to be able to use either. Once C++20 concepts are available in the major compilers' binary releases, I'll add the appropriate concepts to the library.
 
 #### A note on the name
 
