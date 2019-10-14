@@ -104,7 +104,7 @@ Same as `nd_vector` extending `nd_span`, `image` is also a non-virtual subclass 
 #### [Blur](https://janhett.github.io/spice/namespacespice_1_1blur.html)
 
 ##### Fast gaussian blur approximation
-![fast_gaussian](./data/showcase/fast_gaussian.jpg)
+![fast_gaussian](./data/showcase/blur_fast_gaussian.jpg)
 
 Performs a series of box blurs to approximate a true gaussian in linear time. The number of passes is adjustable.
 
@@ -122,7 +122,9 @@ Adds salt-and-pepper noise with a given density to the image passed as the first
 
 ##### Gaussian
 
-> Not yet implemented
+![noise_gaussian](./data/showcase/noise_gaussian.jpg)
+
+Adds gaussian noise with a given median value and standard deviation to the image. The default combining operation is addition but other operations can be specified if needed.
 
 #### [Statistics](https://janhett.github.io/spice/namespacespice_1_1statistics.html)
 
