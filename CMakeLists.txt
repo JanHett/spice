@@ -1,3 +1,25 @@
+# changes To-Do (https://www.youtube.com/watch?v=bsXLMQ6WgIk):
+
+# remove file(GLOB)
+
+# set up target for lib: `add_library`
+
+# set up target for tests: `add_executable`
+
+# set version number
+
+# remove explicit compile flags, and required version...
+# set them on targets:
+# --> target_compile_features(<target> PUBLIC ... INTERFACE ... PRIVATE ...)
+
+# specify PUBLIC/INTERFACE/PRIVATE on target_link_libraries
+
+# remove -Wall etc from *requirements* - only uise it for building tests
+
+# add install commands and export library interface (38:00 +)
+
+
+
 include(GoogleTest)
 
 cmake_minimum_required(VERSION 3.10)

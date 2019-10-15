@@ -2,9 +2,7 @@
 
 # spice. An image processing library.
 
-[![Build Status](https://travis-ci.org/JanHett/spice.svg?branch=master)](https://travis-ci.org/JanHett/spice) [![Coverage Status](https://coveralls.io/repos/github/JanHett/spice/badge.svg?branch=master)](https://coveralls.io/github/JanHett/spice?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1b7aafabf21e47e8ade8eba647589e67)](https://www.codacy.com/manual/JanHett/spice?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=JanHett/spice&amp;utm_campaign=Badge_Grade) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/3262/badge)](https://bestpractices.coreinfrastructure.org/projects/3262)
-
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FJanHett%2Fspice.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FJanHett%2Fspice?ref=badge_shield)
+[![Build Status](https://travis-ci.org/JanHett/spice.svg?branch=master)](https://travis-ci.org/JanHett/spice) [![Coverage Status](https://coveralls.io/repos/github/JanHett/spice/badge.svg?branch=master)](https://coveralls.io/github/JanHett/spice?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1b7aafabf21e47e8ade8eba647589e67)](https://www.codacy.com/manual/JanHett/spice?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=JanHett/spice&amp;utm_campaign=Badge_Grade) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/3262/badge)](https://bestpractices.coreinfrastructure.org/projects/3262) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FJanHett%2Fspice.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FJanHett%2Fspice?ref=badge_shield)
 
 This is an attempt to provide a set of generic tools for image processing. At the core of the library is a type for storing n-dimensional data which intends to translate the flexibility of [NumPy's](https://docs.scipy.org/doc/numpy/reference/generated/numpy.array.html) and [Julia's](https://docs.julialang.org/en/v1/manual/arrays/) Arrays into a low-overhead structure imitating the design of the existing C++ standard library (and also being compatible with it where applicable).
 
@@ -16,7 +14,7 @@ With that being said, here's what spice does do:
 
 ## Features
 
-> This section is meant to provide a quick introduction to what can be done with this library. Please refer to the [documentation](https://janhett.github.io/spice/) for more a complete reference and details on the individual types' properties.
+> This section is meant to provide a quick introduction to what can be done with this library. Please refer to the [documentation](https://janhett.github.io/spice/) for more a complete reference and details on the individual types' properties. The section titles are linked to the appropriate pages.
 
 ### N-Dimensional Container [`nd_vector`](https://janhett.github.io/spice/classspice_1_1nd__vector__impl_3_01_dimensions_00_01_t_00_01true_01_4.html)
 
