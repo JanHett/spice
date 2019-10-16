@@ -14,9 +14,17 @@
 
 # specify PUBLIC/INTERFACE/PRIVATE on target_link_libraries
 
-# remove -Wall etc from *requirements* - only uise it for building tests
+# remove -Wall etc from *requirements* - only use it for building tests
 
 # add install commands and export library interface (38:00 +)
+
+# add alias spice::spice
+
+# CTEST! ctest -S build.cmake <== this is where CI is run
+
+# remove -Werror
+
+# target properties for static analysis (especially CMAK_CXX_CLANG_TIDY)
 
 
 

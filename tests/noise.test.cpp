@@ -31,6 +31,13 @@ TEST(noise, salt_and_pepper) {
 
 TEST(noise, uniform) {
     GTEST_SKIP();
+    // auto boat_fl = load_image<float>("../data/testing/boat.jpg");
+    // noise::uniform(boat_fl, -0.25f, 0.25f);
+    // write_image("../data/testing/boat_uniform_float.jpg", boat_fl, OIIO::TypeDesc::UINT8);
+
+    // auto boat_int = load_image<uint8_t>("../data/testing/boat.jpg");
+    // noise::uniform(boat_int, uint8_t(0), uint8_t(64));
+    // write_image("../data/testing/boat_uniform_int.jpg", boat_int, OIIO::TypeDesc::UINT8);
 }
 
 TEST(noise, gaussian) {

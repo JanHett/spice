@@ -13,6 +13,10 @@
 namespace spice {
 /**
  * This namespace exports various noise generation algorithms.
+ *
+ * \note By default, none of these algorithms checks for overflow. This is a
+ * problem especially with integer types, but much less so with floating point
+ * types since the latter do not clip beyond their interpreted range.
  */
 namespace noise {
     namespace {
@@ -65,14 +69,30 @@ namespace noise {
      * Adds uniform noise to the input image.
      *
      * \param source The image to modify
-     * \param sigma The standard deviation
-     * \param mean The mean of the noise distribution
+     * \param min The minimum noise value
+     * \param max The maximum noise value
+     * \param operation The with which to combine the noise with the
+     * image. Please note that the image element will be the first operand and
+     * the noise sample the second (i.e. `element = operation(element, noise`).
      */
-    template<typename T>
+    template<typename T, typename Op = std::plus<T>>
     void uniform(
         image<T> & source,
-        float sigma,
-        T const & mean);
+        T const & min,
+        T const & max,
+        Op operation = Op())
+    {
+        std::mt19937 mersenne(rand_dev());
+        if constexpr (std::is_floating_point<T>::value) {
+            std::uniform_real_distribution<T> dist(min, max);
+            for(auto & elem : source.data())
+                elem = operation(elem, dist(mersenne));
+        } else {
+            std::uniform_int_distribution<T> dist(min, max);
+            for(auto & elem : source.data())
+                elem = operation(elem, dist(mersenne));
+        }
+    }
 
     /**
      * Adds uniform noise to a copy of the input image.

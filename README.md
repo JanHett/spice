@@ -116,7 +116,9 @@ Adds salt-and-pepper noise with a given density to the image passed as the first
 
 ##### Uniform
 
-> Not yet implemented
+![noise_uniform](./data/showcase/noise_uniform.jpg)
+
+Adds noise, uniformly distributed between the specified minimum and maximum values, to the image. The default combining operation is addition but other operations can be specified if needed.
 
 ##### Gaussian
 
