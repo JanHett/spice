@@ -202,4 +202,6 @@ In the process of writing spice as it exists today, I have also published an [ar
 
 ## Credits
 
+The build system has been adapted from cmake init: https://github.com/cginternals/cmake-init
+
 Backing image of spice splash screen and favicon: Crab Nebula by NASA/STScI: https://hubblesite.org/contents/media/images/2005/37/1823-Image.html?news=true
