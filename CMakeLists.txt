@@ -81,7 +81,7 @@ add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 # TODO: change src to include
 target_include_directories(
   ${PROJECT_NAME}
-  INTERFACE $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/src>
+  INTERFACE $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>
             $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
@@ -122,7 +122,17 @@ install(FILES "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
         DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/cmake)
 
 # TODO have source ".../include/spice"?
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/src DESTINATION include)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/include DESTINATION include)
+
+#############################
+# Testing setup
+#############################
+
+option(ENABLE_TESTS "Build unit tests" ON)
+
+if(ENABLE_TESTS)
+  add_subdirectory(tests)
+endif()
 
 ################################################################################
 
