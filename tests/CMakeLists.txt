@@ -2,7 +2,8 @@
 # External dependencies
 # 
 
-find_package(${PROJECT_NAME} REQUIRED HINTS "${CMAKE_CURRENT_SOURCE_DIR}/../../../")
+# find_package(${PROJECT_NAME} REQUIRED HINTS "${CMAKE_CURRENT_SOURCE_DIR}/../")
+# add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/../")
 
 # 
 # Executable name and options
@@ -59,7 +60,11 @@ target_include_directories(${target}
 
 # 
 # Libraries
-# 
+#
+
+include(GoogleTest)
+set(GTEST_ROOT "/usr/local/include/gtest" CACHE PATH "Path to googletest")
+find_package(GTest REQUIRED)
 
 target_link_libraries(${target}
     PRIVATE
@@ -94,12 +99,18 @@ target_compile_options(${target}
     -fsanitize=address
 )
 
+target_link_options(${target}
+    PRIVATE
+    -fsanitize=address
+)
+
 
 # 
 # Linker options
 # 
 
-# target_link_libraries(${target}
-#     PRIVATE
-#     ${DEFAULT_LINKER_OPTIONS}
-# )
+target_link_libraries(${target}
+    PRIVATE
+    # ${DEFAULT_LINKER_OPTIONS}
+    spice
+)
