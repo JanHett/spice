@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "src/nd_vector.hpp"
+#include <spice/nd_vector.hpp>
 
 using namespace spice;
 

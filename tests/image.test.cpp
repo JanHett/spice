@@ -4,9 +4,9 @@
 #include <limits>
 #include <numeric>
 #include <cstdint>
-#include "../src/image.hpp"
-#include "../src/statistics.hpp"
-#include "../src/print.hpp"
+#include <spice/image.hpp>
+#include <spice/statistics.hpp>
+#include <spice/print.hpp>
 
 using namespace spice;
 

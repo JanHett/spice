@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "../src/blur.hpp"
-#include "../src/statistics.hpp"
-#include "../src/print.hpp"
+#include <spice/blur.hpp>
+#include <spice/statistics.hpp>
+#include <spice/print.hpp>
 
 using namespace spice;
 

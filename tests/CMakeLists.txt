@@ -18,10 +18,10 @@ message(STATUS "Test ${target}")
 # Sources
 # 
 
-set(sources
-    all.test.cpp
+file(GLOB sources
+    *.cpp
+    **/*.cpp
 )
-
 
 # 
 # Create executable

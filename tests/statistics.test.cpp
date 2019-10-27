@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../src/statistics.hpp"
+#include <spice/statistics.hpp>
 
 using namespace spice;
 

@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "../src/noise.hpp"
-#include "../src/statistics.hpp"
-#include "../src/print.hpp"
+#include <spice/noise.hpp>
+#include <spice/statistics.hpp>
+#include <spice/print.hpp>
 
 using namespace spice;
 
