@@ -309,6 +309,11 @@
               T_scalar const&amp; rhs) -&gt; <a href="classspice_1_1nd__vector__impl.html" class="m-doc">nd_<wbr />vector_<wbr />impl</a>&lt;Dimensions, T, true&gt;</span>
             </dt>
             <dd></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a76d0f0f50d896799e71a7a659658d951" class="m-doc">operator&lt;&lt;</a>(</span><span class="m-doc-wrap">std::ostream&amp; os,
+              <a href="classspice_1_1nd__vector__impl.html" class="m-doc">nd_<wbr />vector_<wbr />impl</a> const&amp; vec) -&gt; std::ostream&amp;</span>
+            </dt>
+            <dd></dd>
           </dl>
         </section>
         <section>
@@ -416,7 +421,7 @@
               </div>
               <span class="m-doc-wrap-bumper"><a href="classspice_1_1nd__vector__impl.html" class="m-doc">nd_<wbr />vector_<wbr />impl</a>&amp; spice::<wbr />nd_vector_impl&lt;Dimensions, T, Owner&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#abc25d6bb736263ea88b3c0f977c474cf" class="m-doc-self">operator=</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1nd__vector__impl.html" class="m-doc">nd_<wbr />vector_<wbr />impl</a> const&amp; other)</span></span>
             </h3>
-<p>Creates an nd_vector and initialises it with the values found in the passed data array.</p><aside class="m-note m-info"><h4>Note</h4><p>The <code>data</code> array should be structured in column-major order.</p></aside>
+<p>Copies the values from <code>other</code> to <code>this</code>. Only values included in the intersection of the shapes of <code>other</code> and <code>this</code> are copied, the shape of <code>this</code> is not adjusted.</p>
           </div></section>
           <section class="m-doc-details" id="a118691ef034a0ad3023f9d4beb4e16dc"><div>
             <h3>
@@ -1045,6 +1050,16 @@
               T_scalar const&amp; rhs)</span></span>
             </h3>
 <p>Divides each element of the nd_vector by the scalar <code>rhs</code> argument.</p><aside class="m-note m-info"><h4>Note</h4><p>The first operand will be copied as an owning nd_vector, even if it is merely a view.</p></aside>
+          </div></section>
+          <section class="m-doc-details" id="a76d0f0f50d896799e71a7a659658d951"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;size_t Dimensions, typename T, bool Owner&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">std::ostream&amp; </span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a76d0f0f50d896799e71a7a659658d951" class="m-doc-self">operator&lt;&lt;</a>(</span><span class="m-doc-wrap">std::ostream&amp; os,
+              <a href="classspice_1_1nd__vector__impl.html" class="m-doc">nd_<wbr />vector_<wbr />impl</a> const&amp; vec)</span></span>
+            </h3>
+<p>Prints a representation of the nd_vector of the form <code><a href="classspice_1_1nd__vector__impl.html" class="m-doc">nd_<wbr />vector_<wbr />impl</a> (W x H x D)[ 42, ..., 47 ]</code>to the proVided stream.</p>
           </div></section>
         </section>
       </div>

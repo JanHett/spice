@@ -45,7 +45,7 @@
       <div class="m-col-l-10 m-push-l-1">
         <h1>
           <span class="m-breadcrumb"><a href="namespacespice.html">spice</a>::<wbr/></span>print <span class="m-thin">namespace</span>
-          <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="print_8hpp.html">&lt;src/print.hpp&gt;</a></div>
+          <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="print_8hpp.html">&lt;include/spice/print.hpp&gt;</a></div>
         </h1>
         <div class="m-block m-default">
           <h3>Contents</h3>
@@ -78,9 +78,9 @@
             <dd></dd>
             <dt>
               <div class="m-doc-template">template&lt;typename T = float&gt;</div>
-              <span class="m-doc-wrap-bumper">void <a href="#a88a7519e79506711e0f7e87c5c077b24" class="m-doc">histogram</a>(</span><span class="m-doc-wrap">std::vector&lt;std::vector&lt;size_t&gt;&gt; const&amp; histogram,
+              <span class="m-doc-wrap-bumper">void <a href="#a73f1ee05c39abd57c52a4426ecbd8909" class="m-doc">histogram</a>(</span><span class="m-doc-wrap">std::vector&lt;std::vector&lt;size_t&gt;&gt; const&amp; histogram,
               size_t max_amplitude,
-              std::vector&lt;<a href="namespacespice.html#a3298381bfef4f5a53aad5ae5052a168f" class="m-doc">color</a>&lt;T&gt;&gt; colors,
+              std::vector&lt;<a href="namespacespice.html#a3298381bfef4f5a53aad5ae5052a168f" class="m-doc">color</a>&lt;T&gt;&gt; const&amp; colors,
               std::ostream&amp; stream = std::cout)</span>
             </dt>
             <dd></dd>
@@ -129,14 +129,14 @@
             </h3>
 <p>Prints an image in pixel-art style to the <code>stream</code>.</p><aside class="m-note m-info"><h4>Note</h4><p>Since there is no way to reliably make exactly square pixels, the aspect ratio will be off.</p></aside>
           </div></section>
-          <section class="m-doc-details" id="a88a7519e79506711e0f7e87c5c077b24"><div>
+          <section class="m-doc-details" id="a73f1ee05c39abd57c52a4426ecbd8909"><div>
             <h3>
               <div class="m-doc-template">
                 template&lt;typename T = float&gt;
               </div>
-              <span class="m-doc-wrap-bumper">void spice::<wbr />print::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a88a7519e79506711e0f7e87c5c077b24" class="m-doc-self">histogram</a>(</span><span class="m-doc-wrap">std::vector&lt;std::vector&lt;size_t&gt;&gt; const&amp; histogram,
+              <span class="m-doc-wrap-bumper">void spice::<wbr />print::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a73f1ee05c39abd57c52a4426ecbd8909" class="m-doc-self">histogram</a>(</span><span class="m-doc-wrap">std::vector&lt;std::vector&lt;size_t&gt;&gt; const&amp; histogram,
               size_t max_amplitude,
-              std::vector&lt;<a href="namespacespice.html#a3298381bfef4f5a53aad5ae5052a168f" class="m-doc">color</a>&lt;T&gt;&gt; colors,
+              std::vector&lt;<a href="namespacespice.html#a3298381bfef4f5a53aad5ae5052a168f" class="m-doc">color</a>&lt;T&gt;&gt; const&amp; colors,
               std::ostream&amp; stream = std::cout)</span></span>
             </h3>
             <table class="m-table m-fullwidth m-flat">

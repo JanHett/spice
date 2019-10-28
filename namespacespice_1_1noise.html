@@ -45,7 +45,7 @@
       <div class="m-col-l-10 m-push-l-1">
         <h1>
           <span class="m-breadcrumb"><a href="namespacespice.html">spice</a>::<wbr/></span>noise <span class="m-thin">namespace</span>
-          <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="noise_8hpp.html">&lt;src/noise.hpp&gt;</a></div>
+          <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="noise_8hpp.html">&lt;include/spice/noise.hpp&gt;</a></div>
         </h1>
         <div class="m-block m-default">
           <h3>Contents</h3>
@@ -58,7 +58,7 @@
             </li>
           </ul>
         </div>
-<p>This namespace exports various noise generation algorithms.</p>
+<p>This namespace exports various noise generation algorithms.</p><aside class="m-note m-info"><h4>Note</h4><p>By default, none of these algorithms checks for overflow. This is a problem especially with integer types, but much less so with floating point types since the latter do not clip beyond their interpreted range.</p></aside>
         <section id="func-members">
           <h2><a href="#func-members">Functions</a></h2>
           <dl class="m-doc">
@@ -69,31 +69,19 @@
             </dt>
             <dd></dd>
             <dt>
-              <div class="m-doc-template">template&lt;typename T&gt;</div>
-              <span class="m-doc-wrap-bumper">void <a href="#afc4d82583885bf79d6287eefb6fb5534" class="m-doc">uniform</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt;&amp; source,
-              float sigma,
-              T const&amp; mean)</span>
+              <div class="m-doc-template">template&lt;typename T, typename Op = std::plus&lt;T&gt;&gt;</div>
+              <span class="m-doc-wrap-bumper">void <a href="#acfe5fb5efa82898ca757f27b252dff0b" class="m-doc">uniform</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt;&amp; source,
+              T const&amp; min,
+              T const&amp; max,
+              Op operation = Op())</span>
             </dt>
             <dd></dd>
             <dt>
-              <div class="m-doc-template">template&lt;typename T&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#a177d345a34dc65a213952463e739b601" class="m-doc">uniform</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt; source,
-              float sigma,
-              T const&amp; mean) -&gt; <a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt;</span>
-            </dt>
-            <dd></dd>
-            <dt>
-              <div class="m-doc-template">template&lt;typename T&gt;</div>
-              <span class="m-doc-wrap-bumper">void <a href="#a7e24587575f5b1eda6ed4d1f3fe719e5" class="m-doc">gaussian</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt;&amp; source,
-              float sigma,
-              T const&amp; mean)</span>
-            </dt>
-            <dd></dd>
-            <dt>
-              <div class="m-doc-template">template&lt;typename T&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#afd5f72a73baa989049d5e01a72901199" class="m-doc">gaussian</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt; source,
-              float sigma,
-              T const&amp; mean) -&gt; <a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt;</span>
+              <div class="m-doc-template">template&lt;typename T, typename Op = std::plus&lt;T&gt;&gt;</div>
+              <span class="m-doc-wrap-bumper">void <a href="#a29fba65cc55703135292be1620fda91a" class="m-doc">gaussian</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt;&amp; source,
+              T const&amp; mean,
+              T const&amp; sigma,
+              Op operation = Op())</span>
             </dt>
             <dd></dd>
           </dl>
@@ -125,14 +113,15 @@
             </table>
 <p>Adds salt and pepper noise to the input image.</p>
           </div></section>
-          <section class="m-doc-details" id="afc4d82583885bf79d6287eefb6fb5534"><div>
+          <section class="m-doc-details" id="acfe5fb5efa82898ca757f27b252dff0b"><div>
             <h3>
               <div class="m-doc-template">
-                template&lt;typename T&gt;
+                template&lt;typename T, typename Op = std::plus&lt;T&gt;&gt;
               </div>
-              <span class="m-doc-wrap-bumper">void spice::<wbr />noise::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#afc4d82583885bf79d6287eefb6fb5534" class="m-doc-self">uniform</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt;&amp; source,
-              float sigma,
-              T const&amp; mean)</span></span>
+              <span class="m-doc-wrap-bumper">void spice::<wbr />noise::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#acfe5fb5efa82898ca757f27b252dff0b" class="m-doc-self">uniform</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt;&amp; source,
+              T const&amp; min,
+              T const&amp; max,
+              Op operation = Op())</span></span>
             </h3>
             <table class="m-table m-fullwidth m-flat">
               <thead>
@@ -144,31 +133,30 @@
                   <td>The image to modify</td>
                 </tr>
                 <tr>
-                  <td>sigma</td>
-                  <td>The standard deviation</td>
+                  <td>min</td>
+                  <td>The minimum noise value</td>
                 </tr>
                 <tr>
-                  <td>mean</td>
-                  <td>The mean of the noise distribution</td>
+                  <td>max</td>
+                  <td>The maximum noise value</td>
+                </tr>
+                <tr>
+                  <td>operation</td>
+                  <td>The with which to combine the noise with the image. Please note that the image element will be the first operand and the noise sample the second (i.e. <code>element = operation(element, noise</code>).</td>
                 </tr>
               </tbody>
-              <tfoot>
-                <tr>
-                  <th>Returns</th>
-                  <td>The modified image Adds uniform noise to the input image.</td>
-                </tr>
-              </tfoot>
             </table>
-<p>Adds salt and pepper noise to a copy of the input image.</p>
+<p>Adds uniform noise to the input image.</p>
           </div></section>
-          <section class="m-doc-details" id="a177d345a34dc65a213952463e739b601"><div>
+          <section class="m-doc-details" id="a29fba65cc55703135292be1620fda91a"><div>
             <h3>
               <div class="m-doc-template">
-                template&lt;typename T&gt;
+                template&lt;typename T, typename Op = std::plus&lt;T&gt;&gt;
               </div>
-              <span class="m-doc-wrap-bumper"><a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt; spice::<wbr />noise::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a177d345a34dc65a213952463e739b601" class="m-doc-self">uniform</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt; source,
-              float sigma,
-              T const&amp; mean)</span></span>
+              <span class="m-doc-wrap-bumper">void spice::<wbr />noise::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a29fba65cc55703135292be1620fda91a" class="m-doc-self">gaussian</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt;&amp; source,
+              T const&amp; mean,
+              T const&amp; sigma,
+              Op operation = Op())</span></span>
             </h3>
             <table class="m-table m-fullwidth m-flat">
               <thead>
@@ -180,88 +168,20 @@
                   <td>The image to modify</td>
                 </tr>
                 <tr>
-                  <td>sigma</td>
-                  <td>The standard deviation</td>
-                </tr>
-                <tr>
                   <td>mean</td>
                   <td>The mean of the noise distribution</td>
-                </tr>
-              </tbody>
-              <tfoot>
-                <tr>
-                  <th>Returns</th>
-                  <td>The modified image</td>
-                </tr>
-              </tfoot>
-            </table>
-<p>Adds uniform noise to a copy of the input image.</p>
-          </div></section>
-          <section class="m-doc-details" id="a7e24587575f5b1eda6ed4d1f3fe719e5"><div>
-            <h3>
-              <div class="m-doc-template">
-                template&lt;typename T&gt;
-              </div>
-              <span class="m-doc-wrap-bumper">void spice::<wbr />noise::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a7e24587575f5b1eda6ed4d1f3fe719e5" class="m-doc-self">gaussian</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt;&amp; source,
-              float sigma,
-              T const&amp; mean)</span></span>
-            </h3>
-            <table class="m-table m-fullwidth m-flat">
-              <thead>
-                <tr><th colspan="2">Parameters</th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style="width: 1%">source</td>
-                  <td>The image to modify</td>
                 </tr>
                 <tr>
                   <td>sigma</td>
                   <td>The standard deviation</td>
                 </tr>
                 <tr>
-                  <td>mean</td>
-                  <td>The mean of the noise distribution</td>
+                  <td>operation</td>
+                  <td>The operation with which to combine the noise with the image. Please note that the image element will be the first operand and the noise sample the second (i.e. <code>element = operation(element, noise</code>).</td>
                 </tr>
               </tbody>
             </table>
 <p>Adds gaussian noise to the input image.</p>
-          </div></section>
-          <section class="m-doc-details" id="afd5f72a73baa989049d5e01a72901199"><div>
-            <h3>
-              <div class="m-doc-template">
-                template&lt;typename T&gt;
-              </div>
-              <span class="m-doc-wrap-bumper"><a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt; spice::<wbr />noise::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#afd5f72a73baa989049d5e01a72901199" class="m-doc-self">gaussian</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt; source,
-              float sigma,
-              T const&amp; mean)</span></span>
-            </h3>
-            <table class="m-table m-fullwidth m-flat">
-              <thead>
-                <tr><th colspan="2">Parameters</th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style="width: 1%">source</td>
-                  <td>The image to modify</td>
-                </tr>
-                <tr>
-                  <td>sigma</td>
-                  <td>The standard deviation</td>
-                </tr>
-                <tr>
-                  <td>mean</td>
-                  <td>The mean of the noise distribution</td>
-                </tr>
-              </tbody>
-              <tfoot>
-                <tr>
-                  <th>Returns</th>
-                  <td>The modified image</td>
-                </tr>
-              </tfoot>
-            </table>
-<p>Adds gaussian noise to a copy of the input image.</p>
           </div></section>
         </section>
       </div>
