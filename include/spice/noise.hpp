@@ -50,22 +50,6 @@ namespace noise {
     }
 
     /**
-     * Adds salt and pepper noise to a copy of the input image.
-     *
-     * \param source The image to modify
-     * \param density The probability of a pixel being either white or black
-     * \returns The modified image
-     */
-    // template<typename T>
-    // [[nodiscard]] image<T> salt_and_pepper(
-    //     image<T> source,
-    //     float density)
-    // {
-    //     salt_and_pepper(source, density);
-    //     return source;
-    // }
-
-    /**
      * Adds uniform noise to the input image.
      *
      * \param source The image to modify
@@ -95,24 +79,6 @@ namespace noise {
     }
 
     /**
-     * Adds uniform noise to a copy of the input image.
-     *
-     * \param source The image to modify
-     * \param sigma The standard deviation
-     * \param mean The mean of the noise distribution
-     * \returns The modified image
-     */
-    // template<typename T>
-    // image<T> uniform(
-    //     image<T> source,
-    //     float sigma,
-    //     T const & mean)
-    // {
-    //     uniform(source, sigma, mean);
-    //     return source;
-    // }
-
-    /**
      * Adds gaussian noise to the input image.
      *
      * \param source The image to modify
@@ -134,24 +100,6 @@ namespace noise {
         for(auto & elem : source.data())
             elem = operation(elem, normal_dist(mersenne));
     }
-
-    /**
-     * Adds gaussian noise to a copy of the input image.
-     *
-     * \param source The image to modify
-     * \param sigma The standard deviation
-     * \param mean The mean of the noise distribution
-     * \returns The modified image
-     */
-    // template<typename T>
-    // image<T> gaussian(
-    //     image<T> source,
-    //     float sigma,
-    //     T const & mean)
-    // {
-    //     gaussian(source, sigma, mean);
-    //     return source;
-    // }
 }
 }
 

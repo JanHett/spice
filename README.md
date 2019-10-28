@@ -150,32 +150,38 @@ Analogous to images, histograms can also be printed to any arbitrary stream.
 
 ## Building
 
-In a nutshell:
-
-```bash
-python3 tools/build.py <Debug | Release>
-```
-
 ### Prerequisites
 
 #### For the library
 
-- C++17
+- [C++17](https://en.cppreference.com/w/cpp/compiler_support)
 - [CMake 3.10](https://cmake.org/)
 - [OpenImageIO](https://github.com/OpenImageIO/oiio)
-- [Guideline Support Library](https://github.com/microsoft/GSL) (available as a git submodule, will be pulled by CMake during configuration)
-- [Google Test](https://github.com/google/googletest) (technically only needed for building tests)
+- [Guideline Support Library](https://github.com/microsoft/GSL) (included as a git submodule, will be pulled by CMake during configuration)
+
+#### For the tests
+
+- [Google Test](https://github.com/google/googletest)
 
 #### For the documentation
 
 - [Doxygen](http://www.doxygen.nl/)
-- [m.css](https://github.com/mosra/m.css) (available as a git submodule, pull with `git submodule update --recursive --remote --init`)
+- [m.css](https://github.com/mosra/m.css) (included as a git submodule, will be pulled by CMake during configuration if building documentation is enabled)
+
+### Build It!
+
+```bash
+cd <spice repo directory>
+mkdir build
+cd build
+# tests are enabled by default, use option ENABLE_TESTS to override
+cmake .. -DCMAKE_INSTALL_PREFIX=<where spice should be installed> [-DENABLE_TESTS=OFF|ON] [-DENABLE_DOCS=OFF|ON]
+cmake --build . --config Debug|Release [--target [install] [doc]]
+# if you chose to build the tests, you can test if everything worked
+tests/spice-test
+```
 
 ### Notes
-
-spice does not yet have a fully fledged cmake/make setup. Setting this up is part of getting the library to a usable state and will happen before a proper release.
-
-For now, there is a Python build script called `./tools/build`. Run it with `-h` for details on how to use it.
 
 spice has been tested to build with clang and gcc on macOS and may or may not build in other configurations. I plan to extend support to other operating systems and eventually also the MSVC platform, but for now, features are the primary focus. For these early days, the library will also remain dependent on the most recent C++ standard (read: I will jump up to C++20 as soon as it's ready and if you have standards that require you to stick to a specific C++ version, this library probably fails more than just this test).
 

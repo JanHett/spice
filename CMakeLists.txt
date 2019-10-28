@@ -31,9 +31,11 @@
 
 cmake_minimum_required(VERSION 3.12)
 
-project("spice" VERSION 0.0.1
+project("spice"
              DESCRIPTION "An image processing library."
              HOMEPAGE_URL "https://github.com/janhett/spice")
+
+set(PROJECT_VERSION 1.0.0-alpha)
 
 include(GNUInstallDirs)
 
@@ -132,6 +134,16 @@ option(ENABLE_TESTS "Build unit tests" ON)
 
 if(ENABLE_TESTS)
   add_subdirectory(tests)
+endif()
+
+#############################
+# Documentation setup
+#############################
+
+option(ENABLE_DOCS "Build documentation" ON)
+
+if(ENABLE_DOCS)
+  add_subdirectory(doc)
 endif()
 
 ################################################################################

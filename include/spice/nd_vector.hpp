@@ -94,21 +94,6 @@ public:
     {}
 
     /**
-     * Creates an nd_vector and initialises it with the values found in the
-     * passed data array.
-     *
-     * \note The `data` array should be structured in column-major order.
-     *
-     * \param data The raw image data
-     * \param shape The shape of the nd_vector
-     */
-    // bd_vector_impl(
-    //     T data[],
-    //     std::array<size_t, Dimensions> shape):
-    // m_data(data),
-    // m_shape(shape) {}
-
-    /**
      * Copies the values from `other` to `this`. Only values included in the
      * intersection of the shapes of `other` and `this` are copied, the shape
      * of `this` is not adjusted.
