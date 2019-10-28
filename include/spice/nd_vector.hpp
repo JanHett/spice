@@ -884,6 +884,10 @@ public:
         return lhs;
     }
 
+    /**
+     * Prints a representation of the nd_vector of the form
+     * `nd_vector_impl (W x H x D)[ 42, ..., 47 ]`to the proVided stream.
+     */
     friend std::ostream& operator<<(std::ostream& os,
         nd_vector_impl const & vec)
     {

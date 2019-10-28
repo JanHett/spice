@@ -131,6 +131,7 @@ public:
      * \param width The width of the image
      * \param height The height of the image
      * \param channel_semantics The meaning to assign to the channels
+     * \param default_value The value to initialise the image with
      */
     image(
         size_t width,

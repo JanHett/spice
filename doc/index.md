@@ -1,15 +1,44 @@
-# spice {#index}
+# spice. An image processing library. {#index}
 
-## A light-weight image processing library.
+This is an attempt to provide a set of generic tools for image processing. At the core of the library is a type for storing n-dimensional data which intends to translate the flexibility of [NumPy's](https://docs.scipy.org/doc/numpy/reference/generated/numpy.array.html) and [Julia's](https://docs.julialang.org/en/v1/manual/arrays/) Arrays into a low-overhead structure imitating the design of the existing C++ standard library (and also being compatible with it where applicable).
 
-This is a re-write of a previous project of mine. It attempts to correct some of the design mistakes I made. That being said, it is far from being usable at the moment. In fact, for now it "does" (almost) nothing for the moment. My current goal is to set up the data structures I need to implement actual functionality. I am taking my time with this, because one of the lessons I learned from the predecessor of this project is that data structures make a huge difference for the performance, reliability and usability of a library. Once this basis is established, I will be sure to boast about the added features in the appropriate place (meaning either in the README or in the documentation).
+Building on this type, a number of more image-specific types are provided.
 
-Check out the [documentation](https://janhett.github.io/spice/) for a more in-depth look at what this library does. I have also published an [article](https://medium.com/@janhettenkofer/designing-an-efficient-user-friendly-image-data-structure-a24a8aed4a2d?source=friends_link&sk=5c8808dfabcf1841752c1fb3e8916238) about the considerations that went into the `spice::image` data structure.
+This documentation provides in-depth information on the library interface. Please have a look at the [README](https://github.com/janhett/spice) for an overview of the features.
 
-### Building
+## Building
 
-spice does not yet have a fully fledged cmake/make setup. Setting this up is part of getting the library to a usable state and will happen before a proper release.
+### Prerequisites
 
-For now, there is a Python build script called `./tools/build`. Please run it with `-h` to find out how to use it, it is changing much too frequently to keep this README up to date.
+#### For the library
 
-The main library depends on OpenImageIO and nothing else. For unit testing, Google Test is required and to build the documentation, you need Doxygen and m.css.
+- [C++17](https://en.cppreference.com/w/cpp/compiler_support)
+- [CMake 3.10](https://cmake.org/)
+- [OpenImageIO](https://github.com/OpenImageIO/oiio)
+- [Guideline Support Library](https://github.com/microsoft/GSL) (included as a git submodule, will be pulled by CMake during configuration)
+
+#### For the tests
+
+- [Google Test](https://github.com/google/googletest)
+
+#### For the documentation
+
+- [Doxygen](http://www.doxygen.nl/)
+- [m.css](https://github.com/mosra/m.css) (included as a git submodule, will be pulled by CMake during configuration if building documentation is enabled)
+
+### Build It!
+
+```bash
+cd <spice repo directory>
+mkdir build
+cd build
+# tests are enabled by default, use option ENABLE_TESTS to override
+cmake .. -DCMAKE_INSTALL_PREFIX=<where spice should be installed> [-DENABLE_TESTS=OFF|ON] [-DENABLE_DOCS=OFF|ON]
+cmake --build . --config Debug|Release [--target [install] [doc]]
+# if you chose to build the tests, you can test if everything worked
+tests/spice-test
+```
+
+### Notes
+
+spice has been tested to build with clang and gcc on macOS and may or may not build in other configurations. I plan to extend support to other operating systems and eventually also the MSVC platform, but for now, features are the primary focus. For these early days, the library will also remain dependent on the most recent C++ standard (read: I will jump up to C++20 as soon as it's ready and if you have standards that require you to stick to a specific C++ version, this library probably fails more than just this test).
