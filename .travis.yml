@@ -9,6 +9,8 @@ os:
   - osx
 # dist: xenial
 
+osx_image: xcode11.2
+
 install: ./ci/install-${TRAVIS_OS_NAME}.sh
 
 script: ./ci/travis.sh
