@@ -39,6 +39,11 @@ set(PROJECT_VERSION 1.0.0-alpha)
 
 include(GNUInstallDirs)
 
+if(APPLE)
+    # Fix linking on 10.14+. See https://stackoverflow.com/questions/54068035
+    LINK_DIRECTORIES(/usr/local/lib)
+endif()
+
 #############################
 # Dependency setup
 #############################
@@ -91,7 +96,7 @@ target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
 target_link_libraries(spice
     INTERFACE
         GSL
-        OpenImageIO ${CMAKE_DL_LIBS})
+        OpenImageIO)
 
 #############################
 # Installation setup
