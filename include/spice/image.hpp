@@ -9,7 +9,7 @@
 
 #include <OpenImageIO/imageio.h>
 
-#include "./nd_vector.hpp"
+#include "nd_vector.hpp"
 
 /**
  * Contains the entire public interface of the library.
@@ -281,12 +281,15 @@ template<typename T>
  *
  * \param filename The path on disk relative to the current working
  * directory
+ * \param config file format specific parameters in the form of an ImageSpec
+ * configuration that will be handed through to OIIO
  * \returns An image object representing the file contents
  */
 template<typename T>
-[[nodiscard]] image<T> load_image(char const * filename)
+[[nodiscard]] image<T> load_image(char const * filename,
+    const OIIO::ImageSpec * config = nullptr)
 {
-    auto file = OIIO::ImageInput::open(filename);
+    auto file = OIIO::ImageInput::open(filename, config);
     // TODO more expressive error handling
     if (!file)
         return image<T>();
@@ -299,9 +302,9 @@ template<typename T>
 
     // transpose the data before constructing an image object
     T * tx_img_data = new T[spec.width * spec.height * spec.nchannels];
-    for (size_t y = 0; y < spec.height; ++y)
-        for (size_t x = 0; x < spec.width; ++x)
-            for (size_t chan = 0; chan < spec.nchannels; ++chan)
+    for (int y = 0; y < spec.height; ++y)
+        for (int x = 0; x < spec.width; ++x)
+            for (int chan = 0; chan < spec.nchannels; ++chan)
                 tx_img_data[
                     x * spec.height * spec.nchannels +
                     y * spec.nchannels +

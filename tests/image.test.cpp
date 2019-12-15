@@ -4,6 +4,9 @@
 #include <limits>
 #include <numeric>
 #include <cstdint>
+
+#include <gsl/span>
+
 #include <spice/image.hpp>
 #include <spice/statistics.hpp>
 #include <spice/print.hpp>
@@ -16,7 +19,8 @@ image<T> make_checkerboard(size_t width = 1,
     channel_list channel_semantics = { "R", "G", "B" })
 {
     image<T> im(width, height, channel_semantics);
-    for (size_t pxl = 0; pxl < im.data().size(); pxl += im.channels())
+    for (typename gsl::span<T>::index_type pxl = 0; pxl < im.data().size();\
+        pxl += im.channels())
         for (size_t chan = 0; chan < im.channels(); ++chan)
             im.data()[pxl + chan] = (pxl / 3) % 2 == 0 ?
                 image<T>::intensity_range.max :
