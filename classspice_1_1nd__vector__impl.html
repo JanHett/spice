@@ -280,6 +280,12 @@
             </dt>
             <dd></dd>
             <dt>
+              <div class="m-doc-template">template&lt;typename T_scalar, typename = std::enable_if_t&lt;std::is_arithmetic&lt;T_scalar&gt;::value&gt;&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="#a8563d6cb30052ccd479205efb074073d" class="m-doc">operator-</a>(</span><span class="m-doc-wrap">T_scalar const&amp; lhs,
+              <a href="classspice_1_1nd__vector__impl.html" class="m-doc">nd_<wbr />vector_<wbr />impl</a>&lt;Dimensions, T, true&gt; rhs) -&gt; <a href="classspice_1_1nd__vector__impl.html" class="m-doc">nd_<wbr />vector_<wbr />impl</a>&lt;Dimensions, T, true&gt;</span>
+            </dt>
+            <dd></dd>
+            <dt>
               <div class="m-doc-template">template&lt;bool Owner_rhs&gt;</div>
               <span class="m-doc-wrap-bumper">auto <a href="#a2d60d9fbd58341c614ca4e61b4535512" class="m-doc">operator*</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1nd__vector__impl.html" class="m-doc">nd_<wbr />vector_<wbr />impl</a>&lt;Dimensions, T, true&gt; lhs,
               <a href="classspice_1_1nd__vector__impl.html" class="m-doc">nd_<wbr />vector_<wbr />impl</a>&lt;Dimensions, T, Owner_rhs&gt; const&amp; rhs) -&gt; <a href="classspice_1_1nd__vector__impl.html" class="m-doc">nd_<wbr />vector_<wbr />impl</a>&lt;Dimensions, T, true&gt;</span>
@@ -307,6 +313,12 @@
               <div class="m-doc-template">template&lt;typename T_scalar, typename = std::enable_if_t&lt;std::is_arithmetic&lt;T_scalar&gt;::value&gt;&gt;</div>
               <span class="m-doc-wrap-bumper">auto <a href="#a6a4fc625026041b20c419247c4103245" class="m-doc">operator/</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1nd__vector__impl.html" class="m-doc">nd_<wbr />vector_<wbr />impl</a>&lt;Dimensions, T, true&gt; lhs,
               T_scalar const&amp; rhs) -&gt; <a href="classspice_1_1nd__vector__impl.html" class="m-doc">nd_<wbr />vector_<wbr />impl</a>&lt;Dimensions, T, true&gt;</span>
+            </dt>
+            <dd></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T_scalar, typename = std::enable_if_t&lt;std::is_arithmetic&lt;T_scalar&gt;::value&gt;&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="#af115c19ca1a7ac0f86f547e8f733b292" class="m-doc">operator/</a>(</span><span class="m-doc-wrap">T_scalar const&amp; lhs,
+              <a href="classspice_1_1nd__vector__impl.html" class="m-doc">nd_<wbr />vector_<wbr />impl</a>&lt;Dimensions, T, true&gt; rhs) -&gt; <a href="classspice_1_1nd__vector__impl.html" class="m-doc">nd_<wbr />vector_<wbr />impl</a>&lt;Dimensions, T, true&gt;</span>
             </dt>
             <dd></dd>
             <dt>
@@ -996,6 +1008,17 @@
             </h3>
 <p>Subtracts the scalar <code>rhs</code> argument from each element of the nd_vector.</p><aside class="m-note m-info"><h4>Note</h4><p>The first operand will be copied as an owning nd_vector, even if it is merely a view.</p></aside>
           </div></section>
+          <section class="m-doc-details" id="a8563d6cb30052ccd479205efb074073d"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;size_t Dimensions, typename T, bool Owner&gt;
+                template&lt;typename T_scalar, typename = std::enable_if_t&lt;std::is_arithmetic&lt;T_scalar&gt;::value&gt;&gt;
+              </div>
+              <span class="m-doc-wrap-bumper"><a href="classspice_1_1nd__vector__impl.html" class="m-doc">nd_<wbr />vector_<wbr />impl</a>&lt;Dimensions, T, true&gt; </span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a8563d6cb30052ccd479205efb074073d" class="m-doc-self">operator-</a>(</span><span class="m-doc-wrap">T_scalar const&amp; lhs,
+              <a href="classspice_1_1nd__vector__impl.html" class="m-doc">nd_<wbr />vector_<wbr />impl</a>&lt;Dimensions, T, true&gt; rhs)</span></span>
+            </h3>
+<p>Subtracts the scalar from each element of the nd_vector, returning an nd_vector containing the resulting values.</p><aside class="m-note m-info"><h4>Note</h4><p>The second operand will be copied as an owning nd_vector, even if it is merely a view.</p></aside>
+          </div></section>
           <section class="m-doc-details" id="a2d60d9fbd58341c614ca4e61b4535512"><div>
             <h3>
               <div class="m-doc-template">
@@ -1050,6 +1073,17 @@
               T_scalar const&amp; rhs)</span></span>
             </h3>
 <p>Divides each element of the nd_vector by the scalar <code>rhs</code> argument.</p><aside class="m-note m-info"><h4>Note</h4><p>The first operand will be copied as an owning nd_vector, even if it is merely a view.</p></aside>
+          </div></section>
+          <section class="m-doc-details" id="af115c19ca1a7ac0f86f547e8f733b292"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;size_t Dimensions, typename T, bool Owner&gt;
+                template&lt;typename T_scalar, typename = std::enable_if_t&lt;std::is_arithmetic&lt;T_scalar&gt;::value&gt;&gt;
+              </div>
+              <span class="m-doc-wrap-bumper"><a href="classspice_1_1nd__vector__impl.html" class="m-doc">nd_<wbr />vector_<wbr />impl</a>&lt;Dimensions, T, true&gt; </span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#af115c19ca1a7ac0f86f547e8f733b292" class="m-doc-self">operator/</a>(</span><span class="m-doc-wrap">T_scalar const&amp; lhs,
+              <a href="classspice_1_1nd__vector__impl.html" class="m-doc">nd_<wbr />vector_<wbr />impl</a>&lt;Dimensions, T, true&gt; rhs)</span></span>
+            </h3>
+<p>Divides the scalar by each element of the nd_vector, returning an nd_vector containing the resulting values.</p><aside class="m-note m-info"><h4>Note</h4><p>The second operand will be copied as an owning nd_vector, even if it is merely a view.</p></aside>
           </div></section>
           <section class="m-doc-details" id="a76d0f0f50d896799e71a7a659658d951"><div>
             <h3>
