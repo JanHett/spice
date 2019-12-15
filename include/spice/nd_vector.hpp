@@ -801,6 +801,24 @@ public:
     }
 
     /**
+     * Subtracts the scalar from each element of the nd_vector, returning an
+     * nd_vector containing the resulting values.
+     *
+     * \note The second operand will be copied as an owning nd_vector, even if
+     * it is merely a view.
+     */
+    template<typename T_scalar,
+        typename = std::enable_if_t<std::is_arithmetic<T_scalar>::value>>
+    [[nodiscard]] friend nd_vector_impl<Dimensions, T, true> operator-(
+            T_scalar const & lhs,
+            nd_vector_impl<Dimensions, T, true> rhs)
+    {
+        for (auto & el : rhs.data())
+            el = lhs - el;
+        return rhs;
+    }
+
+    /**
      * Multiplies the two nd_vectors element-wise.
      * If the two nd_vectors have different dimensions, only the overlapping
      * parts will be taken into account. The nd_vectors will be aligned by their
@@ -882,6 +900,24 @@ public:
     {
         lhs /= rhs;
         return lhs;
+    }
+
+    /**
+     * Divides the scalar by each element of the nd_vector, returning an
+     * nd_vector containing the resulting values.
+     *
+     * \note The second operand will be copied as an owning nd_vector, even if
+     * it is merely a view.
+     */
+    template<typename T_scalar,
+        typename = std::enable_if_t<std::is_arithmetic<T_scalar>::value>>
+    [[nodiscard]] friend nd_vector_impl<Dimensions, T, true> operator/(
+            T_scalar const & lhs,
+            nd_vector_impl<Dimensions, T, true> rhs)
+    {
+        for (auto & el : rhs.data())
+            el = lhs / el;
+        return rhs;
     }
 
     /**

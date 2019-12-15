@@ -74,7 +74,7 @@ TEST(nd_vector, empty_constructor) {
     EXPECT_EQ(ndv.shape()[2], 3);
 
     EXPECT_EQ(ndv.size(), 60);
-    for (int i = 0; i < ndv.size(); ++i)
+    for (size_t i = 0; i < ndv.size(); ++i)
         EXPECT_EQ(ndv.data()[i], 0.f);
 }
 TEST(nd_vector, data_constructor) {
@@ -761,15 +761,259 @@ TEST(nd_vector, operator_plus_equals_scalar) {
     EXPECT_EQ(data_plus_42,
         ndv1);
 }
-TEST(nd_vector, operator_plus_scalar_nd_vector) { GTEST_SKIP(); }
-TEST(nd_vector, operator_plus_nd_vector_scalar) { GTEST_SKIP(); }
+TEST(nd_vector, operator_plus_scalar_nd_vector) {
+    float data1[] = {
+        0, 0, 0, 0, 0,
+        1, 1, 1, 1, 1,
+        2, 2, 2, 2, 2,
+        3, 3, 3, 3, 3
+    };
+    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
 
-TEST(nd_vector, operator_minus_equals_scalar) { GTEST_SKIP(); }
-TEST(nd_vector, operator_minus_scalar) { GTEST_SKIP(); }
+    auto ndv2 = 42 + ndv1;
 
-TEST(nd_vector, operator_multiply_equals_scalar) { GTEST_SKIP(); }
-TEST(nd_vector, operator_multiply_scalar_nd_vector) { GTEST_SKIP(); }
-TEST(nd_vector, operator_multiply_nd_vector_scalar) { GTEST_SKIP(); }
+    float data_result[] = {
+        42.f, 42.f, 42.f, 42.f, 42.f,
+        43.f, 43.f, 43.f, 43.f, 43.f,
+        44.f, 44.f, 44.f, 44.f, 44.f,
+        45.f, 45.f, 45.f, 45.f, 45.f
+    }; 
 
-TEST(nd_vector, operator_divide_equals_scalar) { GTEST_SKIP(); }
-TEST(nd_vector, operator_divide_scalar) { GTEST_SKIP(); }
+    EXPECT_EQ(data_result,
+        ndv2);
+    for (size_t i = 0; i < 20; ++i)
+        EXPECT_NE(data1[i], data_result[i]);
+}
+TEST(nd_vector, operator_plus_nd_vector_scalar) {
+    float data1[] = {
+        0, 0, 0, 0, 0,
+        1, 1, 1, 1, 1,
+        2, 2, 2, 2, 2,
+        3, 3, 3, 3, 3
+    };
+    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+
+    auto ndv2 = ndv1 + 42;
+
+    float data_result[] = {
+        42.f, 42.f, 42.f, 42.f, 42.f,
+        43.f, 43.f, 43.f, 43.f, 43.f,
+        44.f, 44.f, 44.f, 44.f, 44.f,
+        45.f, 45.f, 45.f, 45.f, 45.f
+    }; 
+
+    EXPECT_EQ(data_result,
+        ndv2);
+    for (size_t i = 0; i < 20; ++i)
+        EXPECT_NE(data1[i], data_result[i]);
+}
+
+TEST(nd_vector, operator_minus_equals_scalar) {
+    float data1[] = {
+        0, 0, 0, 0, 0,
+        1, 1, 1, 1, 1,
+        2, 2, 2, 2, 2,
+        3, 3, 3, 3, 3
+    };
+    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+
+    ndv1 -= 42;
+
+    float data_result[] = {
+        -42.f, -42.f, -42.f, -42.f, -42.f,
+        -41.f, -41.f, -41.f, -41.f, -41.f,
+        -40.f, -40.f, -40.f, -40.f, -40.f,
+        -39.f, -39.f, -39.f, -39.f, -39.f
+    }; 
+
+    EXPECT_EQ(data_result,
+        ndv1);
+    for (size_t i = 0; i < 20; ++i)
+        EXPECT_EQ(data1[i], data_result[i]);
+}
+TEST(nd_vector, operator_minus_scalar_nd_vector) {
+    float data1[] = {
+        0, 0, 0, 0, 0,
+        1, 1, 1, 1, 1,
+        2, 2, 2, 2, 2,
+        3, 3, 3, 3, 3
+    };
+    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+
+    auto ndv2 = 42 - ndv1;
+
+    float data_result[] = {
+        42.f, 42.f, 42.f, 42.f, 42.f,
+        41.f, 41.f, 41.f, 41.f, 41.f,
+        40.f, 40.f, 40.f, 40.f, 40.f,
+        39.f, 39.f, 39.f, 39.f, 39.f
+    }; 
+
+    EXPECT_EQ(data_result,
+        ndv2);
+    for (size_t i = 0; i < 20; ++i)
+        EXPECT_NE(data1[i], data_result[i]);
+}
+TEST(nd_vector, operator_minus_nd_vector_scalar) {
+    float data1[] = {
+        0, 0, 0, 0, 0,
+        1, 1, 1, 1, 1,
+        2, 2, 2, 2, 2,
+        3, 3, 3, 3, 3
+    };
+    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+
+    auto ndv2 = ndv1 - 42;
+
+    float data_result[] = {
+        -42.f, -42.f, -42.f, -42.f, -42.f,
+        -41.f, -41.f, -41.f, -41.f, -41.f,
+        -40.f, -40.f, -40.f, -40.f, -40.f,
+        -39.f, -39.f, -39.f, -39.f, -39.f
+    }; 
+
+    EXPECT_EQ(data_result,
+        ndv2);
+    for (size_t i = 0; i < 20; ++i)
+        EXPECT_NE(data1[i], data_result[i]);
+}
+
+TEST(nd_vector, operator_multiply_equals_scalar) {
+    float data1[] = {
+        0, 0, 0, 0, 0,
+        1, 1, 1, 1, 1,
+        2, 2, 2, 2, 2,
+        3, 3, 3, 3, 3
+    };
+    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+
+    ndv1 *= 42;
+
+    float data_result[] = {
+        0.f, 0.f, 0.f, 0.f, 0.f,
+        42.f, 42.f, 42.f, 42.f, 42.f,
+        84.f, 84.f, 84.f, 84.f, 84.f,
+        126.f,126.f,126.f,126.f,126.f
+    }; 
+
+    EXPECT_EQ(data_result,
+        ndv1);
+    for (size_t i = 0; i < 20; ++i)
+        EXPECT_EQ(data1[i], data_result[i]);
+}
+TEST(nd_vector, operator_multiply_scalar_nd_vector) {
+    float data1[] = {
+        0, 0, 0, 0, 0,
+        1, 1, 1, 1, 1,
+        2, 2, 2, 2, 2,
+        3, 3, 3, 3, 3
+    };
+    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+
+    auto ndv2 = 42 * ndv1;
+
+    float data_result[] = {
+        0.f, 0.f, 0.f, 0.f, 0.f,
+        42.f, 42.f, 42.f, 42.f, 42.f,
+        84.f, 84.f, 84.f, 84.f, 84.f,
+        126.f,126.f,126.f,126.f,126.f
+    }; 
+
+    EXPECT_EQ(data_result,
+        ndv2);
+    for (size_t i = 5; i < 20; ++i)
+        EXPECT_NE(data1[i], data_result[i]);
+}
+TEST(nd_vector, operator_multiply_nd_vector_scalar) {
+    float data1[] = {
+        0, 0, 0, 0, 0,
+        1, 1, 1, 1, 1,
+        2, 2, 2, 2, 2,
+        3, 3, 3, 3, 3
+    };
+    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+
+    auto ndv2 = ndv1 * 42;
+
+    float data_result[] = {
+        0.f, 0.f, 0.f, 0.f, 0.f,
+        42.f, 42.f, 42.f, 42.f, 42.f,
+        84.f, 84.f, 84.f, 84.f, 84.f,
+        126.f,126.f,126.f,126.f,126.f
+    }; 
+
+    EXPECT_EQ(data_result,
+        ndv2);
+    for (size_t i = 5; i < 20; ++i)
+        EXPECT_NE(data1[i], data_result[i]);
+}
+
+TEST(nd_vector, operator_divide_equals_scalar) {
+    float data1[] = {
+        0.f, 0.f, 0.f, 0.f, 0.f,
+        42.f, 42.f, 42.f, 42.f, 42.f,
+        84.f, 84.f, 84.f, 84.f, 84.f,
+        126.f,126.f,126.f,126.f,126.f
+    };
+    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+
+    ndv1 /= 42;
+
+    float data_result[] = {
+        0.f, 0.f, 0.f, 0.f, 0.f,
+        1.f, 1.f, 1.f, 1.f, 1.f,
+        2.f, 2.f, 2.f, 2.f, 2.f,
+        3.f, 3.f, 3.f, 3.f, 3.f
+    }; 
+
+    EXPECT_EQ(data_result,
+        ndv1);
+    for (size_t i = 0; i < 20; ++i)
+        EXPECT_EQ(data1[i], data_result[i]);
+}
+TEST(nd_vector, operator_divide_scalar_nd_vector) {
+    float data1[] = {
+        1, 1, 1, 1, 1,
+        2, 2, 2, 2, 2,
+        3, 3, 3, 3, 3,
+        4, 4, 4, 4, 4
+    };
+    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+
+    auto ndv2 = 42 / ndv1;
+
+    float data_result[] = {
+        42.f, 42.f, 42.f, 42.f, 42.f,
+        21.f, 21.f, 21.f, 21.f, 21.f,
+        14.f, 14.f, 14.f, 14.f, 14.f,
+        10.5f,10.5f,10.5f,10.5f,10.5f
+    }; 
+
+    EXPECT_EQ(data_result,
+        ndv2);
+    for (size_t i = 0; i < 20; ++i)
+        EXPECT_NE(data1[i], data_result[i]);
+}
+TEST(nd_vector, operator_divide_nd_vector_scalar) {
+    float data1[] = {
+        0.f, 0.f, 0.f, 0.f, 0.f,
+        42.f, 42.f, 42.f, 42.f, 42.f,
+        84.f, 84.f, 84.f, 84.f, 84.f,
+        126.f,126.f,126.f,126.f,126.f
+    };
+    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+
+    auto ndv2 = ndv1 / 42;
+
+    float data_result[] = {
+        0.f, 0.f, 0.f, 0.f, 0.f,
+        1.f, 1.f, 1.f, 1.f, 1.f,
+        2.f, 2.f, 2.f, 2.f, 2.f,
+        3.f, 3.f, 3.f, 3.f, 3.f
+    }; 
+
+    EXPECT_EQ(data_result,
+        ndv2);
+    for (size_t i = 5; i < 20; ++i)
+        EXPECT_NE(data1[i], data_result[i]);
+}
