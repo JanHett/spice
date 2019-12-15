@@ -54,6 +54,7 @@ add_executable(${PROJECT_NAME}::${target} ALIAS ${target})
 target_include_directories(${target}
     PRIVATE
     # ${DEFAULT_INCLUDE_DIRECTORIES}
+    ${PROJECT_BINARY_DIR}/external
     ${PROJECT_BINARY_DIR}/include
 )
 
@@ -97,11 +98,15 @@ target_compile_options(${target}
     -o1
     -fno-omit-frame-pointer
     -fsanitize=address
+    # TODO: uncomment once Apple's clang starts supporting this flag
+    # -fsanitize=leak
 )
 
 target_link_options(${target}
     PRIVATE
     -fsanitize=address
+    # TODO: uncomment once Apple's clang starts supporting this flag
+    # -fsanitize=leak
 )
 
 
