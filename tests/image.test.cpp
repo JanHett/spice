@@ -4,6 +4,7 @@
 #include <limits>
 #include <numeric>
 #include <cstdint>
+#include <fstream>
 
 #include <gsl/span>
 
@@ -330,8 +331,13 @@ TEST(image_support, load_image) {
 TEST(image_support, write_image) {
     auto boat = load_image<float>("../data/testing/boat.jpg");
 
-    bool written = write_image("../data/testing/boat_2.jpg",
+    std::string out_path("../data/testing/boat_2.jpg");
+    bool written = write_image(out_path.c_str(),
         boat, OIIO::TypeDesc::UINT8);
 
     EXPECT_TRUE(written);
+    std::ifstream f(out_path.c_str());
+    EXPECT_TRUE(f.good());
+
+    std::remove(out_path.c_str());
 }
