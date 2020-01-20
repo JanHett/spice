@@ -60,7 +60,7 @@ Note that `nd_vector` is implemented as a non-virtual subclass of `nd_span` to a
 
 #### A note on the name
 
-I named this structure `nd_vector` because it's closer to a `std::vector` than a `std::array` in that it is a dynamically allocated data structure. I don't love it, though, since vector implies a one-dimensional data structure. Suggestions are welcome.
+I named this structure `nd_vector` because it's closer to a `std::vector` than a `std::array` in that it is a dynamically allocated data structure. However, since the term *vector* implies a one-dimensional data structure I would very much like to replace it with something more appropriate. Suggestions are welcome.
 
 ### View over N-Dimensional slices of `nd_vector`s: [`nd_span`](https://janhett.github.io/spice/classspice_1_1nd__vector__impl.html)
 

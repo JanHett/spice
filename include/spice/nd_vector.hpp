@@ -1020,6 +1020,14 @@ public:
     }
 
     /**
+     * \brief Get a reference to the data pointer.
+     * 
+     * \return T*& 
+     */
+    [[nodiscard]] T * & data_ptr()
+    { return this->m_data; }
+
+    /**
      * Copies the values from `other` to `this`. Unlike the copy assignment
      * operator of `nd_span`, this copies the entire `nd_vector` and also
      * modifies the size of it.

@@ -4,3 +4,4 @@ doc/xml
 doc/m.math.cache
 .idea
 cmake-build*
+.vscode
