@@ -1,20 +1,19 @@
 /**
- * \file composite.hpp
+ * \file transform.hpp
  * \author Jan Hettenkofer (jan@hettenkofer.net)
- * \brief Functions for compositing images as well as utility data structures.
+ * \brief Tranformation matrix types and assorted operations thereupon.
  * \version 0.1
  * \date 2020-01-14
  * 
  * @copyright Copyright (c) 2020
  */
 
-#ifndef SPICE_COMPOSITE
-#define SPICE_COMPOSITE
+#ifndef SPICE_TRANSFORM
+#define SPICE_TRANSFORM
 
 #include <cmath>
 
 #include "image.hpp"
-#include "matrix.hpp"
 #include "matrix.hpp"
 
 namespace spice {
@@ -56,16 +55,6 @@ public:
         .rotate(angle)
         .scale(scale_x, scale_y);
     }
-
-    /**
-     * Moves the data from `other` to `this`, resizing the object as necessary.
-     */
-    // transform_2d & operator=(std::vector<float> && other)
-    // {
-    //     delete this->m_data;
-    //     this->m_data = std::exchange(other.data(), nullptr);
-    //     return *this;
-    // }
 
     /**
      * Adds a translation by the given vector to the `transform_2d`.
@@ -161,7 +150,7 @@ public:
 /**
  * Creates a `transform_2d` describing the translation by the given vector.
  */
-transform_2d translate(float x, float y)
+inline transform_2d translate(float x, float y)
 {
     return transform_2d(x, y, 0, 0, 0);
 }
@@ -169,7 +158,7 @@ transform_2d translate(float x, float y)
 /**
  * Creates a `transform_2d` describing the rotation by the given angle.
  */
-transform_2d rotate(float angle)
+inline transform_2d rotate(float angle)
 {
     return transform_2d(0, 0, angle, 0, 0);
 }
@@ -177,20 +166,10 @@ transform_2d rotate(float angle)
 /**
  * Creates a `transform_2d` describing the scale by the given factors.
  */
-transform_2d scale(float x, float y)
+inline transform_2d scale(float x, float y)
 {
     return transform_2d(0, 0, 0, x, y);
 }
-
-/**
- * \brief Copy values from image `b`, transformed by `tx`, into image `a`.
- *
- * \param a the destination image
- * \param b the source image
- * \param tx the transformation to be applied to image `b`
- */
-template<typename T>
-void merge(image<T> & a, image<T> const & b, transform_2d tx);
 }
 
-#endif // SPICE_COMPOSITE
+#endif // SPICE_TRANSFORM
