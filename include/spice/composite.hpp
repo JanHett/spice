@@ -23,22 +23,7 @@ namespace spice {
          * `position` by returning the value of the pixel to the top-left of
          * `position`.
          * 
-         * \tparam T 
-         * \param source 
-         * \param position 
-         * \return T 
-         */
-        template<typename T>
-        color<T> nearest_neighbor_floor(image<T> const & source,
-            std::pair<float, float> const & position)
-        {
-            return source(position.first, position.second);
-        }
-
-        /**
-         * \brief Nearest neighbour interpolation between pixels adjacent to
-         * `position` by returning the value of the pixel to the top-left of
-         * `position`.
+         * \todo Create `const` version of this.
          * 
          * \tparam T 
          * \param source 
@@ -46,13 +31,46 @@ namespace spice {
          * \return T 
          */
         template<typename T>
-        color<T> nearest_neighbor_round(image<T> const & source,
-            std::pair<float, float> const & position)
-        {
-            return source(
-                std::round(position.first),
-                std::round(position.second));
-        }
+        class nearest_neighbor_floor {
+        private:
+            image<T> & m_img;
+        public:
+            nearest_neighbor_floor(image<T> & source) :
+            m_img(source)
+            {}
+
+            pixel_view<T> operator() (float x, float y)
+            {
+                return m_img(x, y);
+            }
+        };
+
+        /**
+         * \brief Nearest neighbour interpolation between pixels adjacent to
+         * `position` by returning the value of the pixel to the top-left of
+         * `position`.
+         * 
+         * \todo Create `const` version of this.
+         * 
+         * \tparam T 
+         * \param source 
+         * \param position 
+         * \return T 
+         */
+        template<typename T>
+        class nearest_neighbor_round {
+        private:
+            image<T> & m_img;
+        public:
+            nearest_neighbor_round(image<T> & source) :
+            m_img(source)
+            {}
+
+            pixel_view<T> operator() (float x, float y)
+            {
+                return m_img(std::round(x), std::round(y));
+            }
+        };
 
         /**
          * \brief Nearest neighbour interpolation between pixels adjacent to
@@ -60,32 +78,20 @@ namespace spice {
          * 
          * This is an alias for `nearest_neighbor_floor`.
          * 
+         * \todo Create `const` version of this.
+         * 
          * \tparam T 
          * \param source 
          * \param position 
          * \return T 
          */
         template<typename T>
-        color<T> nearest_neighbor(image<T> const & source,
-            std::pair<float, float> const & position)
-        {
-            return nearest_neighbor_floor(source, position);
-        }
+        using nearest_neighbor = nearest_neighbor_floor<T>;
 
         /**
          * \brief Bilinear interpolation between pixels adjacent to `position`.
          * 
-         * \tparam T 
-         * \param source 
-         * \param position 
-         * \return T 
-         */
-        template<typename T>
-        color<T> bilinear(image<T> const & source,
-            std::pair<float, float> const & position);
-
-        /**
-         * \brief Bicubic interpolation between pixels adjacent to `position`.
+         * \todo Create `const` version of this.
          * 
          * \tparam T 
          * \param source 
@@ -93,8 +99,34 @@ namespace spice {
          * \return T 
          */
         template<typename T>
-        color<T> bicubic(image<T> const & source,
-            std::pair<float, float> const & position);
+        class bilinear {
+        private:
+            image<T> & m_img;
+        public:
+            bilinear(image<T> const & source) :
+            m_img(source)
+            {}
+        };
+
+        /**
+         * \brief Bicubic interpolation between pixels adjacent to `position`.
+         * 
+         * \todo Create `const` version of this.
+         * 
+         * \tparam T 
+         * \param source 
+         * \param position 
+         * \return T 
+         */
+        template<typename T>
+        class bicubic {
+        private:
+            image<T> & m_img;
+        public:
+            bicubic(image<T> const & source) :
+            m_img(source)
+            {}
+        };
     };
 /**
  * \brief Copy values from image `b`, transformed by `tx`, into image `a`.
@@ -107,9 +139,8 @@ namespace spice {
  * \tparam T
  * \tparam Interpolation The interpolation function type
  */
-template<typename T, typename Interpolation>
-void merge(image<T> & a, image<T> const & b, transform_2d tx,
-Interpolation interpolation = interpolation::bilinear);
+template<typename T, typename Interpolation = interpolation::bilinear<T>>
+void merge(image<T> & a, image<T> const & b, transform_2d tx);
 };
 
 #endif // SPICE_COMPOSITE

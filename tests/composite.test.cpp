@@ -12,8 +12,10 @@ TEST(interpolation, nearest_neighbor_floor) {
     color<float> white({3}, 1.f);
     color<float> black({3}, 0.f);
 
-    EXPECT_EQ(white, interpolation::nearest_neighbor_floor(img, {0.9, 0.9}));
-    EXPECT_EQ(black, interpolation::nearest_neighbor_floor(img, {0.9, 1.9}));
+    interpolation::nearest_neighbor_floor<float> interpolate(img);
+
+    EXPECT_EQ(white, interpolate(0.9, 0.9));
+    EXPECT_EQ(black, interpolate(0.9, 1.9));
 }
 
 TEST(interpolation, nearest_neighbor_round) {
@@ -22,8 +24,10 @@ TEST(interpolation, nearest_neighbor_round) {
     color<float> white({3}, 1.f);
     color<float> black({3}, 0.f);
 
-    EXPECT_EQ(white, interpolation::nearest_neighbor_round(img, {0.42, 0.47}));
-    EXPECT_EQ(black, interpolation::nearest_neighbor_round(img, {0.123, 1.3}));
+    interpolation::nearest_neighbor_round<float> interpolate(img);
+
+    EXPECT_EQ(white, interpolate(0.42, 0.47));
+    EXPECT_EQ(black, interpolate(0.123, 1.3));
 }
 
 TEST(interpolation, nearest_neighbor) {
@@ -32,8 +36,10 @@ TEST(interpolation, nearest_neighbor) {
     color<float> white({3}, 1.f);
     color<float> black({3}, 0.f);
 
-    EXPECT_EQ(white, interpolation::nearest_neighbor(img, {0.9, 0.9}));
-    EXPECT_EQ(black, interpolation::nearest_neighbor(img, {0.9, 1.9}));
+    interpolation::nearest_neighbor<float> interpolate(img);
+
+    EXPECT_EQ(white, interpolate(0.9, 0.9));
+    EXPECT_EQ(black, interpolate(0.9, 1.9));
 }
 
 TEST(interpolation, bilinear) { GTEST_SKIP(); }
