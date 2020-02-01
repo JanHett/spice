@@ -152,7 +152,7 @@ public:
  */
 inline transform_2d translate(float x, float y)
 {
-    return transform_2d(x, y, 0, 0, 0);
+    return transform_2d(x, y, 0, 1, 1);
 }
 
 /**
@@ -160,7 +160,7 @@ inline transform_2d translate(float x, float y)
  */
 inline transform_2d rotate(float angle)
 {
-    return transform_2d(0, 0, angle, 0, 0);
+    return transform_2d(0, 0, angle, 1, 1);
 }
 
 /**

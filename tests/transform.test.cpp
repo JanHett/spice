@@ -65,5 +65,3 @@ TEST(transform_2d, create_translate) { GTEST_SKIP(); }
 TEST(transform_2d, create_rotate) { GTEST_SKIP(); }
 
 TEST(transform_2d, create_scale) { GTEST_SKIP(); }
-
-TEST(transform_2d, merge) { GTEST_SKIP(); }
