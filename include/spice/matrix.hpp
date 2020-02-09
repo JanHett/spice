@@ -36,7 +36,7 @@ namespace {
         T const * const b,
         size_t common_dim, size_t a_rows, size_t b_columns)
     {
-        matrix<T> c(b_columns, a_rows);
+        matrix<T> c(b_columns, a_rows, T{});
 
         for (size_t x = 0; x < b_columns; ++x) {
             for (size_t y = 0; y < a_rows; ++y) {
@@ -61,14 +61,107 @@ template<typename T>
 class matrix : public nd_vector_impl<2, T, true> {
 public:
     /**
-     * Creates a zero-initialised `matrix`.
+     * Creates a `matrix` initalised to the identity.
      */
     matrix(
         size_t columns = 0,
         size_t rows = 0
     ) : nd_vector_impl<2, T, true>({columns, rows})
-    {}
+    {
+        for (size_t j = 0; j < std::min(columns, rows); ++j) {
+            (*this)(j, j) = 1;
+        }
+    }
+
+    /**
+     * Creates a `matrix` initalised to the given default value.
+     */
+    matrix(
+        size_t columns,
+        size_t rows,
+        T const & default_value
+    ) : nd_vector_impl<2, T, true>({columns, rows})
+    {
+        if (default_value != T{})
+            for (size_t j = 0; j < columns * rows; ++j)
+                this->m_data[j] = default_value;
+    }
+
+    size_t columns()
+    { return this->shape()[0]; }
+
+    size_t rows()
+    { return this->shape()[1]; }
 };
+
+/**
+ * \brief Invert matrix m.
+ * 
+ * \throw `std::domain_error` if the matrix is not invertible. Only applicable
+ * if template aregument `Throws` is set to true.
+ * 
+ * \param m the matrix to invert
+ * \tparam Throws set this to false to presume invertibility
+ * \return matrix<T> 
+ */
+template<typename T, bool Throws = true>
+matrix<T> invert(matrix<T> m)
+{
+    matrix<T> mat(m.columns(), m.rows());
+    for (size_t column = 0; column < m.columns(); ++column)
+    {
+        // Swap row in case our pivot point is not working
+        if (m(column, column) == 0)
+        {
+            size_t big = column;
+            for (size_t row = 0; row < m.rows(); ++row)
+                if (fabs(m(row, column)) > fabs(m(big, column)))
+                    big = row;
+
+            if constexpr(Throws) {
+                // Throw if this is a singular matrix
+                if (big == column)
+                    throw std::domain_error ("Cannot invert singular matrix");
+            }
+
+            // Swap rows
+            for (size_t row = 0; row < m.rows(); ++row)
+            {
+                std::swap(m(column, row), m(big, row));
+                std::swap(mat(column, row), mat(big, row));
+            }
+        }
+
+        // Set each row in the column to 0
+        for (size_t row = 0; row < m.rows(); ++row)
+        {
+            if (row != column)
+            {
+                T coeff = m(row, column) / m(column, column);
+                if (coeff != 0)
+                {
+                    for (size_t j = 0; j < m.columns(); ++j)
+                    {
+                        m(row, j) -= coeff * m(column, j);
+                        mat(row, j) -= coeff * mat(column, j);
+                    }
+                    // Set the element to 0 for safety
+                    m(row, column) = 0;
+                }
+            }
+        }
+    }
+    // Set each element of the diagonal to 1
+    for (size_t row = 0; row < m.rows(); ++row)
+    {
+        for (size_t column = 0; column < m.columns(); ++column)
+        {
+            mat(row, column) /= m(row, row);
+        }
+    }
+
+    return mat;
+}
 }
 
 #endif // SPICE_MATRIX

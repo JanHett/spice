@@ -83,7 +83,7 @@ public:
     }
 
     /**
-     * Adds a rotation by the given angle to the `transform_2d`.
+     * Adds a clockwise rotation by the given angle to the `transform_2d`.
      */
     transform_2d & rotate(float angle, bool radians = false)
     {
@@ -92,8 +92,8 @@ public:
 
         matrix<float> new_data = matmul_internal<float>(this->m_data,
             std::array<float, 9>{
-                std::cos(angle), -1 * std::sin(angle), 0,
-                std::sin(angle), std::cos(angle), 0,
+                std::cos(angle), std::sin(angle), 0,
+                -std::sin(angle), std::cos(angle), 0,
                 0, 0, 1
             }.data(),
             3, 3, 3);
@@ -110,7 +110,7 @@ public:
      */
     float rotate()
     {
-        return std::atan2(this->m_data[1], this->m_data[0]) * (180 / M_PI) * -1;
+        return -std::atan2(this->m_data[1], this->m_data[0]) * (180 / M_PI) * -1;
     }
 
     /**

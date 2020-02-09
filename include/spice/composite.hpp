@@ -141,32 +141,84 @@ namespace interpolation {
  * \tparam Interpolation The interpolation function type
  */
 template<typename T, typename Interpolation = interpolation::bilinear<T>>
-void merge(image<T> & a, image<T> const & b, transform_2d tx)
+void merge(image<T> & a, image<T> /* const */ & b, transform_2d tx)
 {
-    // naive implementation, will look "dusty" for scale values > 1
-    // TODO: imlement properly (inverse transform?)
-    for (size_t x = 0; x < b.width(); ++x) {
-        for (size_t y = 0; y < b.height(); ++y) {
+    // calculate bounding box of b under tx
+    auto top_left = matmul_internal(
+        tx.data_ptr(), std::array<float, 3>{
+            0, 0, 1
+        }.data(), 3, 3, 1);
+    auto top_right = matmul_internal(
+        tx.data_ptr(), std::array<float, 3>{
+            static_cast<float>(b.width()), 0, 1
+        }.data(), 3, 3, 1);
+    auto bottom_left = matmul_internal(
+        tx.data_ptr(), std::array<float, 3>{
+            0, static_cast<float>(b.height()), 1
+        }.data(), 3, 3, 1);
+    auto bottom_right = matmul_internal(
+        tx.data_ptr(), std::array<float, 3>{
+            static_cast<float>(b.width()), static_cast<float>(b.height()), 1
+        }.data(), 3, 3, 1);
+
+    std::pair<size_t, size_t> bb_start{
+        std::clamp(
+            std::min({
+                top_left(0,0), top_right(0,0),
+                bottom_left(0,0), bottom_right(0,0)
+            }) - 1,
+            0.f,
+            static_cast<float>(a.width())
+        ), std::clamp(
+            std::min({
+                top_left(0,1), top_right(0,1),
+                bottom_left(0,1), bottom_right(0,1)
+            }) - 1,
+            0.f,
+            static_cast<float>(a.height())
+        )
+    };
+
+    std::pair<size_t, size_t> bb_end{
+        std::clamp(
+            std::max({
+                top_left(0,0), top_right(0,0),
+                bottom_left(0,0), bottom_right(0,0)
+            }) + 1,
+            0.f,
+            static_cast<float>(a.width())
+        ), std::clamp(
+            std::max({
+                top_left(0,1), top_right(0,1),
+                bottom_left(0,1), bottom_right(0,1)
+            }) + 1,
+            0.f,
+            static_cast<float>(a.height())
+        )
+    };
+
+    // std::cout << "bb_start: " << bb_start.first << ", " << bb_start.second << "\n";
+    // std::cout << "bb_end: " << bb_end.first << ", " << bb_end.second << "\n";
+
+    // transform "backwards"
+    auto tx_inv = invert(tx);
+    for (size_t x = bb_start.first; x < bb_end.first; ++x) {
+        for (size_t y = bb_start.second; y < bb_end.second; ++y) {
             float coordinates[] = {
                 static_cast<float>(x), static_cast<float>(y), 1};
-
-            auto new_coordinates = matmul_internal<float>(
-                tx.data_ptr(), &coordinates[0],
+            auto src_coordinates = matmul_internal<float>(
+                tx_inv.data_ptr(), &coordinates[0],
                 3, 3, 1);
 
-            float new_x = new_coordinates(0, 0);
-            float new_y = new_coordinates(0, 1);
-            if (new_x < 0 || new_x >= a.width() ||
-                new_y < 0 || new_y >= a.height()) {
-                // std::cout << "skipping (" << new_x << ", " << new_y << ")\n";
+            if (src_coordinates(0,0) < 0 || src_coordinates(0,1) < 0 ||
+                src_coordinates(0,0) >= b.width() ||
+                src_coordinates(0,1) >= b.height())
                 continue;
-            }
-
-            size_t floor_x = new_x;
-            size_t floor_y = new_y;
-
-            // std::cout << "Setting a(" << floor_x << ", " << floor_y << ") to " << b(x, y) << '\n';
-            a(floor_x, floor_y) = b(x, y);
+            
+            Interpolation itp(b);
+            for (size_t chan = 0; chan < a.channels(); ++chan)
+                a(x, y, chan) = itp(src_coordinates(0,0),
+                src_coordinates(0,1))(chan);
         }
     }
 }

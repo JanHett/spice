@@ -23,7 +23,6 @@ TEST(transform_2d, default_constructor) {
 }
 
 TEST(transform_2d, fully_specified_constructor) {
-    // GTEST_SKIP();
     transform_2d tx(
         42, 47,
         123,
