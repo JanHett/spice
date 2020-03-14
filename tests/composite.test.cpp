@@ -4,15 +4,17 @@
 
 #include "test_utils.hpp"
 
+#include <spice/print.hpp>
+
 using namespace spice;
 
-TEST(interpolation, nearest_neighbor_floor) {
+TEST(interpolation, nearest_neighbor) {
     auto img = make_checkerboard<float>(2,1);
 
     color<float> white({3}, 1.f);
     color<float> black({3}, 0.f);
 
-    interpolation::nearest_neighbor_floor<float> interpolate(img);
+    interpolation::nearest_neighbor<float> interpolate(img);
 
     EXPECT_EQ(white, interpolate(0.9, 0.9));
     EXPECT_EQ(black, interpolate(0.9, 1.9));
@@ -30,19 +32,27 @@ TEST(interpolation, nearest_neighbor_round) {
     EXPECT_EQ(black, interpolate(0.123, 1.3));
 }
 
-TEST(interpolation, nearest_neighbor) {
-    auto img = make_checkerboard<float>(2,1);
+TEST(interpolation, bilinear) {
+    auto img = make_checkerboard<float>(3,3);
 
-    color<float> white({3}, 1.f);
+    // print::image(img);
+
     color<float> black({3}, 0.f);
+    color<float> grey_25({3}, 0.25f);
+    color<float> grey_50({3}, 0.5f);
+    color<float> grey_75({3}, 0.75f);
+    color<float> white({3}, 1.f);
 
-    interpolation::nearest_neighbor<float> interpolate(img);
+    interpolation::bilinear<float> interpolate(img);
 
-    EXPECT_EQ(white, interpolate(0.9, 0.9));
-    EXPECT_EQ(black, interpolate(0.9, 1.9));
+    EXPECT_EQ(white, interpolate(0.f, 0.f));
+    EXPECT_EQ(grey_75, interpolate(0.25, 0.f));
+    EXPECT_EQ(grey_50, interpolate(0.5, 0.5));
+    EXPECT_EQ(grey_25, interpolate(0.75, 0.f));
+    EXPECT_EQ(black, interpolate(1.f, 0.f));
+
+    // TODO: test intermediate values
 }
-
-TEST(interpolation, bilinear) { GTEST_SKIP(); }
 
 TEST(interpolation, bicubic) { GTEST_SKIP(); }
 
@@ -52,7 +62,7 @@ TEST(merge, merge_w_translate) {
 
     transform_2d tx(10, 20, 0, 1, 1);
 
-    merge<float, interpolation::nearest_neighbor<float>>(a, b, tx);
+    merge<float, interpolation::bilinear<float>>(a, b, tx);
 
     write_image("../data/testing/translate.jpg", a);
 
@@ -69,7 +79,7 @@ TEST(merge, merge_w_translate) {
 
             transform_2d tx = rotate(47).scale(0.42, 0.47).translate(42, 47);
 
-            merge<float, interpolation::nearest_neighbor<float>>(a, b, tx);
+            merge<float, interpolation::bilinear<float>>(a, b, tx);
 
             write_image("../data/testing/boat_tx.jpg", a);
 
@@ -120,7 +130,7 @@ TEST(merge, merge_w_translate) {
             }
 
             transform_2d abstract_tx(165, 256, 45, 1, 1);
-            merge<float, interpolation::nearest_neighbor<float>>(bg, square, abstract_tx);
+            merge<float, interpolation::bilinear<float>>(bg, square, abstract_tx);
             write_image("../data/testing/abstract_generated.jpg", bg);
         }
 }
@@ -131,7 +141,7 @@ TEST(merge, merge_w_rotate) {
 
     transform_2d tx(0, 0, 47, 1, 1);
 
-    merge<float, interpolation::nearest_neighbor<float>>(a, b, tx);
+    merge<float, interpolation::bilinear<float>>(a, b, tx);
 
     write_image("../data/testing/rotate.jpg", a);
 
@@ -150,7 +160,7 @@ TEST(merge, merge_w_scale) {
 
     transform_2d tx(0, 0, 0, 2, 0.5);
 
-    merge<float, interpolation::nearest_neighbor<float>>(a, b, tx);
+    merge<float, interpolation::bilinear<float>>(a, b, tx);
 
     write_image("../data/testing/scale.jpg", a);
 

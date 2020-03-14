@@ -17,6 +17,10 @@
 #include "transform.hpp"
 
 namespace spice {
+/**
+ * \brief Interpolation operations on images.
+ *
+ */
 namespace interpolation {
     /**
      * \brief Nearest neighbour interpolation between pixels adjacent to
@@ -31,15 +35,15 @@ namespace interpolation {
      * \return T 
      */
     template<typename T>
-    class nearest_neighbor_floor {
+    class nearest_neighbor {
     private:
-        image<T> & m_img;
+        image<T> const & m_img;
     public:
-        nearest_neighbor_floor(image<T> & source) :
+        nearest_neighbor(image<T> const & source) :
         m_img(source)
         {}
 
-        pixel_view<T> operator() (float x, float y)
+        color<T> operator() (float x, float y)
         {
             return m_img(x, y);
         }
@@ -60,52 +64,53 @@ namespace interpolation {
     template<typename T>
     class nearest_neighbor_round {
     private:
-        image<T> & m_img;
+        image<T> const & m_img;
     public:
-        nearest_neighbor_round(image<T> & source) :
+        nearest_neighbor_round(image<T> const & source) :
         m_img(source)
         {}
 
-        pixel_view<T> operator() (float x, float y)
+        color<T> operator() (float x, float y)
         {
             return m_img(std::round(x), std::round(y));
         }
     };
 
     /**
-     * \brief Nearest neighbour interpolation between pixels adjacent to
-     * `position`.
-     * 
-     * This is an alias for `nearest_neighbor_floor`.
-     * 
-     * \todo Create `const` version of this.
-     * 
-     * \tparam T 
-     * \param source 
-     * \param position 
-     * \return T 
-     */
-    template<typename T>
-    using nearest_neighbor = nearest_neighbor_floor<T>;
-
-    /**
      * \brief Bilinear interpolation between pixels adjacent to `position`.
-     * 
-     * \todo Create `const` version of this.
-     * 
+     *
      * \tparam T 
-     * \param source 
-     * \param position 
-     * \return T 
      */
     template<typename T>
     class bilinear {
     private:
-        image<T> & m_img;
+        image<T> const & m_img;
     public:
         bilinear(image<T> const & source) :
         m_img(source)
         {}
+
+        color<T> operator() (float x, float y)
+        {
+            // avoid overflow - TODO: remove?
+            if (x < 0 || y < 0 ||
+                m_img.width() - 1 <= x || m_img.height() - 1 <= y)
+                return color<T>({m_img.channels()}, T{});
+
+            auto unit_x_0 = std::floorf(x);
+            auto unit_y_0 = std::floorf(y);
+            auto unit_x_1 = std::floorf(x + 1);
+            auto unit_y_1 = std::floorf(y + 1);
+
+            auto unit_x = x - std::floorf(x);
+            auto unit_y = y - std::floorf(y);
+
+            return
+                m_img(unit_x_0, unit_y_0) * (1 - unit_x) * (1 - unit_y) +
+                m_img(unit_x_1, unit_y_0) * unit_x * (1 - unit_y) +
+                m_img(unit_x_0, unit_y_1) * (1 - unit_x) * unit_y +
+                m_img(unit_x_1, unit_y_1) * unit_x * unit_y;
+        }
     };
 
     /**
@@ -121,7 +126,7 @@ namespace interpolation {
     template<typename T>
     class bicubic {
     private:
-        image<T> & m_img;
+        image<T> const & m_img;
     public:
         bicubic(image<T> const & source) :
         m_img(source)
@@ -132,16 +137,18 @@ namespace interpolation {
 /**
  * \brief Copy values from image `b`, transformed by `tx`, into image `a`.
  *
+ * \todo Handle alpha channel?
+ *
  * \param a the destination image
  * \param b the source image
  * \param tx the transformation to be applied to image `b`
  * \param interpolation a function to determine intermediate pixel values
- * 
+ *
  * \tparam T
  * \tparam Interpolation The interpolation function type
  */
 template<typename T, typename Interpolation = interpolation::bilinear<T>>
-void merge(image<T> & a, image<T> /* const */ & b, transform_2d tx)
+void merge(image<T> & a, image<T> const & b, transform_2d tx)
 {
     // calculate bounding box of b under tx
     auto top_left = matmul_internal(

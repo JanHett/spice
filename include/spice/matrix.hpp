@@ -107,6 +107,8 @@ public:
 template<typename T, bool Throws = true>
 matrix<T> invert(matrix<T> m)
 {
+    // implementation adapted from https://www.scratchapixel.com/lessons/
+    // mathematics-physics-for-computer-graphics/matrix-inverse
     matrix<T> mat(m.columns(), m.rows());
     for (size_t column = 0; column < m.columns(); ++column)
     {
