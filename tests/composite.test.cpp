@@ -18,6 +18,10 @@ TEST(interpolation, nearest_neighbor) {
 
     EXPECT_EQ(white, interpolate(0.9, 0.9));
     EXPECT_EQ(black, interpolate(0.9, 1.9));
+
+    // make sure overflow is handled correctly
+    EXPECT_EQ(black, interpolate(42.47, 47.42));
+    EXPECT_EQ(black, interpolate(-42.47, -47.42));
 }
 
 TEST(interpolation, nearest_neighbor_round) {
@@ -30,6 +34,10 @@ TEST(interpolation, nearest_neighbor_round) {
 
     EXPECT_EQ(white, interpolate(0.42, 0.47));
     EXPECT_EQ(black, interpolate(0.123, 1.3));
+
+    // make sure overflow is handled correctly
+    EXPECT_EQ(black, interpolate(42.47, 47.42));
+    EXPECT_EQ(black, interpolate(-42.47, -47.42));
 }
 
 TEST(interpolation, bilinear) {
@@ -51,7 +59,9 @@ TEST(interpolation, bilinear) {
     EXPECT_EQ(grey_25, interpolate(0.75, 0.f));
     EXPECT_EQ(black, interpolate(1.f, 0.f));
 
-    // TODO: test intermediate values
+    // make sure overflow is handled correctly
+    EXPECT_EQ(black, interpolate(42.47, 47.42));
+    EXPECT_EQ(black, interpolate(-42.47, -47.42));
 }
 
 TEST(interpolation, bicubic) { GTEST_SKIP(); }
@@ -73,66 +83,81 @@ TEST(merge, merge_w_translate) {
     EXPECT_EQ(black, a( 9, 19));
     EXPECT_EQ(white, a(10, 20));
 
-        {
-            auto a = load_image<float>("../data/testing/boat.jpg");
-            auto b = a;
+    // {
+    //         auto a = load_image<float>("../data/testing/boat.jpg");
+    //         image<float> b_bilinear(a.width() * 2, a.height() * 2, a.channel_semantics(), 1.f);
+    //         image<float> b_nearest_neighbour(a.width() * 2, a.height() * 2, a.channel_semantics(), 1.f);
 
-            transform_2d tx = rotate(47).scale(0.42, 0.47).translate(42, 47);
+    //         transform_2d tx = rotate(47).scale(2, 1.2);
 
-            merge<float, interpolation::bilinear<float>>(a, b, tx);
+    //         merge<float, interpolation::bilinear<float>>(b_bilinear, a, tx);
+    //         merge<float, interpolation::nearest_neighbor<float>>(
+    //             b_nearest_neighbour, a, tx);
 
-            write_image("../data/testing/boat_tx.jpg", a);
+    //         write_image("../data/testing/boat_scaled_bilinear.jpg", b_bilinear);
+    //         write_image("../data/testing/boat_scaled_nearest_neighbour.jpg", b_nearest_neighbour);
+    // }
 
-            //
-            // abstract art...
-            //
+        // {
+        //     auto a = load_image<float>("../data/testing/boat.jpg");
+        //     auto b = a;
 
-            image<float> bg(512, 512, {"R", "G", "B"});
-            image<float> square(128, 128, {"R", "G", "B"});
-            color<float> white({3}, 1.f);
+        //     transform_2d tx = rotate(47).scale(0.42, 0.47).translate(42, 47);
 
-            // paint bg
-            for (size_t x = 0; x < bg.width(); ++x) {
-                for (size_t y = 0; y < bg.height(); ++y) {
-                    for (size_t chan = 0; chan < bg.channels(); ++chan) {
-                        bg(x, y, chan) = (
-                            std::sinf((static_cast<float>(x) / bg.width()) * 10 * chan) +
-                            1 - std::cosf((static_cast<float>(y) / bg.height()) * 10 * chan)
-                            ) / 2;
-                    }
-                }
-            }
+        //     merge<float, interpolation::bilinear<float>>(a, b, tx);
 
-            // paint square colours
-            for (size_t x = 0; x < square.width(); ++x) {
-                for (size_t y = 0; y < square.height(); ++y) {
-                    for (size_t chan = 0; chan < square.channels(); ++chan) {
-                        square(x, y, chan) = (
-                            1 - std::cosf((static_cast<float>(x) / square.width()) * chan) +
-                            std::sinf((static_cast<float>(y) / square.height()) * chan)
-                            ) / 2 * chan;
-                    }
-                }
-            }
+        //     write_image("../data/testing/boat_tx.jpg", a);
 
-            // paint borders of square white
-            for (size_t x = 0; x < square.width(); ++x) {
-                square(x, 0) = white;
-                square(x, 1) = white;
-                square(x, 126) = white;
-                square(x, 127) = white;
-            }
-            for (size_t y = 0; y < square.height(); ++y) {
-                square(0, y) = white;
-                square(1, y) = white;
-                square(126, y) = white;
-                square(127, y) = white;
-            }
+        //     //
+        //     // abstract art...
+        //     //
 
-            transform_2d abstract_tx(165, 256, 45, 1, 1);
-            merge<float, interpolation::bilinear<float>>(bg, square, abstract_tx);
-            write_image("../data/testing/abstract_generated.jpg", bg);
-        }
+        //     image<float> bg(512, 512, {"R", "G", "B"});
+        //     image<float> square(128, 128, {"R", "G", "B"});
+        //     color<float> white({3}, 1.f);
+
+        //     // paint bg
+        //     for (size_t x = 0; x < bg.width(); ++x) {
+        //         for (size_t y = 0; y < bg.height(); ++y) {
+        //             for (size_t chan = 0; chan < bg.channels(); ++chan) {
+        //                 bg(x, y, chan) = (
+        //                     std::sinf((static_cast<float>(x) / bg.width()) * 10 * chan) +
+        //                     1 - std::cosf((static_cast<float>(y) / bg.height()) * 10 * chan)
+        //                     ) / 2;
+        //             }
+        //         }
+        //     }
+
+        //     // paint square colours
+        //     for (size_t x = 0; x < square.width(); ++x) {
+        //         for (size_t y = 0; y < square.height(); ++y) {
+        //             for (size_t chan = 0; chan < square.channels(); ++chan) {
+        //                 square(x, y, chan) = (
+        //                     1 - std::cosf((static_cast<float>(x) / square.width()) * chan) +
+        //                     std::sinf((static_cast<float>(y) / square.height()) * chan)
+        //                     ) / 2 * chan;
+        //             }
+        //         }
+        //     }
+
+        //     // paint borders of square white
+        //     for (size_t x = 0; x < square.width(); ++x) {
+        //         square(x, 0) = white;
+        //         square(x, 1) = white;
+        //         square(x, 126) = white;
+        //         square(x, 127) = white;
+        //     }
+        //     for (size_t y = 0; y < square.height(); ++y) {
+        //         square(0, y) = white;
+        //         square(1, y) = white;
+        //         square(126, y) = white;
+        //         square(127, y) = white;
+        //     }
+
+        //     transform_2d abstract_tx(165, 256, 45, 1, 1);
+        //     merge<float, interpolation::bilinear<float>>(bg, square, abstract_tx);
+        //     write_image("../data/testing/abstract_generated.jpg", bg);
+        // }
 }
 
 TEST(merge, merge_w_rotate) {

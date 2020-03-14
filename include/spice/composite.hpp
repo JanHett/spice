@@ -27,51 +27,46 @@ namespace interpolation {
      * `position` by returning the value of the pixel to the top-left of
      * `position`.
      * 
-     * \todo Create `const` version of this.
-     * 
-     * \tparam T 
-     * \param source 
-     * \param position 
-     * \return T 
+     * \tparam T type of pixel values
      */
     template<typename T>
     class nearest_neighbor {
     private:
         image<T> const & m_img;
+        color<T> const m_default_color;
     public:
         nearest_neighbor(image<T> const & source) :
-        m_img(source)
+        m_img(source), m_default_color({m_img.channels()}, T{})
         {}
 
         color<T> operator() (float x, float y)
         {
+            if (x < 0 || y < 0 || x >= m_img.width() || y >= m_img.height())
+                return m_default_color;
             return m_img(x, y);
         }
     };
 
     /**
      * \brief Nearest neighbour interpolation between pixels adjacent to
-     * `position` by returning the value of the pixel to the top-left of
-     * `position`.
+     * `position` by rounding `position`.
      * 
-     * \todo Create `const` version of this.
-     * 
-     * \tparam T 
-     * \param source 
-     * \param position 
-     * \return T 
+     * \tparam T type of pixel values
      */
     template<typename T>
     class nearest_neighbor_round {
     private:
         image<T> const & m_img;
+        color<T> const m_default_color;
     public:
         nearest_neighbor_round(image<T> const & source) :
-        m_img(source)
+        m_img(source), m_default_color({m_img.channels()}, T{})
         {}
 
         color<T> operator() (float x, float y)
         {
+            if (x < 0 || y < 0 || x >= m_img.width() || y >= m_img.height())
+                return m_default_color;
             return m_img(std::round(x), std::round(y));
         }
     };
@@ -79,24 +74,20 @@ namespace interpolation {
     /**
      * \brief Bilinear interpolation between pixels adjacent to `position`.
      *
-     * \tparam T 
+     * \tparam T type of pixel values
      */
     template<typename T>
     class bilinear {
     private:
         image<T> const & m_img;
+        color<T> const m_default_color;
     public:
         bilinear(image<T> const & source) :
-        m_img(source)
+        m_img(source), m_default_color({m_img.channels()}, T{})
         {}
 
         color<T> operator() (float x, float y)
         {
-            // avoid overflow - TODO: remove?
-            if (x < 0 || y < 0 ||
-                m_img.width() - 1 <= x || m_img.height() - 1 <= y)
-                return color<T>({m_img.channels()}, T{});
-
             auto unit_x_0 = std::floorf(x);
             auto unit_y_0 = std::floorf(y);
             auto unit_x_1 = std::floorf(x + 1);
@@ -105,23 +96,48 @@ namespace interpolation {
             auto unit_x = x - std::floorf(x);
             auto unit_y = y - std::floorf(y);
 
+            // create corners and initialise with default values
+            pixel_view<T> img_00(m_default_color);
+            pixel_view<T> img_01(m_default_color);
+            pixel_view<T> img_10(m_default_color);
+            pixel_view<T> img_11(m_default_color);
+
+            if (unit_x_0 >= 0 && unit_y_0 >= 0 &&
+                unit_x_0 < m_img.width() && unit_y_0 < m_img.height())
+            {
+                img_00.reset(m_img(unit_x_0, unit_y_0));
+            }
+
+            if (unit_x_0 >= 0 && unit_y_1 >= 0 &&
+                unit_x_0 < m_img.width() && unit_y_1 < m_img.height())
+            {
+                img_01.reset(m_img(unit_x_0, unit_y_1));
+            }
+
+            if (unit_x_1 >= 0 && unit_y_0 >= 0 &&
+                unit_x_1 < m_img.width() && unit_y_0 < m_img.height())
+            {
+                img_10.reset(m_img(unit_x_1, unit_y_0));
+            }
+
+            if (unit_x_1 >= 0 && unit_y_1 >= 0 &&
+                unit_x_1 < m_img.width() && unit_y_1 < m_img.height())
+            {
+                img_11.reset(m_img(unit_x_1, unit_y_1));
+            }
+
             return
-                m_img(unit_x_0, unit_y_0) * (1 - unit_x) * (1 - unit_y) +
-                m_img(unit_x_1, unit_y_0) * unit_x * (1 - unit_y) +
-                m_img(unit_x_0, unit_y_1) * (1 - unit_x) * unit_y +
-                m_img(unit_x_1, unit_y_1) * unit_x * unit_y;
+                img_00 * (1 - unit_x) * (1 - unit_y) +
+                img_10 * unit_x * (1 - unit_y) +
+                img_01 * (1 - unit_x) * unit_y +
+                img_11 * unit_x * unit_y;
         }
     };
 
     /**
      * \brief Bicubic interpolation between pixels adjacent to `position`.
-     * 
-     * \todo Create `const` version of this.
-     * 
-     * \tparam T 
-     * \param source 
-     * \param position 
-     * \return T 
+     *
+     * \tparam T type of pixel values
      */
     template<typename T>
     class bicubic {
@@ -204,9 +220,8 @@ void merge(image<T> & a, image<T> const & b, transform_2d tx)
         )
     };
 
-    // std::cout << "bb_start: " << bb_start.first << ", " << bb_start.second << "\n";
-    // std::cout << "bb_end: " << bb_end.first << ", " << bb_end.second << "\n";
-
+    // ready the interpolation function
+    Interpolation itp(b);
     // transform "backwards"
     auto tx_inv = invert(tx);
     for (size_t x = bb_start.first; x < bb_end.first; ++x) {
@@ -217,15 +232,7 @@ void merge(image<T> & a, image<T> const & b, transform_2d tx)
                 tx_inv.data_ptr(), &coordinates[0],
                 3, 3, 1);
 
-            if (src_coordinates(0,0) < 0 || src_coordinates(0,1) < 0 ||
-                src_coordinates(0,0) >= b.width() ||
-                src_coordinates(0,1) >= b.height())
-                continue;
-            
-            Interpolation itp(b);
-            for (size_t chan = 0; chan < a.channels(); ++chan)
-                a(x, y, chan) = itp(src_coordinates(0,0),
-                src_coordinates(0,1))(chan);
+            a(x, y) = itp(src_coordinates(0,0), src_coordinates(0,1));
         }
     }
 }
