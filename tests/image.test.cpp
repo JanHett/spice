@@ -24,6 +24,7 @@ TEST(image, default_constructor) {
     EXPECT_EQ(0, im.height());
     EXPECT_EQ(0, im.channels());
     EXPECT_EQ(0, im.channel_semantics().size());
+    EXPECT_EQ(NO_ALPHA, im.alpha_channel());
 }
 
 TEST(image, size_constructor) {
@@ -41,6 +42,14 @@ TEST(image, size_constructor) {
     EXPECT_EQ("G", im1.channel_semantics()[1]);
     EXPECT_EQ("B", im1.channel_semantics()[2]);
     EXPECT_EQ("A", im1.channel_semantics()[3]);
+    EXPECT_EQ(3, im1.alpha_channel());
+
+    image<float> im_force_no_alpha(2, 3, { "R", "G", "B", "A" },
+        DISABLE_ALPHA_DEDUCTION);
+    EXPECT_EQ(NO_ALPHA, im_force_no_alpha.alpha_channel());
+
+    image<float> im_manual_alpha(2, 3, { "R", "G", "X", "B" }, 2);
+    EXPECT_EQ(2, im_manual_alpha.alpha_channel());
 }
 
 TEST(image, copy_constructor) {
@@ -66,6 +75,7 @@ TEST(image, copy_constructor) {
     EXPECT_EQ("G", im2.channel_semantics()[1]);
     EXPECT_EQ("B", im2.channel_semantics()[2]);
     EXPECT_EQ("A", im2.channel_semantics()[3]);
+    EXPECT_EQ(3, im2.alpha_channel());
 }
 
 TEST(image, operator_equals) {

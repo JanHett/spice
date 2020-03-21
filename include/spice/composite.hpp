@@ -86,7 +86,7 @@ namespace interpolation {
         m_img(source), m_default_color({m_img.channels()}, T{})
         {}
 
-        color<T> operator() (float x, float y)
+        [[nodiscard]] color<T> operator() (float x, float y)
         {
             auto unit_x_0 = std::floorf(x);
             auto unit_y_0 = std::floorf(y);
@@ -102,29 +102,22 @@ namespace interpolation {
             pixel_view<T> img_10(m_default_color);
             pixel_view<T> img_11(m_default_color);
 
+            // reassign corners to point to actual image data
             if (unit_x_0 >= 0 && unit_y_0 >= 0 &&
                 unit_x_0 < m_img.width() && unit_y_0 < m_img.height())
-            {
-                img_00.reset(m_img(unit_x_0, unit_y_0));
-            }
+            { img_00.reset(m_img(unit_x_0, unit_y_0)); }
 
             if (unit_x_0 >= 0 && unit_y_1 >= 0 &&
                 unit_x_0 < m_img.width() && unit_y_1 < m_img.height())
-            {
-                img_01.reset(m_img(unit_x_0, unit_y_1));
-            }
+            { img_01.reset(m_img(unit_x_0, unit_y_1)); }
 
             if (unit_x_1 >= 0 && unit_y_0 >= 0 &&
                 unit_x_1 < m_img.width() && unit_y_0 < m_img.height())
-            {
-                img_10.reset(m_img(unit_x_1, unit_y_0));
-            }
+            { img_10.reset(m_img(unit_x_1, unit_y_0)); }
 
             if (unit_x_1 >= 0 && unit_y_1 >= 0 &&
                 unit_x_1 < m_img.width() && unit_y_1 < m_img.height())
-            {
-                img_11.reset(m_img(unit_x_1, unit_y_1));
-            }
+            { img_11.reset(m_img(unit_x_1, unit_y_1)); }
 
             return
                 img_00 * (1 - unit_x) * (1 - unit_y) +
@@ -151,9 +144,54 @@ namespace interpolation {
 };
 
 /**
+ * \brief blend operations
+ * 
+ * All operations assume equivalent `channel_semantics` for foreground and
+ * background data.
+ */
+namespace blend_function {
+    /**
+     * \brief Overlay the foreground over the background.
+     *
+     * \todo this assumes premultiplied alpha. Generalise this to support
+     * unpremultiplied data as well.
+     * 
+     * \tparam T 
+     */
+    template<typename T>
+    class overlay {
+    private:
+        int m_alpha_channel_index;
+    public:
+        /**
+         * \brief Construct a new overlay object
+         * 
+         * \param alpha_channel_index the index of the alpha channel or
+         * `NO_ALPHA`.
+         */
+        overlay(int alpha_channel_index = NO_ALPHA) :
+        m_alpha_channel_index(alpha_channel_index) {}
+
+        /**
+         * \brief Blend the foreground and the background.
+         * 
+         * \param bg 
+         * \param fg 
+         * \return color<T> 
+         */
+        [[nodiscard]] color<T> operator() (pixel_view<T> const & bg,
+            pixel_view<T> const & fg)
+        {
+            float alpha_fg = m_alpha_channel_index > -1 ?
+                fg(m_alpha_channel_index) : image<T>::intensity_range.max;
+
+            return fg + bg * (1 - alpha_fg / image<T>::intensity_range.max);
+        }
+    };
+}
+
+/**
  * \brief Copy values from image `b`, transformed by `tx`, into image `a`.
- *
- * \todo Handle alpha channel?
  *
  * \param a the destination image
  * \param b the source image
@@ -163,7 +201,11 @@ namespace interpolation {
  * \tparam T
  * \tparam Interpolation The interpolation function type
  */
-template<typename T, typename Interpolation = interpolation::bilinear<T>>
+template<
+    typename T,
+    typename Interpolation = interpolation::bilinear<T>,
+    typename BlendFunction = blend_function::overlay<T>
+>
 void merge(image<T> & a, image<T> const & b, transform_2d tx)
 {
     // calculate bounding box of b under tx
@@ -220,8 +262,9 @@ void merge(image<T> & a, image<T> const & b, transform_2d tx)
         )
     };
 
-    // ready the interpolation function
+    // ready the interpolation and blend functions
     Interpolation itp(b);
+    BlendFunction blend(b.alpha_channel());
     // transform "backwards"
     auto tx_inv = invert(tx);
     for (size_t x = bb_start.first; x < bb_end.first; ++x) {
@@ -232,7 +275,10 @@ void merge(image<T> & a, image<T> const & b, transform_2d tx)
                 tx_inv.data_ptr(), &coordinates[0],
                 3, 3, 1);
 
-            a(x, y) = itp(src_coordinates(0,0), src_coordinates(0,1));
+            a(x, y) = blend(
+                a(x, y),
+                itp(src_coordinates(0,0), src_coordinates(0,1))
+                );
         }
     }
 }

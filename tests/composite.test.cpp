@@ -66,15 +66,51 @@ TEST(interpolation, bilinear) {
 
 TEST(interpolation, bicubic) { GTEST_SKIP(); }
 
+TEST(blend_function, overlay_no_alpha) {
+    color<float> fg({3}, 0.47);
+    color<float> bg({3}, 0.123);
+
+    blend_function::overlay<float> blend;
+
+    auto blended = blend(bg, fg);
+
+    EXPECT_FLOAT_EQ(blended[0], 0.47f);
+    EXPECT_FLOAT_EQ(blended[1], 0.47f);
+    EXPECT_FLOAT_EQ(blended[2], 0.47f);
+}
+
+TEST(blend_function, overlay_with_alpha) {
+    color<float> fg({4}, 0.6);
+    color<float> bg({4}, 0.1);
+
+    // fully opaque background
+    bg[2] = 1.f;
+
+    // "red"-ish foreground
+    fg[1] = 0.2;
+    fg[3] = 0.3;
+
+    // alpha at index 2 - odd, but let's test it to be sure it works
+    blend_function::overlay<float> blend(2);
+
+    auto blended = blend(bg, fg);
+
+    EXPECT_FLOAT_EQ(blended[0], 0.64f);
+    EXPECT_FLOAT_EQ(blended[1], 0.24f);
+    EXPECT_FLOAT_EQ(blended[2], 1.f);
+    EXPECT_FLOAT_EQ(blended[3], 0.34f);
+}
+
 TEST(merge, merge_w_translate) {
     image<float> a(50, 50, {"R", "G", "B"});
-    image<float> b(50, 50, {"R", "G", "B"}, image<float>::intensity_range.max);
+    image<float> b(50, 50, {"R", "G", "B"}, NO_ALPHA,
+        image<float>::intensity_range.max);
 
     transform_2d tx(10, 20, 0, 1, 1);
 
     merge<float, interpolation::bilinear<float>>(a, b, tx);
 
-    write_image("../data/testing/translate.jpg", a);
+    // write_image("../data/testing/translate.jpg", a);
 
     color<float> black({3}, 0.f);
     color<float> white({3}, 1.f);
@@ -84,8 +120,8 @@ TEST(merge, merge_w_translate) {
     EXPECT_EQ(white, a(10, 20));
 
     // {
-    //         auto a = load_image<float>("../data/testing/boat.jpg");
-    //         image<float> b_bilinear(a.width() * 2, a.height() * 2, a.channel_semantics(), 1.f);
+    //         auto a = load_image<float>("../data/testing/boat.jpg", nullptr, true);
+    //         image<float> b_bilinear(a.width() * 2, a.height() * 2, a.channel_semantics(), NO_ALPHA, 1.f);
     //         image<float> b_nearest_neighbour(a.width() * 2, a.height() * 2, a.channel_semantics(), 1.f);
 
     //         transform_2d tx = rotate(47).scale(2, 1.2);
@@ -94,8 +130,8 @@ TEST(merge, merge_w_translate) {
     //         merge<float, interpolation::nearest_neighbor<float>>(
     //             b_nearest_neighbour, a, tx);
 
-    //         write_image("../data/testing/boat_scaled_bilinear.jpg", b_bilinear);
-    //         write_image("../data/testing/boat_scaled_nearest_neighbour.jpg", b_nearest_neighbour);
+    //         write_image("../data/testing/boat_scaled_bilinear_blend.jpg", b_bilinear);
+    //         write_image("../data/testing/boat_scaled_nearest_neighbour_blend.jpg", b_nearest_neighbour);
     // }
 
         // {
@@ -162,13 +198,14 @@ TEST(merge, merge_w_translate) {
 
 TEST(merge, merge_w_rotate) {
     image<float> a(50, 50, {"R", "G", "B"});
-    image<float> b(50, 50, {"R", "G", "B"}, image<float>::intensity_range.max);
+    image<float> b(50, 50, {"R", "G", "B"}, NO_ALPHA,
+        image<float>::intensity_range.max);
 
     transform_2d tx(0, 0, 47, 1, 1);
 
     merge<float, interpolation::bilinear<float>>(a, b, tx);
 
-    write_image("../data/testing/rotate.jpg", a);
+    // write_image("../data/testing/rotate.jpg", a);
 
     color<float> black({3}, 0.f);
     color<float> white({3}, 1.f);
@@ -181,13 +218,14 @@ TEST(merge, merge_w_rotate) {
 
 TEST(merge, merge_w_scale) {
     image<float> a(50, 50, {"R", "G", "B"});
-    image<float> b(50, 50, {"R", "G", "B"}, image<float>::intensity_range.max);
+    image<float> b(50, 50, {"R", "G", "B"}, NO_ALPHA,
+        image<float>::intensity_range.max);
 
     transform_2d tx(0, 0, 0, 2, 0.5);
 
     merge<float, interpolation::bilinear<float>>(a, b, tx);
 
-    write_image("../data/testing/scale.jpg", a);
+    // write_image("../data/testing/scale.jpg", a);
 
     color<float> black({3}, 0.f);
     color<float> white({3}, 1.f);

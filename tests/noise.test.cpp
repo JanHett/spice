@@ -7,7 +7,7 @@
 using namespace spice;
 
 TEST(noise, salt_and_pepper) {
-    image<float> img(10, 10, {"R", "G", "B"}, 0.5);
+    image<float> img(10, 10, {"R", "G", "B"}, DISABLE_ALPHA_DEDUCTION, 0.5);
 
     noise::salt_and_pepper(img, 0.5);
 

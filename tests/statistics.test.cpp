@@ -6,7 +6,7 @@ using namespace spice;
 
 TEST(histogram, single_channel_impulse_black) {
     // Black image
-    image<float> black(10, 10, {"ALPHA"});
+    image<float> black(10, 10, {"ALPHA"}, 0);
     auto hist_black = statistics::histogram(black, 42);
 
     EXPECT_EQ(1, hist_black.size());
@@ -17,7 +17,7 @@ TEST(histogram, single_channel_impulse_black) {
 }
 
 TEST(histogram, single_channel_impulse_white) {
-    image<uint16_t> white(10, 42, {"ALPHA"});
+    image<uint16_t> white(10, 42, {"ALPHA"}, 0);
     for (auto & smpl: white.data())
         smpl = image<uint16_t>::intensity_range.max;
 
@@ -31,7 +31,7 @@ TEST(histogram, single_channel_impulse_white) {
 }
 
 TEST(histogram, single_channel_impulse_grey) {
-    image<uint8_t> grey(10, 42, {"ALPHA"});
+    image<uint8_t> grey(10, 42, {"ALPHA"}, 0);
     uint8_t grey_val = image<uint8_t>::intensity_range.max / 2;
     for (auto & smpl: grey.data())
         smpl = grey_val;
@@ -49,7 +49,7 @@ TEST(histogram, single_channel_impulse_grey) {
 }
 
 TEST(histogram, single_channel_overflow_underflow) {
-    image<double> grey(10, 42, {"ALPHA"});
+    image<double> grey(10, 42, {"ALPHA"}, 0);
     double grey_val = image<double>::intensity_range.max / 2;
     for (auto & smpl: grey.data())
         smpl = grey_val;
