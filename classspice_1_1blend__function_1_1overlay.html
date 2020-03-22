@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>spice::range struct | spice</title>
+  <title>spice::blend_function::overlay class | spice</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
   <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
   <link rel="icon" href="spice_favicon.png" type="image/png" />
@@ -44,77 +44,106 @@
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
         <h1>
+          <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="composite_8hpp.html">&lt;include/spice/composite.hpp&gt;</a></div>
           <div class="m-doc-template">template&lt;typename T&gt;</div>
-          <span class="m-breadcrumb"><a href="namespacespice.html">spice</a>::<wbr/></span>range <span class="m-thin">struct</span>
+          <span class="m-breadcrumb"><a href="namespacespice.html">spice</a>::<wbr/></span><span class="m-breadcrumb"><a href="namespacespice_1_1blend__function.html">blend_function</a>::<wbr/></span>overlay <span class="m-thin">class</span>
         </h1>
+        <p>Overlay the foreground over the background.</p>
+        <table class="m-table m-fullwidth m-flat">
+          <thead>
+            <tr><th colspan="2">Template parameters</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="width: 1%">T</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
         <div class="m-block m-default">
           <h3>Contents</h3>
           <ul>
             <li>
               Reference
               <ul>
-                <li><a href="#pub-attribs">Public variables</a></li>
-                <li><a href="#friends">Friends</a></li>
+                <li><a href="#typeless-methods">Constructors, destructors, conversion operators</a></li>
+                <li><a href="#pub-methods">Public functions</a></li>
               </ul>
             </li>
           </ul>
         </div>
-<p>Describes a range of grey values of the particular type.</p>
-        <section id="pub-attribs">
-          <h2><a href="#pub-attribs">Public variables</a></h2>
+<aside class="m-note m-dim"><h4><a href="todo.html#_todo000004" class="m-doc">Todo</a></h4><p>this assumes premultiplied alpha. Generalise this to support unpremultiplied data as well.</p></aside>
+        <section id="typeless-methods">
+          <h2><a href="#typeless-methods">Constructors, destructors, conversion operators</a></h2>
           <dl class="m-doc">
             <dt>
-              T <a href="#aeca048c3121c422a74bb41cd82990f05" class="m-doc">min</a>
+              <span class="m-doc-wrap-bumper"><a href="#ae478e82af739babba1ce1ccf0d985e64" class="m-doc">overlay</a>(</span><span class="m-doc-wrap">int alpha_channel_index = <a href="namespacespice.html#ad7e5b34607a455eaef6ab9f13c75682a" class="m-doc">NO_<wbr />ALPHA</a>)</span>
             </dt>
-            <dd></dd>
-            <dt>
-              T <a href="#a05387bb6ba02c56eccd80fa57fe79153" class="m-doc">max</a>
-            </dt>
-            <dd></dd>
+            <dd>Construct a new overlay object.</dd>
           </dl>
         </section>
-        <section id="friends">
-          <h2><a href="#friends">Friends</a></h2>
+        <section id="pub-methods">
+          <h2><a href="#pub-methods">Public functions</a></h2>
           <dl class="m-doc">
             <dt>
-              <span class="m-doc-wrap-bumper">auto <a href="#a2aa06ea65a2d8d28166b375302e4209e" class="m-doc">operator==</a>(</span><span class="m-doc-wrap"><a href="structspice_1_1range.html" class="m-doc">range</a>&lt;T&gt; const&amp; lhs,
-              <a href="structspice_1_1range.html" class="m-doc">range</a>&lt;T&gt; const&amp; rhs) -&gt; bool</span>
+              <span class="m-doc-wrap-bumper">auto <a href="#ad61af7cc0e4982e59d79db4c87b97fda" class="m-doc">operator()</a>(</span><span class="m-doc-wrap"><a href="namespacespice.html#aeae8f6cbafa76129d382207efb155641" class="m-doc">pixel_<wbr />view</a>&lt;T&gt; const&amp; bg,
+              <a href="namespacespice.html#aeae8f6cbafa76129d382207efb155641" class="m-doc">pixel_<wbr />view</a>&lt;T&gt; const&amp; fg) -&gt; <a href="namespacespice.html#a3298381bfef4f5a53aad5ae5052a168f" class="m-doc">color</a>&lt;T&gt;</span>
             </dt>
-            <dd></dd>
+            <dd>Blend the foreground and the background.</dd>
           </dl>
         </section>
         <section>
           <h2>Function documentation</h2>
-          <section class="m-doc-details" id="a2aa06ea65a2d8d28166b375302e4209e"><div>
+          <section class="m-doc-details" id="ae478e82af739babba1ce1ccf0d985e64"><div>
             <h3>
               <div class="m-doc-template">
                 template&lt;typenameT&gt;
               </div>
-              <span class="m-doc-wrap-bumper">bool </span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a2aa06ea65a2d8d28166b375302e4209e" class="m-doc-self">operator==</a>(</span><span class="m-doc-wrap"><a href="structspice_1_1range.html" class="m-doc">range</a>&lt;T&gt; const&amp; lhs,
-              <a href="structspice_1_1range.html" class="m-doc">range</a>&lt;T&gt; const&amp; rhs)</span></span>
+              <span class="m-doc-wrap-bumper"> spice::<wbr />blend_function::<wbr />overlay&lt;T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ae478e82af739babba1ce1ccf0d985e64" class="m-doc-self">overlay</a>(</span><span class="m-doc-wrap">int alpha_channel_index = <a href="namespacespice.html#ad7e5b34607a455eaef6ab9f13c75682a" class="m-doc">NO_<wbr />ALPHA</a>)</span></span>
             </h3>
-<p>Two ranges are equal if and only if both their min and their max are equal as determined by comparison with <code>==</code>.</p>
+            <p>Construct a new overlay object.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">alpha_channel_index</td>
+                  <td>the index of the alpha channel or <code>NO_ALPHA</code>.</td>
+                </tr>
+              </tbody>
+            </table>
           </div></section>
-        </section>
-        <section>
-          <h2>Variable documentation</h2>
-          <section class="m-doc-details" id="aeca048c3121c422a74bb41cd82990f05"><div>
+          <section class="m-doc-details" id="ad61af7cc0e4982e59d79db4c87b97fda"><div>
             <h3>
               <div class="m-doc-template">
                 template&lt;typenameT&gt;
               </div>
-              T spice::<wbr />range&lt;T&gt;::<wbr /><a href="#aeca048c3121c422a74bb41cd82990f05" class="m-doc-self">min</a>
+              <span class="m-doc-wrap-bumper"><a href="namespacespice.html#a3298381bfef4f5a53aad5ae5052a168f" class="m-doc">color</a>&lt;T&gt; spice::<wbr />blend_function::<wbr />overlay&lt;T&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ad61af7cc0e4982e59d79db4c87b97fda" class="m-doc-self">operator()</a>(</span><span class="m-doc-wrap"><a href="namespacespice.html#aeae8f6cbafa76129d382207efb155641" class="m-doc">pixel_<wbr />view</a>&lt;T&gt; const&amp; bg,
+              <a href="namespacespice.html#aeae8f6cbafa76129d382207efb155641" class="m-doc">pixel_<wbr />view</a>&lt;T&gt; const&amp; fg)</span></span>
             </h3>
-<p>The low end of the range.</p>
-          </div></section>
-          <section class="m-doc-details" id="a05387bb6ba02c56eccd80fa57fe79153"><div>
-            <h3>
-              <div class="m-doc-template">
-                template&lt;typenameT&gt;
-              </div>
-              T spice::<wbr />range&lt;T&gt;::<wbr /><a href="#a05387bb6ba02c56eccd80fa57fe79153" class="m-doc-self">max</a>
-            </h3>
-<p>The high end of the range.</p>
+            <p>Blend the foreground and the background.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">bg</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>fg</td>
+                  <td></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>color&lt;T&gt;</td>
+                </tr>
+              </tfoot>
+            </table>
           </div></section>
         </section>
       </div>

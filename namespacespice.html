@@ -5,7 +5,7 @@
   <title>spice namespace | spice</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
   <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
-  <link rel="icon" href="favicon-dark.png" type="image/png" />
+  <link rel="icon" href="spice_favicon.png" type="image/png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#22272e" />
 </head>
@@ -16,7 +16,7 @@
       <a href="index.html" id="m-navbar-brand" class="m-col-t-8 m-col-m-none m-left-m">spice</a>
       <div class="m-col-t-4 m-hide-m m-text-right m-nopadr">
         <a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
-          <path d="m6 0c-3.3144 0-6 2.6856-6 6 0 3.3144 2.6856 6 6 6 1.4858 0 2.8463-0.54083 3.8945-1.4355-0.0164 0.33797 0.14734 0.75854 0.5 1.1504l3.2227 3.7891c0.55185 0.6139 1.4517 0.66544 2.002 0.11524 0.55022-0.55022 0.49866-1.4501-0.11524-2.002l-3.7891-3.2246c-0.39184-0.35266-0.81242-0.51469-1.1504-0.5 0.89472-1.0482 1.4355-2.4088 1.4355-3.8945 0-3.3128-2.6856-5.998-6-5.998zm0 1.5625a4.4375 4.4375 0 0 1 4.4375 4.4375 4.4375 4.4375 0 0 1-4.4375 4.4375 4.4375 4.4375 0 0 1-4.4375-4.4375 4.4375 4.4375 0 0 1 4.4375-4.4375z"/>
+          <path id="m-doc-search-icon-path" d="m6 0c-3.31 0-6 2.69-6 6 0 3.31 2.69 6 6 6 1.49 0 2.85-0.541 3.89-1.44-0.0164 0.338 0.147 0.759 0.5 1.15l3.22 3.79c0.552 0.614 1.45 0.665 2 0.115 0.55-0.55 0.499-1.45-0.115-2l-3.79-3.22c-0.392-0.353-0.812-0.515-1.15-0.5 0.895-1.05 1.44-2.41 1.44-3.89 0-3.31-2.69-6-6-6zm0 1.56a4.44 4.44 0 0 1 4.44 4.44 4.44 4.44 0 0 1-4.44 4.44 4.44 4.44 0 0 1-4.44-4.44 4.44 4.44 0 0 1 4.44-4.44z"/>
         </svg></a>
         <a id="m-navbar-show" href="#navigation" title="Show navigation"></a>
         <a id="m-navbar-hide" href="#" title="Hide navigation"></a>
@@ -31,7 +31,7 @@
             <li><a href="annotated.html">Classes</a></li>
             <li><a href="files.html">Files</a></li>
             <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
-              <path d="m6 0c-3.3144 0-6 2.6856-6 6 0 3.3144 2.6856 6 6 6 1.4858 0 2.8463-0.54083 3.8945-1.4355-0.0164 0.33797 0.14734 0.75854 0.5 1.1504l3.2227 3.7891c0.55185 0.6139 1.4517 0.66544 2.002 0.11524 0.55022-0.55022 0.49866-1.4501-0.11524-2.002l-3.7891-3.2246c-0.39184-0.35266-0.81242-0.51469-1.1504-0.5 0.89472-1.0482 1.4355-2.4088 1.4355-3.8945 0-3.3128-2.6856-5.998-6-5.998zm0 1.5625a4.4375 4.4375 0 0 1 4.4375 4.4375 4.4375 4.4375 0 0 1-4.4375 4.4375 4.4375 4.4375 0 0 1-4.4375-4.4375 4.4375 4.4375 0 0 1 4.4375-4.4375z"/>
+              <use href="#m-doc-search-icon-path" />
             </svg></a></li>
           </ol>
         </div>
@@ -56,6 +56,7 @@
                 <li><a href="#nested-classes">Classes</a></li>
                 <li><a href="#typedef-members">Typedefs</a></li>
                 <li><a href="#func-members">Functions</a></li>
+                <li><a href="#var-members">Variables</a></li>
               </ul>
             </li>
           </ul>
@@ -64,10 +65,14 @@
         <section id="namespaces">
           <h2><a href="#namespaces">Namespaces</a></h2>
           <dl class="m-doc">
+            <dt>namespace <a href="namespacespice_1_1blend__function.html" class="m-doc">blend_function</a></dt>
+            <dd>blend operations</dd>
             <dt>namespace <a href="namespacespice_1_1blur.html" class="m-doc">blur</a></dt>
             <dd></dd>
             <dt>namespace <a href="namespacespice_1_1helpers.html" class="m-doc">helpers</a></dt>
             <dd></dd>
+            <dt>namespace <a href="namespacespice_1_1interpolation.html" class="m-doc">interpolation</a></dt>
+            <dd>Interpolation operations on images.</dd>
             <dt>namespace <a href="namespacespice_1_1noise.html" class="m-doc">noise</a></dt>
             <dd></dd>
             <dt>namespace <a href="namespacespice_1_1print.html" class="m-doc">print</a></dt>
@@ -85,6 +90,11 @@
             </dt>
             <dd></dd>
             <dt>
+              <div class="m-doc-template">template&lt;typename T&gt;</div>
+              class <a href="classspice_1_1matrix.html" class="m-doc">matrix</a>
+            </dt>
+            <dd></dd>
+            <dt>
               <div class="m-doc-template">template&lt;size_t Dimensions, typename T, bool Owner = true&gt;</div>
               class <a href="classspice_1_1nd__vector__impl.html" class="m-doc">nd_vector_impl</a>
             </dt>
@@ -97,6 +107,10 @@
             <dt>
               <div class="m-doc-template">template&lt;typename T&gt;</div>
               struct <a href="structspice_1_1range.html" class="m-doc">range</a>
+            </dt>
+            <dd></dd>
+            <dt>
+              class <a href="classspice_1_1transform__2d.html" class="m-doc">transform_2d</a>
             </dt>
             <dd></dd>
           </dl>
@@ -139,6 +153,13 @@
           <h2><a href="#func-members">Functions</a></h2>
           <dl class="m-doc">
             <dt>
+              <div class="m-doc-template">template&lt;typename T, typename Interpolation = interpolation::bilinear&lt;T&gt;, typename BlendFunction = blend_function::overlay&lt;T&gt;&gt;</div>
+              <span class="m-doc-wrap-bumper">void <a href="#ad4178531fb2826268d7b3b966eeca1b7" class="m-doc">merge</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt;&amp; a,
+              <a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt; const&amp; b,
+              <a href="classspice_1_1transform__2d.html" class="m-doc">transform_<wbr />2d</a> tx)</span>
+            </dt>
+            <dd>Copy values from image <code>b</code>, transformed by <code>tx</code>, into image <code>a</code>.</dd>
+            <dt>
               <div class="m-doc-template">template&lt;typename T&gt;</div>
               <span class="m-doc-wrap-bumper">auto <a href="#a660abe4353d9707068b4d911a73c36c6" class="m-doc">operator&lt;&lt;</a>(</span><span class="m-doc-wrap">std::ostream&amp; os,
               <a href="namespacespice.html#a3298381bfef4f5a53aad5ae5052a168f" class="m-doc">color</a>&lt;T&gt; const&amp; pxl) -&gt; std::ostream&amp;</span>
@@ -157,8 +178,9 @@
             <dd></dd>
             <dt>
               <div class="m-doc-template">template&lt;typename T&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#a3afa9677ed6dc8cfdb7f7e3674a610d4" class="m-doc">load_image</a>(</span><span class="m-doc-wrap">char const* filename,
-              const OIIO::ImageSpec* config = nullptr) -&gt; <a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt;</span>
+              <span class="m-doc-wrap-bumper">auto <a href="#ad0dd31cb64723d9801a73bdb83f4069f" class="m-doc">load_image</a>(</span><span class="m-doc-wrap">char const* filename,
+              const OIIO::ImageSpec* config = nullptr,
+              bool ensure_alpha = false) -&gt; <a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt;</span>
             </dt>
             <dd></dd>
             <dt>
@@ -168,6 +190,38 @@
               OIIO::TypeDesc const&amp; format = <a href="namespacespice_1_1helpers.html#acd1d17e34b67c4eb2b80233b1e018b05" class="m-doc">helpers::<wbr />type_to_typedesc</a>&lt;T&gt;()) -&gt; bool</span>
             </dt>
             <dd></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T, bool Throws = true&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="#a65eeac69e13e5e5d02c41c6d4266af46" class="m-doc">invert</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1matrix.html" class="m-doc">matrix</a>&lt;T&gt; m) -&gt; <a href="classspice_1_1matrix.html" class="m-doc">matrix</a>&lt;T&gt;</span>
+            </dt>
+            <dd>Invert matrix m.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a04a0919a7474ba26ab88b7080bf82d98" class="m-doc">translate</a>(</span><span class="m-doc-wrap">float x,
+              float y) -&gt; <a href="classspice_1_1transform__2d.html" class="m-doc">transform_<wbr />2d</a></span>
+            </dt>
+            <dd></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#acf23018480f0bbbd43df0b7c3b77df20" class="m-doc">rotate</a>(</span><span class="m-doc-wrap">float angle) -&gt; <a href="classspice_1_1transform__2d.html" class="m-doc">transform_<wbr />2d</a></span>
+            </dt>
+            <dd></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a0510aa1313d61629ddf0e8e7c695aeaa" class="m-doc">scale</a>(</span><span class="m-doc-wrap">float x,
+              float y) -&gt; <a href="classspice_1_1transform__2d.html" class="m-doc">transform_<wbr />2d</a></span>
+            </dt>
+            <dd></dd>
+          </dl>
+        </section>
+        <section id="var-members">
+          <h2><a href="#var-members">Variables</a></h2>
+          <dl class="m-doc">
+            <dt id="ad7e5b34607a455eaef6ab9f13c75682a">
+              const int <a href="#ad7e5b34607a455eaef6ab9f13c75682a" class="m-doc-self">NO_ALPHA</a>
+            </dt>
+            <dd>Symbolic alpha channel index signifying the absence of opacity data.</dd>
+            <dt id="a094fbc9766e56fcdb621a2f629fcf76f">
+              const int <a href="#a094fbc9766e56fcdb621a2f629fcf76f" class="m-doc-self">DISABLE_ALPHA_DEDUCTION</a>
+            </dt>
+            <dd>Symbolic alpha channel index used to disable automatic detection of the alpha channel where applicable.</dd>
           </dl>
         </section>
         <section>
@@ -226,6 +280,54 @@
         </section>
         <section>
           <h2>Function documentation</h2>
+          <section class="m-doc-details" id="ad4178531fb2826268d7b3b966eeca1b7"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="composite_8hpp.html">&lt;include/spice/composite.hpp&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename T, typename Interpolation = interpolation::bilinear&lt;T&gt;, typename BlendFunction = blend_function::overlay&lt;T&gt;&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">void spice::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ad4178531fb2826268d7b3b966eeca1b7" class="m-doc-self">merge</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt;&amp; a,
+              <a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt; const&amp; b,
+              <a href="classspice_1_1transform__2d.html" class="m-doc">transform_<wbr />2d</a> tx)</span></span>
+            </h3>
+            <p>Copy values from image <code>b</code>, transformed by <code>tx</code>, into image <code>a</code>.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Template parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">T</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Interpolation</td>
+                  <td>The interpolation function type</td>
+                </tr>
+                <tr>
+                  <td>BlendFunction</td>
+                  <td>The blend function type</td>
+                </tr>
+              </tbody>
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>a</td>
+                  <td>the destination image</td>
+                </tr>
+                <tr>
+                  <td>b</td>
+                  <td>the source image</td>
+                </tr>
+                <tr>
+                  <td>tx</td>
+                  <td>the transformation to be applied to image <code>b</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
           <section class="m-doc-details" id="a660abe4353d9707068b4d911a73c36c6"><div>
             <h3>
               <div class="m-doc-template">
@@ -272,13 +374,14 @@
             </table>
 <p>Transposes the image pixel-wise</p>
           </div></section>
-          <section class="m-doc-details" id="a3afa9677ed6dc8cfdb7f7e3674a610d4"><div>
+          <section class="m-doc-details" id="ad0dd31cb64723d9801a73bdb83f4069f"><div>
             <h3>
               <div class="m-doc-template">
                 template&lt;typename T&gt;
               </div>
-              <span class="m-doc-wrap-bumper"><a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt; spice::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a3afa9677ed6dc8cfdb7f7e3674a610d4" class="m-doc-self">load_image</a>(</span><span class="m-doc-wrap">char const* filename,
-              const OIIO::ImageSpec* config = nullptr)</span></span>
+              <span class="m-doc-wrap-bumper"><a href="classspice_1_1image.html" class="m-doc">image</a>&lt;T&gt; spice::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ad0dd31cb64723d9801a73bdb83f4069f" class="m-doc-self">load_image</a>(</span><span class="m-doc-wrap">char const* filename,
+              const OIIO::ImageSpec* config = nullptr,
+              bool ensure_alpha = false)</span></span>
             </h3>
             <table class="m-table m-fullwidth m-flat">
               <thead>
@@ -292,6 +395,10 @@
                 <tr>
                   <td>config</td>
                   <td>file format specific parameters in the form of an ImageSpec configuration that will be handed through to OIIO</td>
+                </tr>
+                <tr>
+                  <td>ensure_alpha</td>
+                  <td>if this is true, <code>load_image</code> will add an alpha channel (labelled <code>&quot;A&quot;</code>) if none is present in the source image.</td>
                 </tr>
               </tbody>
               <tfoot>
@@ -339,6 +446,78 @@
             </table>
 <p>Writes an image to a file at the specified location.</p>
           </div></section>
+          <section class="m-doc-details" id="a65eeac69e13e5e5d02c41c6d4266af46"><div>
+            <h3>
+              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="matrix_8hpp.html">&lt;include/spice/matrix.hpp&gt;</a></div>
+              <div class="m-doc-template">
+                template&lt;typename T, bool Throws = true&gt;
+              </div>
+              <span class="m-doc-wrap-bumper"><a href="classspice_1_1matrix.html" class="m-doc">matrix</a>&lt;T&gt; spice::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a65eeac69e13e5e5d02c41c6d4266af46" class="m-doc-self">invert</a>(</span><span class="m-doc-wrap"><a href="classspice_1_1matrix.html" class="m-doc">matrix</a>&lt;T&gt; m)</span></span>
+            </h3>
+            <p>Invert matrix m.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Template parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">T</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Throws</td>
+                  <td>set this to false to presume invertibility</td>
+                </tr>
+              </tbody>
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>m</td>
+                  <td>the matrix to invert</td>
+                </tr>
+              </tbody>
+              <thead>
+                <tr>
+                  <th>Returns</th>
+                  <td>matrix&lt;T&gt;</td>
+                </tr>
+              </thead>
+              <thead>
+                <tr><th colspan="2">Exceptions</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><tt>std::domain_error</tt></td>
+                  <td>if the matrix is not invertible. Only applicable if template aregument <code>Throws</code> is set to true.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a04a0919a7474ba26ab88b7080bf82d98"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper"><a href="classspice_1_1transform__2d.html" class="m-doc">transform_<wbr />2d</a> spice::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a04a0919a7474ba26ab88b7080bf82d98" class="m-doc-self">translate</a>(</span><span class="m-doc-wrap">float x,
+              float y)</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="transform_8hpp.html">&lt;include/spice/transform.hpp&gt;</a></div>
+            </h3>
+<p>Creates a <code><a href="classspice_1_1transform__2d.html" class="m-doc">transform_<wbr />2d</a></code> describing the translation by the given vector.</p>
+          </div></section>
+          <section class="m-doc-details" id="acf23018480f0bbbd43df0b7c3b77df20"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper"><a href="classspice_1_1transform__2d.html" class="m-doc">transform_<wbr />2d</a> spice::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#acf23018480f0bbbd43df0b7c3b77df20" class="m-doc-self">rotate</a>(</span><span class="m-doc-wrap">float angle)</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="transform_8hpp.html">&lt;include/spice/transform.hpp&gt;</a></div>
+            </h3>
+<p>Creates a <code><a href="classspice_1_1transform__2d.html" class="m-doc">transform_<wbr />2d</a></code> describing the rotation by the given angle.</p>
+          </div></section>
+          <section class="m-doc-details" id="a0510aa1313d61629ddf0e8e7c695aeaa"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper"><a href="classspice_1_1transform__2d.html" class="m-doc">transform_<wbr />2d</a> spice::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a0510aa1313d61629ddf0e8e7c695aeaa" class="m-doc-self">scale</a>(</span><span class="m-doc-wrap">float x,
+              float y)</span></span>
+              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="transform_8hpp.html">&lt;include/spice/transform.hpp&gt;</a></div>
+            </h3>
+<p>Creates a <code><a href="classspice_1_1transform__2d.html" class="m-doc">transform_<wbr />2d</a></code> describing the scale by the given factors.</p>
+          </div></section>
         </section>
       </div>
     </div>
@@ -370,7 +549,6 @@
             copy a link to the result using <span class="m-label m-dim">⌘</span>
             <span class="m-label m-dim">L</span> while <span class="m-label m-dim">⌘</span>
             <span class="m-label m-dim">M</span> produces a Markdown link.</p>
-
           </div>
           <div id="search-notfound" class="m-text m-warning m-text-center">Sorry, nothing was found.</div>
           <ul id="search-results"></ul>
@@ -379,13 +557,13 @@
     </div>
   </div>
 </div>
-<script src="search.js"></script>
-<script src="searchdata.js" async="async"></script>
+<script src="search-v1.js"></script>
+<script src="searchdata-v1.js" async="async"></script>
 <footer><nav>
   <div class="m-container">
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
-        <p>spice. Created by <a href="https://doxygen.org/">Doxygen</a> 1.8.16 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+        <p>spice. Created with <a href="https://doxygen.org/">Doxygen</a> 1.8.17 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
       </div>
     </div>
   </div>

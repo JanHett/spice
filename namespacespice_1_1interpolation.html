@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>spice</title>
+  <title>spice::interpolation namespace | spice</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
   <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
   <link rel="icon" href="spice_favicon.png" type="image/png" />
@@ -43,25 +43,46 @@
   <div class="m-container m-container-inflatable">
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
-        <h1>Modules</h2>
-        <ul class="m-doc">
-        </ul>
-        <script>
-        function toggle(e) {
-            e.parentElement.className = e.parentElement.className == 'm-doc-collapsible' ?
-                'm-doc-expansible' : 'm-doc-collapsible';
-            return false;
-        }
-        /* Collapse all nodes marked as such. Doing it via JS instead of
-           directly in markup so disabling it doesn't harm usability. The list
-           is somehow regenerated on every iteration and shrinks as I change
-           the classes. It's not documented anywhere and I'm not sure if this
-           is the same across browsers, so I am going backwards in that list to
-           be sure. */
-        var collapsed = document.getElementsByClassName("collapsed");
-        for(var i = collapsed.length - 1; i >= 0; --i)
-            collapsed[i].className = 'm-doc-expansible';
-        </script>
+        <h1>
+          <span class="m-breadcrumb"><a href="namespacespice.html">spice</a>::<wbr/></span>interpolation <span class="m-thin">namespace</span>
+        </h1>
+        <p>Interpolation operations on images.</p>
+        <div class="m-block m-default">
+          <h3>Contents</h3>
+          <ul>
+            <li>
+              Reference
+              <ul>
+                <li><a href="#nested-classes">Classes</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <section id="nested-classes">
+          <h2><a href="#nested-classes">Classes</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <div class="m-doc-template">template&lt;typename T&gt;</div>
+              class <a href="classspice_1_1interpolation_1_1bicubic.html" class="m-doc">bicubic</a>
+            </dt>
+            <dd>Bicubic interpolation between pixels adjacent to <code>x</code> and <code>y</code>.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T&gt;</div>
+              class <a href="classspice_1_1interpolation_1_1bilinear.html" class="m-doc">bilinear</a>
+            </dt>
+            <dd>Bilinear interpolation between pixels adjacent to <code>x</code> and <code>y</code>.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T&gt;</div>
+              class <a href="classspice_1_1interpolation_1_1nearest__neighbor.html" class="m-doc">nearest_neighbor</a>
+            </dt>
+            <dd>Nearest neighbour interpolation between pixels adjacent to <code>x</code> and <code>y</code> by returning the value of the pixel to the top-left of <code>x</code> and <code>y</code>.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T&gt;</div>
+              class <a href="classspice_1_1interpolation_1_1nearest__neighbor__round.html" class="m-doc">nearest_neighbor_round</a>
+            </dt>
+            <dd>Nearest neighbour interpolation between pixels adjacent to <code>x</code> and <code>y</code> by rounding <code>x</code> and <code>y</code>.</dd>
+          </dl>
+        </section>
       </div>
     </div>
   </div>

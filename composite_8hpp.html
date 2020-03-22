@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>spice</title>
+  <title>include/spice/composite.hpp file | spice</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
   <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
   <link rel="icon" href="spice_favicon.png" type="image/png" />
@@ -43,25 +43,64 @@
   <div class="m-container m-container-inflatable">
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
-        <h1>Modules</h2>
-        <ul class="m-doc">
-        </ul>
-        <script>
-        function toggle(e) {
-            e.parentElement.className = e.parentElement.className == 'm-doc-collapsible' ?
-                'm-doc-expansible' : 'm-doc-collapsible';
-            return false;
-        }
-        /* Collapse all nodes marked as such. Doing it via JS instead of
-           directly in markup so disabling it doesn't harm usability. The list
-           is somehow regenerated on every iteration and shrinks as I change
-           the classes. It's not documented anywhere and I'm not sure if this
-           is the same across browsers, so I am going backwards in that list to
-           be sure. */
-        var collapsed = document.getElementsByClassName("collapsed");
-        for(var i = collapsed.length - 1; i >= 0; --i)
-            collapsed[i].className = 'm-doc-expansible';
-        </script>
+        <h1>
+          <span class="m-breadcrumb"><a href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a>/</span><span class="m-breadcrumb"><a href="dir_a7123b9441543c041ff1510d5f3fb12c.html">spice</a>/</span>composite.hpp <span class="m-thin">file</span>
+        </h1>
+        <p>Image merging operations and various utilities.</p>
+        <div class="m-block m-default">
+          <h3>Contents</h3>
+          <ul>
+            <li>
+              Reference
+              <ul>
+                <li><a href="#namespaces">Namespaces</a></li>
+                <li><a href="#nested-classes">Classes</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+<aside class="m-note m-default"><h4>Author</h4><p>Jan Hettenkofer (<a href="mailto:jan@hettenkofer.net">jan@hettenkofer.net</a>)</p></aside><aside class="m-note m-default"><h4>Version</h4><p>0.1</p></aside><aside class="m-note m-default"><h4>Date</h4><p>2020-01-20</p></aside><aside class="m-note m-default"><h4>Copyright</h4><p>Copyright (c) 2020</p></aside>
+        <section id="namespaces">
+          <h2><a href="#namespaces">Namespaces</a></h2>
+          <dl class="m-doc">
+            <dt>namespace <a href="namespacespice.html" class="m-doc">spice</a></dt>
+            <dd></dd>
+            <dt>namespace <a href="namespacespice_1_1interpolation.html" class="m-doc">spice::interpolation</a></dt>
+            <dd>Interpolation operations on images.</dd>
+            <dt>namespace <a href="namespacespice_1_1blend__function.html" class="m-doc">spice::blend_function</a></dt>
+            <dd>blend operations</dd>
+          </dl>
+        </section>
+        <section id="nested-classes">
+          <h2><a href="#nested-classes">Classes</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <div class="m-doc-template">template&lt;typename T&gt;</div>
+              class <a href="classspice_1_1interpolation_1_1nearest__neighbor.html" class="m-doc">spice::interpolation::nearest_neighbor</a>
+            </dt>
+            <dd>Nearest neighbour interpolation between pixels adjacent to <code>x</code> and <code>y</code> by returning the value of the pixel to the top-left of <code>x</code> and <code>y</code>.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T&gt;</div>
+              class <a href="classspice_1_1interpolation_1_1nearest__neighbor__round.html" class="m-doc">spice::interpolation::nearest_neighbor_round</a>
+            </dt>
+            <dd>Nearest neighbour interpolation between pixels adjacent to <code>x</code> and <code>y</code> by rounding <code>x</code> and <code>y</code>.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T&gt;</div>
+              class <a href="classspice_1_1interpolation_1_1bilinear.html" class="m-doc">spice::interpolation::bilinear</a>
+            </dt>
+            <dd>Bilinear interpolation between pixels adjacent to <code>x</code> and <code>y</code>.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T&gt;</div>
+              class <a href="classspice_1_1interpolation_1_1bicubic.html" class="m-doc">spice::interpolation::bicubic</a>
+            </dt>
+            <dd>Bicubic interpolation between pixels adjacent to <code>x</code> and <code>y</code>.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T&gt;</div>
+              class <a href="classspice_1_1blend__function_1_1overlay.html" class="m-doc">spice::blend_function::overlay</a>
+            </dt>
+            <dd>Overlay the foreground over the background.</dd>
+          </dl>
+        </section>
       </div>
     </div>
   </div>
