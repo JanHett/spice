@@ -53,9 +53,7 @@ namespace {
 }
 
 /**
- * Represents a 2D transformation matrix.
- *
- * \example `auto tx = transform_2d().translate(2, 5).rotate(42).scale(2, 1);`
+ * Represents a matrix.
  */
 template<typename T>
 class matrix : public nd_vector_impl<2, T, true> {
@@ -92,6 +90,16 @@ public:
 
     size_t rows()
     { return this->shape()[1]; }
+
+    matrix operator*(matrix const & rhs)
+    {
+        return matmul_internal(
+            this->m_data,
+            rhs.m_data,
+            columns(),
+            rows(),
+            rhs.columns);
+    }
 };
 
 /**

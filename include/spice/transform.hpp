@@ -20,7 +20,9 @@ namespace spice {
 /**
  * Represents a 2D transformation matrix.
  *
- * \example `auto tx = transform_2d().translate(2, 5).rotate(42).scale(2, 1);`
+ * ```
+ * auto tx = transform_2d().translate(2, 5).rotate(42).scale(2, 1);
+ * ```
  */
 class transform_2d : public matrix<float> {
 public:

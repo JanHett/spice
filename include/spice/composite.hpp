@@ -12,6 +12,7 @@
 #define SPICE_COMPOSITE
 
 #include <utility>
+#include <cmath>
 
 #include "image.hpp"
 #include "transform.hpp"
@@ -23,9 +24,8 @@ namespace spice {
  */
 namespace interpolation {
     /**
-     * \brief Nearest neighbour interpolation between pixels adjacent to
-     * `position` by returning the value of the pixel to the top-left of
-     * `position`.
+     * \brief Nearest neighbour interpolation between pixels adjacent to `x` and
+     * `y` by returning the value of the pixel to the top-left of `x` and `y`.
      * 
      * \tparam T type of pixel values
      */
@@ -35,11 +35,23 @@ namespace interpolation {
         image<T> const & m_img;
         color<T> const m_default_color;
     public:
-        nearest_neighbor(image<T> const & source) :
+        /**
+         * \brief Construct a new nearest neighbor interpolation object
+         * 
+         * \param source the image to interpolate
+         */
+        explicit nearest_neighbor(image<T> const & source) :
         m_img(source), m_default_color({m_img.channels()}, T{})
         {}
 
-        color<T> operator() (float x, float y)
+        /**
+         * \brief Get the interpolated value at the provided coordinates
+         * 
+         * \param x 
+         * \param y 
+         * \return color<T> 
+         */
+        [[nodiscard]] color<T> operator() (float x, float y)
         {
             if (x < 0 || y < 0 || x >= m_img.width() || y >= m_img.height())
                 return m_default_color;
@@ -48,8 +60,8 @@ namespace interpolation {
     };
 
     /**
-     * \brief Nearest neighbour interpolation between pixels adjacent to
-     * `position` by rounding `position`.
+     * \brief Nearest neighbour interpolation between pixels adjacent to `x` and
+     * `y` by rounding `x` and `y`.
      * 
      * \tparam T type of pixel values
      */
@@ -59,11 +71,23 @@ namespace interpolation {
         image<T> const & m_img;
         color<T> const m_default_color;
     public:
-        nearest_neighbor_round(image<T> const & source) :
+        /**
+         * \brief Construct a new nearest neighbor (round) interpolation object
+         * 
+         * \param source the image to interpolate
+         */
+        explicit nearest_neighbor_round(image<T> const & source) :
         m_img(source), m_default_color({m_img.channels()}, T{})
         {}
 
-        color<T> operator() (float x, float y)
+        /**
+         * \brief Get the interpolated value at the provided coordinates
+         * 
+         * \param x 
+         * \param y 
+         * \return color<T> 
+         */
+        [[nodiscard]] color<T> operator() (float x, float y)
         {
             if (x < 0 || y < 0 || x >= m_img.width() || y >= m_img.height())
                 return m_default_color;
@@ -72,7 +96,7 @@ namespace interpolation {
     };
 
     /**
-     * \brief Bilinear interpolation between pixels adjacent to `position`.
+     * \brief Bilinear interpolation between pixels adjacent to `x` and `y`.
      *
      * \tparam T type of pixel values
      */
@@ -82,19 +106,32 @@ namespace interpolation {
         image<T> const & m_img;
         color<T> const m_default_color;
     public:
-        bilinear(image<T> const & source) :
+
+        /**
+         * \brief Construct a new bilinear interpolation object
+         * 
+         * \param source the image to interpolate
+         */
+        explicit bilinear(image<T> const & source) :
         m_img(source), m_default_color({m_img.channels()}, T{})
         {}
 
+        /**
+         * \brief Get the interpolated value at the provided coordinates
+         * 
+         * \param x 
+         * \param y 
+         * \return color<T> 
+         */
         [[nodiscard]] color<T> operator() (float x, float y)
         {
-            auto unit_x_0 = std::floorf(x);
-            auto unit_y_0 = std::floorf(y);
-            auto unit_x_1 = std::floorf(x + 1);
-            auto unit_y_1 = std::floorf(y + 1);
+            auto unit_x_0 = std::floor(x);
+            auto unit_y_0 = std::floor(y);
+            auto unit_x_1 = std::floor(x + 1);
+            auto unit_y_1 = std::floor(y + 1);
 
-            auto unit_x = x - std::floorf(x);
-            auto unit_y = y - std::floorf(y);
+            auto unit_x = x - std::floor(x);
+            auto unit_y = y - std::floor(y);
 
             // create corners and initialise with default values
             pixel_view<T> img_00(m_default_color);
@@ -128,7 +165,9 @@ namespace interpolation {
     };
 
     /**
-     * \brief Bicubic interpolation between pixels adjacent to `position`.
+     * \brief Bicubic interpolation between pixels adjacent to `x` and `y`.
+     * 
+     * \todo implement this
      *
      * \tparam T type of pixel values
      */
@@ -137,7 +176,7 @@ namespace interpolation {
     private:
         image<T> const & m_img;
     public:
-        bicubic(image<T> const & source) :
+        explicit bicubic(image<T> const & source) :
         m_img(source)
         {}
     };
@@ -196,10 +235,10 @@ namespace blend_function {
  * \param a the destination image
  * \param b the source image
  * \param tx the transformation to be applied to image `b`
- * \param interpolation a function to determine intermediate pixel values
  *
  * \tparam T
  * \tparam Interpolation The interpolation function type
+ * \tparam BlendFunction The blend function type
  */
 template<
     typename T,

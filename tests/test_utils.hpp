@@ -17,7 +17,7 @@ image<T> make_checkerboard(size_t width = 1,
     channel_list channel_semantics = { "R", "G", "B" })
 {
     image<T> im(width, height, channel_semantics);
-    for (typename gsl::span<T>::index_type pxl = 0; pxl < im.data().size();\
+    for (size_t pxl = 0; pxl < im.data().size();\
         pxl += im.channels())
         for (size_t chan = 0; chan < im.channels(); ++chan)
             im.data()[pxl + chan] = (pxl / 3) % 2 == 0 ?

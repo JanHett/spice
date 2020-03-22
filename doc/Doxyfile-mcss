@@ -4,3 +4,4 @@ GENERATE_XML            = YES
 XML_PROGRAMLISTING      = NO
 # M_SHOW_UNDOCUMENTED     = YES
 STRIP_FROM_PATH         = ../
+M_FAVICON               = ./assets/branding/spice_favicon.png

@@ -3,7 +3,7 @@ language: cpp
 
 compiler:
   - clang
-  - gcc
+  # - gcc
 os:
 # - linux
   - osx
@@ -37,5 +37,6 @@ addons:
   homebrew:
     update: true
     packages:
+      # - gcc
       - openimageio
       - doxygen

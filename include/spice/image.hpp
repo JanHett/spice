@@ -29,7 +29,14 @@ using channel_list = std::vector<std::string>;
 template<typename T = float>
 using color = nd_vector<T, 1>;
 
+/**
+ * \brief Symbolic alpha channel index signifying the absence of opacity data
+ */
 const int NO_ALPHA = -1;
+/**
+ * \brief Symbolic alpha channel index used to disable automatic detection of
+ * the alpha channel where applicable
+ */
 const int DISABLE_ALPHA_DEDUCTION = -2;
 
 /**
