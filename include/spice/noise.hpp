@@ -24,6 +24,8 @@ namespace noise {
     }
     /**
      * Adds salt and pepper noise to the input image.
+     * 
+     * \image html ./showcase/noise_salt_and_pepper.jpg
      *
      * \param source The image to modify
      * \param density The probability of a pixel being either white or black
@@ -51,6 +53,8 @@ namespace noise {
 
     /**
      * Adds uniform noise to the input image.
+     * 
+     * \image html ./showcase/noise_uniform.jpg
      *
      * \param source The image to modify
      * \param min The minimum noise value
@@ -80,6 +84,8 @@ namespace noise {
 
     /**
      * Adds gaussian noise to the input image.
+     * 
+     * \image html ./showcase/noise_gaussian.jpg
      *
      * \param source The image to modify
      * \param mean The mean of the noise distribution

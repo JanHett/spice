@@ -275,6 +275,20 @@ TEST(nd_vector, copy_assignment_scalar_non_owner) {
         EXPECT_EQ(47, ndv.data()[idx]);
 }
 
+TEST(nd_vector, reset) {
+    float data_1d_1[] = {5, 6, 7, 8, 9};
+    nd_vector_impl<1, float, false> ndv_1d_1(data_1d_1, {5});
+    float data_1d_2[] = {0, 1, 2, 3, 4};
+    nd_vector_impl<1, float, false> ndv_1d_2(data_1d_2, {5});
+
+    ndv_1d_1.reset(ndv_1d_2);
+
+    EXPECT_EQ(ndv_1d_2.data(), ndv_1d_1.data());
+    EXPECT_EQ(ndv_1d_2.shape().size(), ndv_1d_1.shape().size());
+    for (size_t i = 0; i < ndv_1d_2.shape().size(); ++i)
+        EXPECT_EQ(ndv_1d_2.shape()[i], ndv_1d_1.shape()[i]);
+}
+
 TEST(nd_vector, operator_subscript_n_dim) {
     float data1[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     nd_vector_impl<2, float, false> ndv1(data1, {2, 5});

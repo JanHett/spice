@@ -28,7 +28,7 @@ namespace
         size_t n)
     {
         float w_ideal = std::sqrt((12 * sigma * sigma / n) + 1);
-        float wl = std::floorf(w_ideal);
+        float wl = std::floor(w_ideal);
         if (static_cast<int>(wl) % 2 == 0) --wl;
         float wu = wl + 2;
 
@@ -113,6 +113,8 @@ namespace
  * This function has an asymptotic time complexity of _O(w * h * c)_
  * where _w, h, c_ refer to the width, height and channel count of the
  * source image.
+ * 
+ * \image html ./showcase/blur_fast_gaussian.jpg
  *
  * \param source The image to blur
  * \param sigma The standard deviation ("size") of the blur

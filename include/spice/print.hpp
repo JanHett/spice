@@ -62,6 +62,8 @@ namespace print {
 
     /**
      * Prints an image in pixel-art style to the `stream`.
+     * 
+     * \image html ./showcase/print_image_to_stdout.png
      *
      * \note Since there is no way to reliably make exactly square pixels, the
      * aspect ratio will be off.

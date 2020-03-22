@@ -30,6 +30,16 @@ template<typename T = float>
 using color = nd_vector<T, 1>;
 
 /**
+ * \brief Symbolic alpha channel index signifying the absence of opacity data
+ */
+const int NO_ALPHA = -1;
+/**
+ * \brief Symbolic alpha channel index used to disable automatic detection of
+ * the alpha channel where applicable
+ */
+const int DISABLE_ALPHA_DEDUCTION = -2;
+
+/**
  * Specialized formatter for `spice::color`.
  */
 template<typename T>
@@ -106,13 +116,15 @@ template<typename T>
 class image: public spice::nd_vector<T, 3>
 {
     channel_list m_channel_semantics;
+    int m_alpha_channel;
 public:
     /**
      * Constructs an empty image.
      */
     image():
     spice::nd_vector<T, 3>(),
-    m_channel_semantics{}
+    m_channel_semantics{},
+    m_alpha_channel(NO_ALPHA)
     {}
 
     /**
@@ -121,7 +133,8 @@ public:
      */
     image(image const & other):
     spice::nd_vector<T, 3>(other),
-    m_channel_semantics(other.m_channel_semantics)
+    m_channel_semantics(other.m_channel_semantics),
+    m_alpha_channel(other.m_alpha_channel)
     {}
 
     /**
@@ -131,17 +144,33 @@ public:
      * \param width The width of the image
      * \param height The height of the image
      * \param channel_semantics The meaning to assign to the channels
+     * \param alpha_channel The index of the channel holding alpha values.
+     * If the argument equals `NO_ALPHA`, the index will be deduced from the
+     * `channel_semantics` (if possible). Pass `DISABLE_ALPHA_DEDUCTION` to
+     * disable automatic alpha channel detection.
      * \param default_value The value to initialise the image with
      */
     image(
         size_t width,
         size_t height,
         channel_list channel_semantics = {},
+        int alpha_channel = NO_ALPHA,
         T const & default_value = T{}):
     spice::nd_vector<T, 3>({width, height, channel_semantics.size()},
         default_value),
-    m_channel_semantics(channel_semantics)
-    {}
+    m_channel_semantics{channel_semantics}
+    {
+        // try to deduce the alpha channel
+        if (alpha_channel == NO_ALPHA) {
+            auto alpha_candidate = std::find(m_channel_semantics.begin(),
+                m_channel_semantics.end(), std::string("A"));
+
+            if (alpha_candidate != m_channel_semantics.end())
+                alpha_channel = alpha_candidate - m_channel_semantics.begin();
+        }
+        
+        m_alpha_channel = std::max(alpha_channel, NO_ALPHA);
+    }
 
     /**
      * Constructs a fresh image with the supplied data and shape. Will take
@@ -153,14 +182,30 @@ public:
      * \param width The width of the image
      * \param height The height of the image
      * \param channel_semantics The meaning to assign to the channels
+     * \param alpha_channel The index of the channel holding alpha values.
+     * If the argument equals `NO_ALPHA`, the index will be deduced from the
+     * `channel_semantics` (if possible). Pass `DISABLE_ALPHA_DEDUCTION` to
+     * disable automatic alpha channel detection.
      */
     image(T * const data,
         size_t width,
         size_t height,
-        channel_list channel_semantics = {}):
+        channel_list channel_semantics = {},
+        int alpha_channel = NO_ALPHA):
     spice::nd_vector<T, 3>(data, {width, height, channel_semantics.size()}),
-    m_channel_semantics(channel_semantics)
-    {}
+    m_channel_semantics{channel_semantics}
+    {
+        // try to deduce the alpha channel
+        if (alpha_channel == NO_ALPHA) {
+            auto alpha_candidate = std::find(m_channel_semantics.begin(),
+                m_channel_semantics.end(), std::string("A"));
+
+            if (alpha_candidate != m_channel_semantics.end())
+                alpha_channel = alpha_candidate - m_channel_semantics.begin();
+        }
+        
+        m_alpha_channel = std::max(alpha_channel, NO_ALPHA);
+    }
 
     /**
      * The width of the image.
@@ -183,6 +228,14 @@ public:
      */
     [[nodiscard]] channel_list const & channel_semantics() const
     { return m_channel_semantics; }
+
+    /**
+     * \brief The index of the alpha channel or `NO_ALPHA` if none is present
+     * 
+     * \return int 
+     */
+    [[nodiscard]] int alpha_channel() const
+    { return m_alpha_channel; }
 
     /**
      * Convenience constant defining the value representing black and the
@@ -283,11 +336,13 @@ template<typename T>
  * directory
  * \param config file format specific parameters in the form of an ImageSpec
  * configuration that will be handed through to OIIO
+ * \param ensure_alpha if this is true, `load_image` will add an alpha channel
+ * (labelled `"A"`) if none is present in the source image.
  * \returns An image object representing the file contents
  */
 template<typename T>
 [[nodiscard]] image<T> load_image(char const * filename,
-    const OIIO::ImageSpec * config = nullptr)
+    const OIIO::ImageSpec * config = nullptr, bool ensure_alpha = false)
 {
     auto file = OIIO::ImageInput::open(filename, config);
     // TODO more expressive error handling
@@ -297,17 +352,26 @@ template<typename T>
     const OIIO::ImageSpec & spec = file->spec();
     channel_list channels = spec.channelnames;
 
+    bool needs_alpha = spec.alpha_channel == -1 && ensure_alpha;
+
+    if (needs_alpha)
+        channels.push_back("A");
+
     std::vector<T> img_data(spec.width * spec.height * spec.nchannels);
     file->read_image(helpers::type_to_typedesc<T>(), &img_data[0]);
 
+    // number of channels for final image
+    auto nchannels = channels.size();
     // transpose the data before constructing an image object
-    T * tx_img_data = new T[spec.width * spec.height * spec.nchannels];
-    for (int y = 0; y < spec.height; ++y)
-        for (int x = 0; x < spec.width; ++x)
-            for (int chan = 0; chan < spec.nchannels; ++chan)
+    T * tx_img_data = new T[spec.width * spec.height * nchannels];
+    for (int y = 0; y < spec.height; ++y) {
+        for (int x = 0; x < spec.width; ++x) {
+            for (int chan = 0; chan < spec.nchannels; ++chan) {
+                // note how we're using `spec.nchannels` for source and
+                // `nchannels` for target
                 tx_img_data[
-                    x * spec.height * spec.nchannels +
-                    y * spec.nchannels +
+                    x * spec.height * nchannels +
+                    y * nchannels +
                     chan
                 ] =
                 img_data[
@@ -315,12 +379,24 @@ template<typename T>
                     x * spec.nchannels +
                     chan
                 ];
+            }
+            // if we are adding an alpha channel, write full opacity to the last
+            // (== alpha) channel
+            if (needs_alpha)
+                tx_img_data[
+                    y * spec.width * nchannels +
+                    x * nchannels +
+                    (nchannels - 1)
+                ] = image<T>::intensity_range.max;
+        }
+    }
 
     image<T> result(
         &tx_img_data[0],
         spec.width,
         spec.height,
-        channels
+        channels,
+        spec.alpha_channel
         );
 
     file->close();

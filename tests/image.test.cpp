@@ -4,6 +4,7 @@
 #include <limits>
 #include <numeric>
 #include <cstdint>
+#include <fstream>
 
 #include <gsl/span>
 
@@ -11,23 +12,9 @@
 #include <spice/statistics.hpp>
 #include <spice/print.hpp>
 
+#include "test_utils.hpp"
+
 using namespace spice;
-
-template<typename T>
-image<T> make_checkerboard(size_t width = 1,
-    size_t height = 1,
-    channel_list channel_semantics = { "R", "G", "B" })
-{
-    image<T> im(width, height, channel_semantics);
-    for (typename gsl::span<T>::index_type pxl = 0; pxl < im.data().size();\
-        pxl += im.channels())
-        for (size_t chan = 0; chan < im.channels(); ++chan)
-            im.data()[pxl + chan] = (pxl / 3) % 2 == 0 ?
-                image<T>::intensity_range.max :
-                image<T>::intensity_range.min;
-
-    return im;
-}
 
 TEST(image, default_constructor) {
     image<float> im;
@@ -37,6 +24,7 @@ TEST(image, default_constructor) {
     EXPECT_EQ(0, im.height());
     EXPECT_EQ(0, im.channels());
     EXPECT_EQ(0, im.channel_semantics().size());
+    EXPECT_EQ(NO_ALPHA, im.alpha_channel());
 }
 
 TEST(image, size_constructor) {
@@ -54,6 +42,14 @@ TEST(image, size_constructor) {
     EXPECT_EQ("G", im1.channel_semantics()[1]);
     EXPECT_EQ("B", im1.channel_semantics()[2]);
     EXPECT_EQ("A", im1.channel_semantics()[3]);
+    EXPECT_EQ(3, im1.alpha_channel());
+
+    image<float> im_force_no_alpha(2, 3, { "R", "G", "B", "A" },
+        DISABLE_ALPHA_DEDUCTION);
+    EXPECT_EQ(NO_ALPHA, im_force_no_alpha.alpha_channel());
+
+    image<float> im_manual_alpha(2, 3, { "R", "G", "X", "B" }, 2);
+    EXPECT_EQ(2, im_manual_alpha.alpha_channel());
 }
 
 TEST(image, copy_constructor) {
@@ -79,6 +75,7 @@ TEST(image, copy_constructor) {
     EXPECT_EQ("G", im2.channel_semantics()[1]);
     EXPECT_EQ("B", im2.channel_semantics()[2]);
     EXPECT_EQ("A", im2.channel_semantics()[3]);
+    EXPECT_EQ(3, im2.alpha_channel());
 }
 
 TEST(image, operator_equals) {
@@ -330,8 +327,13 @@ TEST(image_support, load_image) {
 TEST(image_support, write_image) {
     auto boat = load_image<float>("../data/testing/boat.jpg");
 
-    bool written = write_image("../data/testing/boat_2.jpg",
+    std::string out_path("../data/testing/boat_2.jpg");
+    bool written = write_image(out_path.c_str(),
         boat, OIIO::TypeDesc::UINT8);
 
     EXPECT_TRUE(written);
+    std::ifstream f(out_path.c_str());
+    EXPECT_TRUE(f.good());
+
+    std::remove(out_path.c_str());
 }

@@ -1,10 +1,10 @@
-![spice. an image processing library.](data/branding/spice_splash.png)
+![spice. an image processing library.](./doc/assets/branding/spice_splash.png)
 
 # spice. An image processing library.
 
 ![GitHub release)](https://img.shields.io/github/v/release/JanHett/spice?color=blue&include_prereleases) [![Build Status](https://travis-ci.org/JanHett/spice.svg?branch=master)](https://travis-ci.org/JanHett/spice) [![Coverage Status](https://coveralls.io/repos/github/JanHett/spice/badge.svg?branch=master)](https://coveralls.io/github/JanHett/spice?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1b7aafabf21e47e8ade8eba647589e67)](https://www.codacy.com/manual/JanHett/spice?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=JanHett/spice&amp;utm_campaign=Badge_Grade) [![Lines of Code](https://tokei.rs/b1/github/JanHett/spice)](https://github.com/XAMPPRocky/tokei) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/3262/badge)](https://bestpractices.coreinfrastructure.org/projects/3262) [![License](https://img.shields.io/github/license/JanHett/spice?color=blue)](https://www.gnu.org/licenses/gpl-3.0)
 
-This is an attempt to provide a set of generic tools for image processing. At the core of the library is a type for storing n-dimensional data which intends to translate the flexibility of [NumPy's](https://docs.scipy.org/doc/numpy/reference/generated/numpy.array.html) and [Julia's](https://docs.julialang.org/en/v1/manual/arrays/) Arrays into a low-overhead structure imitating the design of the existing C++ standard library (and also being compatible with it where applicable).
+This is an attempt to provide a set of generic tools for image processing. At the core of the library is a type for storing n-dimensional data which intends to translate the flexibility of [NumPy's](https://docs.scipy.org/doc/numpy/reference/generated/numpy.array.html) and [Julia's](https://docs.julialang.org/en/v1/manual/arrays/) Arrays into a low-overhead structure imitating the design of the existing C++ standard library (and eventually also being compatible with it where applicable).
 
 Building on this type, a number of more image-specific types are provided.
 
@@ -60,7 +60,7 @@ Note that `nd_vector` is implemented as a non-virtual subclass of `nd_span` to a
 
 #### A note on the name
 
-I named this structure `nd_vector` because it's closer to a `std::vector` than a `std::array` in that it is a dynamically allocated data structure. I don't love it, though, since vector implies a one-dimensional data structure. Suggestions are welcome.
+I named this structure `nd_vector` because it's closer to a `std::vector` than a `std::array` in that it is a dynamically allocated data structure. However, since the term *vector* implies a one-dimensional data structure I would very much like to replace it with something more appropriate. Suggestions are welcome.
 
 ### View over N-Dimensional slices of `nd_vector`s: [`nd_span`](https://janhett.github.io/spice/classspice_1_1nd__vector__impl.html)
 
@@ -99,10 +99,76 @@ Same as `nd_vector` extending `nd_span`, `image` is also a non-virtual subclass 
 
 ### Image processing and analysis tools
 
+#### [Compositing](https://janhett.github.io/spice/composite_8hpp.html)
+
+##### Merge images
+
+spice provides the function template `merge` to combine two images.
+
+```c++
+image<float> foreground, background;
+
+// create images or load from files...
+
+// create a transformation object
+transform_2d tx = scale(1, 1.9).rotate(2.3).translate(42, 47);
+// transform `foreground` by `tx` and superimpose it on `background`
+merge<float>(background, foreground, tx);
+```
+
+It is parametrised with:
+
+- `T`, the data type of the images to merge
+- `Interpolation` the interpolation function to use
+- `BlendFunction` the blend function to use
+
+A number of interpolation and blend functions are provided.
+
+###### [Interpolation functions](https://janhett.github.io/spice/namespacespice_1_1interpolation.html)
+
+Interpolation functions are types with a call operator taking the coordinates to interpolate as two `float` arguments. They are scoped under the namespace `spice::interpolation`.
+
+| Function name             | Description                                                  |
+| ------------------------- | ------------------------------------------------------------ |
+| `nearest_neighbour`       | Returns the value to the top-left of the provided coordinate (i.e. "floors" the coordinates) |
+| `nearest_neighbour_round` | Returns the value of the pixel closest to the input position (i.e. rounding the coordinates) |
+| `bilinear`                | Estimates the value at the provided coordinates using [bilinear interpolation](https://en.wikipedia.org/wiki/Bilinear_interpolation). |
+
+All interpolation functions return a zero-initialised colour as their default (i.e. when trying to access a value outside the image boundaries)
+
+###### [Blend functions](https://janhett.github.io/spice/namespacespice_1_1blend__function.html)
+
+Blend functions are types with a call operator taking the colours to blend as `pixel_view` arguments. They are scoped under the namespace `spice::blend_function`.
+
+| Function name | Description                                                  |
+| ------------- | ------------------------------------------------------------ |
+| `overlay`     | Calculates the resulting colour respecting the opacities of the two operands. For the moment, this  operations assumes premultiplied alpha. |
+
+###### [Transformation](https://janhett.github.io/spice/classspice_1_1transform__2d.html)
+
+To position an image spice provides the `transform_2d` type. It exposes a set of convenience functions around a 4x4 transformation matrix.
+
+A transformation matrix can be created and modified in one of several ways:
+
+```c++
+// The default constructor creates a neutral transformation matrix
+transform_2d tx0;
+// Using chainable syntax, this matrix can be modified
+tx0.scale(0.52, 1).rotate(90);
+// Free functions of the appropriate names are also provided that create a pre-initialised matrix.
+transform_2d tx1 = scale(1, 1.9).rotate(2.3).translate(42, 47);
+// Finally, a fully specified matrix can be created
+transform_2d tx2(
+  42, 47, // translate
+  45,     // rotate
+  1, 1    // scale
+);
+```
+
 #### [Blur](https://janhett.github.io/spice/namespacespice_1_1blur.html)
 
 ##### Fast gaussian blur approximation
-![fast_gaussian](./data/showcase/blur_fast_gaussian.jpg)
+![fast_gaussian](./doc/assets/showcase/blur_fast_gaussian.jpg)
 
 Performs a series of box blurs to approximate a true gaussian in linear time. The number of passes is adjustable.
 
@@ -110,19 +176,19 @@ Performs a series of box blurs to approximate a true gaussian in linear time. Th
 
 ##### Salt and Pepper
 
-![noise_salt_and_pepper](./data/showcase/noise_salt_and_pepper.jpg)
+![noise_salt_and_pepper](./doc/assets/showcase/noise_salt_and_pepper.jpg)
 
 Adds salt-and-pepper noise with a given density to the image passed as the first argument.
 
 ##### Uniform
 
-![noise_uniform](./data/showcase/noise_uniform.jpg)
+![noise_uniform](./doc/assets/showcase/noise_uniform.jpg)
 
 Adds noise, uniformly distributed between the specified minimum and maximum values, to the image. The default combining operation is addition but other operations can be specified if needed.
 
 ##### Gaussian
 
-![noise_gaussian](./data/showcase/noise_gaussian.jpg)
+![noise_gaussian](./doc/assets/showcase/noise_gaussian.jpg)
 
 Adds gaussian noise with a given median value and standard deviation to the image. The default combining operation is addition but other operations can be specified if needed.
 
@@ -138,7 +204,7 @@ Calculates a histogram of the provided image. Since floating point images are ps
 
 On terminals that can display full 8bpc colour, the `spice::print::image(image<T> img, size_t stride, std::ostream& os)` function will print an approximation of the image to the provided stream using RGB colour escape codes to display the image.
 
-![print_image_to_stdout](./data/showcase/print_image_to_stdout.png)
+![print_image_to_stdout](./doc/assets/showcase/print_image_to_stdout.png)
 
 Not glamorous, but for retro-cool and debugging it does the job.
 
@@ -183,7 +249,7 @@ tests/spice-test
 
 ### Notes
 
-spice has been tested to build with clang and gcc on macOS and may or may not build in other configurations. I plan to extend support to other operating systems and eventually also the MSVC platform, but for now, features are the primary focus. For these early days, the library will also remain dependent on the most recent C++ standard (read: I will jump up to C++20 as soon as it's ready and if you have standards that require you to stick to a specific C++ version, this library probably fails more than just this test).
+spice has been tested to build with clang on macOS and may or may not build in other configurations. I plan to extend support to other operating systems and platforms, but for now, features are the primary focus. For these early days, the library will also remain dependent on the most recent C++ standard (read: I will jump up to C++20 as soon as it's ready and if you have standards that require you to stick to a specific C++ version, this library probably fails more than just this test).
 
 ## Contributing
 

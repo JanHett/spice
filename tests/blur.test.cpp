@@ -7,7 +7,7 @@
 using namespace spice;
 
 TEST(fast_gaussian, normal_call) {
-    // GTEST_SKIP();
+    GTEST_SKIP();
     auto boat = load_image<float>("../data/testing/boat.jpg");
 
     // print::image(boat, 6);

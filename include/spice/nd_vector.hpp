@@ -111,8 +111,17 @@ public:
 
     /**
      * Moves the data from `other` to `this`, resizing the object as necessary.
+     * 
+     * @todo remove completely?
      */
-    nd_vector_impl & operator=(nd_vector_impl && other);
+    // nd_vector_impl & operator=(nd_vector_impl<Dimensions, T, false> && other)
+    // {
+    //     if (this != &other) {
+    //         m_shape = other.m_shape;
+    //         m_data = other.m_data;
+    //     }
+    //     return *this;
+    // }
 
     /**
      * Sets all values of `this` equal to `value`. The current shape is
@@ -122,6 +131,21 @@ public:
     {
         for (size_t offset = 0; offset < size(); ++offset)
             m_data[offset] = value;
+        return *this;
+    }
+
+    /**
+     * \brief Reassigns the data pointer to refer to `other`s data and resets
+     * the size accordingly.
+     * 
+     * \param other 
+     * \return nd_vector_impl& `*this`
+     */
+    nd_vector_impl & reset(nd_vector_impl const & other) {
+        if (this != &other) {
+            m_shape = other.m_shape;
+            m_data = other.m_data;
+        }
         return *this;
     }
 
@@ -1020,6 +1044,14 @@ public:
     }
 
     /**
+     * \brief Get a reference to the data pointer.
+     * 
+     * \return T*& 
+     */
+    [[nodiscard]] T * & data_ptr()
+    { return this->m_data; }
+
+    /**
      * Copies the values from `other` to `this`. Unlike the copy assignment
      * operator of `nd_span`, this copies the entire `nd_vector` and also
      * modifies the size of it.
@@ -1049,6 +1081,9 @@ public:
         }
         return *this;
     }
+
+    // TODO: make sure this doesn't end up here in the first place
+    nd_vector_impl & reset(nd_vector_impl const & other) = delete;
 };
 
 /**
