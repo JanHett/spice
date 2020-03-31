@@ -5,3 +5,4 @@ doc/m.math.cache
 .idea
 cmake-build*
 .vscode
+.DS_Store
