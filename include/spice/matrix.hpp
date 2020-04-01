@@ -56,7 +56,7 @@ namespace {
  * Represents a matrix.
  */
 template<typename T>
-class matrix : public nd_vector_impl<2, T, true> {
+class matrix : public nd_vector<T, 2> {
 public:
     /**
      * Creates a `matrix` initalised to the identity.
@@ -64,7 +64,7 @@ public:
     matrix(
         size_t columns = 0,
         size_t rows = 0
-    ) : nd_vector_impl<2, T, true>({columns, rows})
+    ) : nd_vector<T, 2>({columns, rows})
     {
         for (size_t j = 0; j < std::min(columns, rows); ++j) {
             (*this)(j, j) = 1;
@@ -78,7 +78,7 @@ public:
         size_t columns,
         size_t rows,
         T const & default_value
-    ) : nd_vector_impl<2, T, true>({columns, rows})
+    ) : nd_vector<T, 2>({columns, rows})
     {
         if (default_value != T{})
             for (size_t j = 0; j < columns * rows; ++j)

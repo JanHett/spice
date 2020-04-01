@@ -5,7 +5,7 @@
 using namespace spice;
 
 TEST(nd_vector, default_constructor) {
-    nd_vector_impl<3, float> ndv;
+    nd_vector<float, 3> ndv;
 
     EXPECT_EQ(3, ndv.dimensions());
     for (auto const & dim_s : ndv.shape())
@@ -22,9 +22,9 @@ TEST(nd_vector, copy_constructor) {
         non_owned_data[i] = i;
 
     // create non-owning nd_vector_impl and make an owning copy of it
-    nd_vector_impl<2, float, false> non_owning_ndv(non_owned_data, {2, 5});
-    nd_vector_impl<2, float, false> copied_non_owning_ndv(non_owning_ndv);
-    nd_vector_impl<2, float> copied_owning_ndv(non_owning_ndv);
+    nd_span<float, 2> non_owning_ndv(non_owned_data, {2, 5});
+    nd_span<float, 2> copied_non_owning_ndv(non_owning_ndv);
+    nd_vector<float, 2> copied_owning_ndv(non_owning_ndv);
 
     // check if shape is correct
     EXPECT_EQ(copied_owning_ndv.shape().size(), 2);
@@ -53,8 +53,8 @@ TEST(nd_vector, move_constructor) {
         owned_data[i] = i;
 
     // create owning nd_vector_impl and move it into another right away
-    nd_vector_impl<2, float> movable_ndv(owned_data, {2, 5});
-    nd_vector_impl<2, float> moved_owning_ndv(std::move(movable_ndv));
+    nd_vector<float, 2> movable_ndv(owned_data, {2, 5});
+    nd_vector<float, 2> moved_owning_ndv(std::move(movable_ndv));
 
     // check if shape is correct
     EXPECT_EQ(moved_owning_ndv.shape().size(), 2);
@@ -66,7 +66,7 @@ TEST(nd_vector, move_constructor) {
         EXPECT_EQ(moved_owning_ndv.data()[i], i);
 }
 TEST(nd_vector, empty_constructor) {
-    nd_vector_impl<3, float> ndv({4, 5, 3});
+    nd_vector<float, 3> ndv({4, 5, 3});
 
     EXPECT_EQ(ndv.shape().size(), 3);
     EXPECT_EQ(ndv.shape()[0], 4);
@@ -89,8 +89,8 @@ TEST(nd_vector, data_constructor) {
         owned_data[i] = i;
 
     // create owning and non-owning nd_vectors
-    nd_vector_impl<2, float, false> non_owning_ndv(non_owned_data, {2, 5});
-    nd_vector_impl<2, float> owning_ndv(owned_data, {4, 5});
+    nd_span<float, 2> non_owning_ndv(non_owned_data, {2, 5});
+    nd_vector<float, 2> owning_ndv(owned_data, {4, 5});
 
     // check if shape is correct
     EXPECT_EQ(non_owning_ndv.shape().size(), 2);
@@ -112,31 +112,31 @@ TEST(nd_vector, data_constructor) {
 }
 
 TEST(nd_vector, dimensions) {
-    nd_vector_impl<42, float> ndv;
+    nd_vector<float, 42> ndv;
 
     static_assert(ndv.dimensions() == 42,
         "nd_vector_impl::dimensions returns incorrect value.");
 }
 TEST(nd_vector, shape) {
-    nd_vector_impl<3, float> ndv({1, 2, 3});
+    nd_vector<float, 3> ndv({1, 2, 3});
 
     EXPECT_EQ(ndv.shape(), (std::array<size_t, 3>{1,2,3}));
 }
 TEST(nd_vector, size) {
-    nd_vector_impl<3, float> ndv({1, 2, 3});
+    nd_vector<float, 3> ndv({1, 2, 3});
 
     EXPECT_EQ(ndv.size(), 6);
 
-    nd_vector_impl<1, float> ndv_1d({1});
+    nd_vector<float, 1> ndv_1d({1});
 
     EXPECT_EQ(ndv_1d.size(), 1);
 }
 
 TEST(nd_vector, copy_assignment_owner) {
     float * data_1d_1 = new float[5]{5, 6, 7, 8, 9};
-    nd_vector_impl<1, float, true> ndv_1d_1(data_1d_1, {5});
+    nd_vector<float, 1> ndv_1d_1(data_1d_1, {5});
     float * data_1d_2 = new float[5]{0, 1, 2, 3, 4};
-    nd_vector_impl<1, float, true> ndv_1d_2(data_1d_2, {5});
+    nd_vector<float, 1> ndv_1d_2(data_1d_2, {5});
 
     ndv_1d_1 = ndv_1d_2;
 
@@ -150,12 +150,12 @@ TEST(nd_vector, copy_assignment_owner) {
    float * data1 = new float[10]{
        0, 1, 2, 3, 4,
        5, 6, 7, 8, 9};
-   nd_vector_impl<2, float, true> ndv1(data1, {5, 2});
+   nd_vector<float, 2> ndv1(data1, {5, 2});
 
    float * data2 = new float[10]{
        10, 11, 12, 13, 14,
        15, 16, 17, 18, 19};
-   nd_vector_impl<2, float, true> ndv2(data2, {5, 2});
+   nd_vector<float, 2> ndv2(data2, {5, 2});
 
    ndv1 = ndv2;
 
@@ -175,9 +175,9 @@ TEST(nd_vector, move_assignment_owner) { GTEST_SKIP(); }
 
 TEST(nd_vector, copy_assignment_non_owner) {
     float data_1d_1[] = {5, 6, 7, 8, 9};
-    nd_vector_impl<1, float, false> ndv_1d_1(data_1d_1, {5});
+    nd_span<float, 1> ndv_1d_1(data_1d_1, {5});
     float data_1d_2[] = {0, 1, 2, 3, 4};
-    nd_vector_impl<1, float, false> ndv_1d_2(data_1d_2, {5});
+    nd_span<float, 1> ndv_1d_2(data_1d_2, {5});
 
     ndv_1d_1 = ndv_1d_2;
 
@@ -191,12 +191,12 @@ TEST(nd_vector, copy_assignment_non_owner) {
    float data1[] = {
        0, 1, 2, 3, 4,
        5, 6, 7, 8, 9};
-   nd_vector_impl<2, float, false> ndv1(data1, {5, 2});
+   nd_span<float, 2> ndv1(data1, {5, 2});
 
    float data2[] = {
        10, 11, 12, 13, 14,
        15, 16, 17, 18, 19};
-   nd_vector_impl<2, float, false> ndv2(data2, {5, 2});
+   nd_span<float, 2> ndv2(data2, {5, 2});
 
    ndv1 = ndv2;
 
@@ -216,9 +216,9 @@ TEST(nd_vector, move_assignment_non_owner) { GTEST_SKIP(); }
 
 TEST(nd_vector, copy_assignment_mixed) {
     float * data_1d_1 = new float[5]{5, 6, 7, 8, 9};
-    nd_vector_impl<1, float, true> ndv_1d_1(data_1d_1, {5});
+    nd_vector<float, 1> ndv_1d_1(data_1d_1, {5});
     float data_1d_2[] = {0, 1, 2, 3, 4};
-    nd_vector_impl<1, float, false> ndv_1d_2(data_1d_2, {5});
+    nd_span<float, 1> ndv_1d_2(data_1d_2, {5});
 
     ndv_1d_1 = ndv_1d_2;
 
@@ -232,12 +232,12 @@ TEST(nd_vector, copy_assignment_mixed) {
    float data1[] = {
        0, 1, 2, 3, 4,
        5, 6, 7, 8, 9};
-   nd_vector_impl<2, float, false> ndv1(data1, {5, 2});
+   nd_span<float, 2> ndv1(data1, {5, 2});
 
    float * data2 = new float[10]{
        10, 11, 12, 13, 14,
        15, 16, 17, 18, 19};
-   nd_vector_impl<2, float, true> ndv2(data2, {5, 2});
+   nd_vector<float, 2> ndv2(data2, {5, 2});
 
    ndv1 = ndv2;
 
@@ -257,7 +257,7 @@ TEST(nd_vector, move_assignment_mixed) { GTEST_SKIP(); }
 
 TEST(nd_vector, copy_assignment_scalar_owner) {
     float * data = new float[6]{5, 6, 7, 8, 9, 0};
-    nd_vector_impl<2, float, true> ndv(data, {3, 2});
+    nd_vector<float, 2> ndv(data, {3, 2});
 
     ndv = 42;
 
@@ -267,7 +267,7 @@ TEST(nd_vector, copy_assignment_scalar_owner) {
 
 TEST(nd_vector, copy_assignment_scalar_non_owner) {
     float data[] = {0, 1, 2, 3, 4, 5, 6, 7};
-    nd_vector_impl<3, float, false> ndv(data, {2, 2, 2});
+    nd_span<float, 3> ndv(data, {2, 2, 2});
 
     ndv = 47;
 
@@ -277,9 +277,9 @@ TEST(nd_vector, copy_assignment_scalar_non_owner) {
 
 TEST(nd_vector, reset) {
     float data_1d_1[] = {5, 6, 7, 8, 9};
-    nd_vector_impl<1, float, false> ndv_1d_1(data_1d_1, {5});
+    nd_span<float, 1> ndv_1d_1(data_1d_1, {5});
     float data_1d_2[] = {0, 1, 2, 3, 4};
-    nd_vector_impl<1, float, false> ndv_1d_2(data_1d_2, {5});
+    nd_span<float, 1> ndv_1d_2(data_1d_2, {5});
 
     ndv_1d_1.reset(ndv_1d_2);
 
@@ -291,21 +291,21 @@ TEST(nd_vector, reset) {
 
 TEST(nd_vector, operator_subscript_n_dim) {
     float data1[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-    nd_vector_impl<2, float, false> ndv1(data1, {2, 5});
+    nd_span<float, 2> ndv1(data1, {2, 5});
 
-    EXPECT_EQ(ndv1[0], (nd_vector_impl<1, float, false>(data1, {5})));
+    EXPECT_EQ(ndv1[0], (nd_span<float, 1>(data1, {5})));
 
     // test assigning to returned non-owning nd_vector_impl
     float data2[] = {10, 11, 12, 13, 14};
-    nd_vector_impl<1, float, false> new_ndv(data2, {5});
+    nd_span<float, 1> new_ndv(data2, {5});
     ndv1[0] = new_ndv;
     EXPECT_EQ(ndv1[0], new_ndv);
 }
 TEST(nd_vector, operator_subscript_n_dim_const) {
     float data1[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-    const nd_vector_impl<2, float, false> ndv1(data1, {2, 5});
+    const nd_span<float, 2> ndv1(data1, {2, 5});
 
-    EXPECT_EQ(ndv1[0], (nd_vector_impl<1, float, false>(data1, {5})));
+    EXPECT_EQ(ndv1[0], (nd_span<float, 1>(data1, {5})));
     static_assert(std::is_const<decltype(ndv1[0])>::value,
         "nd_vector_impl::operator[] does not preserve const-ness.");
 }
@@ -315,12 +315,12 @@ TEST(nd_vector, operator_subscript_one_dim_const) { GTEST_SKIP(); }
 
 TEST(nd_vector, operator_call_intermediate_dim) {
     float data1[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-    nd_vector_impl<2, float, false> ndv1(data1, {2, 5});
+    nd_span<float, 2> ndv1(data1, {2, 5});
 
     auto one_dim = ndv1(1);
     static_assert(std::is_same<
             decltype(one_dim),
-            nd_vector_impl<1, float, false>
+            nd_span<float, 1>
         >::value,
         "Intermediate-dimensional call operator does not return an nd-vector");
 
@@ -334,12 +334,12 @@ TEST(nd_vector, operator_call_intermediate_dim) {
 }
 TEST(nd_vector, operator_call_intermediate_dim_const) {
     float data1[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-    const nd_vector_impl<2, float, false> ndv1(data1, {2, 5});
+    const nd_span<float, 2> ndv1(data1, {2, 5});
 
     auto const one_dim = ndv1(0);
     static_assert(std::is_same<
             decltype(one_dim),
-            const nd_vector_impl<1, float, false>
+            const nd_span<float, 1>
         >::value,
         "Intermediate-dimensional call operator does not return an nd-vector");
 
@@ -359,7 +359,7 @@ TEST(nd_vector, operator_call_lowest_dim) {
         10, 11, 12, 13, 14,
         15, 16, 17, 18, 19
     };
-    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+    nd_span<float, 3> ndv1(data1, {2, 2, 5});
 
     EXPECT_EQ( 0, ndv1(0, 0, 0));
     EXPECT_EQ( 1, ndv1(0, 0, 1));
@@ -389,7 +389,7 @@ TEST(nd_vector, operator_call_lowest_dim_const) {
         10, 11, 12, 13, 14,
         15, 16, 17, 18, 19
     };
-    const nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+    const nd_span<float, 3> ndv1(data1, {2, 2, 5});
 
     EXPECT_EQ( 0, ndv1(0, 0, 0));
     EXPECT_EQ( 1, ndv1(0, 0, 1));
@@ -420,7 +420,7 @@ TEST(nd_vector, at_intermediate_dim) {
         10, 11, 12, 13, 14,
         15, 16, 17, 18, 19
     };
-    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+    nd_span<float, 3> ndv1(data1, {2, 2, 5});
 
     EXPECT_THROW(auto fail = ndv1.at(42), std::out_of_range);
 
@@ -436,7 +436,7 @@ TEST(nd_vector, at_intermediate_dim_const) {
         10, 11, 12, 13, 14,
         15, 16, 17, 18, 19
     };
-    const nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+    const nd_span<float, 3> ndv1(data1, {2, 2, 5});
 
     EXPECT_THROW(auto fail = ndv1.at(42), std::out_of_range);
 
@@ -453,7 +453,7 @@ TEST(nd_vector, at_lowest_dim) {
         10, 11, 12, 13, 14,
         15, 16, 17, 18, 19
     };
-    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+    nd_span<float, 3> ndv1(data1, {2, 2, 5});
 
     EXPECT_THROW(auto fail = ndv1.at(42), std::out_of_range);
 
@@ -469,7 +469,7 @@ TEST(nd_vector, at_lowest_dim_const) {
         10, 11, 12, 13, 14,
         15, 16, 17, 18, 19
     };
-    const nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+    const nd_span<float, 3> ndv1(data1, {2, 2, 5});
 
     EXPECT_THROW(auto fail = ndv1.at(42), std::out_of_range);
 
@@ -481,28 +481,28 @@ TEST(nd_vector, at_lowest_dim_const) {
 
 TEST(nd_vector, operator_equals) {
     float data1[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-    nd_vector_impl<2, float, false> ndv1(data1, {2, 5});
-    nd_vector_impl<2, float, false> ndv2(data1, {2, 5});
+    nd_span<float, 2> ndv1(data1, {2, 5});
+    nd_span<float, 2> ndv2(data1, {2, 5});
 
     EXPECT_TRUE(ndv1 == ndv2);
 
     float data2[] = {0, 1, 2, 3, 42, 5, 6, 7, 8, 9};
-    nd_vector_impl<2, float, false> ndv3(data2, {2, 5});
-    nd_vector_impl<2, float, false> ndv4(data2, {5, 2});
+    nd_span<float, 2> ndv3(data2, {2, 5});
+    nd_span<float, 2> ndv4(data2, {5, 2});
 
     EXPECT_FALSE(ndv1 == ndv3);
     EXPECT_FALSE(ndv4 == ndv3);
 }
 TEST(nd_vector, operator_not_equals) {
     float data1[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-    nd_vector_impl<2, float, false> ndv1(data1, {2, 5});
-    nd_vector_impl<2, float, false> ndv2(data1, {2, 5});
+    nd_span<float, 2> ndv1(data1, {2, 5});
+    nd_span<float, 2> ndv2(data1, {2, 5});
 
     EXPECT_FALSE(ndv1 != ndv2);
 
     float data2[] = {0, 1, 2, 3, 42, 5, 6, 7, 8, 9};
-    nd_vector_impl<2, float, false> ndv3(data2, {2, 5});
-    nd_vector_impl<2, float, false> ndv4(data2, {5, 2});
+    nd_span<float, 2> ndv3(data2, {2, 5});
+    nd_span<float, 2> ndv4(data2, {5, 2});
 
     EXPECT_TRUE(ndv1 != ndv3);
     EXPECT_TRUE(ndv4 != ndv3);
@@ -515,14 +515,14 @@ TEST(nd_vector, operator_plus_equals) {
         10, 11, 12, 13,
         15, 16, 17, 18
     };
-    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 4});
+    nd_span<float, 3> ndv1(data1, {2, 2, 4});
     float data2[] = {
         15, 16, 17, 18, 19,
         10, 11, 12, 13, 14,
          5,  6,  7,  8,  9,
          0,  1,  2,  3,  4
     };
-    nd_vector_impl<3, float, false> ndv2(data2, {2, 2, 5});
+    nd_span<float, 3> ndv2(data2, {2, 2, 5});
 
     float data_expected[] = {
         15, 17, 19, 21,
@@ -530,7 +530,7 @@ TEST(nd_vector, operator_plus_equals) {
         15, 17, 19, 21,
         15, 17, 19, 21
     };
-    nd_vector_impl<3, float, false> ndv_expected(data_expected, {2, 2, 4});
+    nd_span<float, 3> ndv_expected(data_expected, {2, 2, 4});
 
     ndv1 += ndv2;
 
@@ -544,14 +544,14 @@ TEST(nd_vector, operator_plus) {
         10, 11, 12, 13,
         15, 16, 17, 18
     };
-    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 4});
+    nd_span<float, 3> ndv1(data1, {2, 2, 4});
     float data2[] = {
         15, 16, 17, 18, 19,
         10, 11, 12, 13, 14,
          5,  6,  7,  8,  9,
          0,  1,  2,  3,  4
     };
-    nd_vector_impl<3, float, false> ndv2(data2, {2, 2, 5});
+    nd_span<float, 3> ndv2(data2, {2, 2, 5});
 
     float data_expected[] = {
         15, 17, 19, 21,
@@ -559,7 +559,7 @@ TEST(nd_vector, operator_plus) {
         15, 17, 19, 21,
         15, 17, 19, 21
     };
-    nd_vector_impl<3, float, false> ndv_expected(data_expected, {2, 2, 4});
+    nd_span<float, 3> ndv_expected(data_expected, {2, 2, 4});
 
     auto ndv_result = ndv1 + ndv2;
 
@@ -575,14 +575,14 @@ TEST(nd_vector, operator_minus_equals) {
         10, 11, 12, 13, 14,
         15, 16, 17, 18, 19
     };
-    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+    nd_span<float, 3> ndv1(data1, {2, 2, 5});
     float data2[] = {
         15, 16, 17, 18, 19,
         10, 11, 12, 13, 14,
          5,  6,  7,  8,  9,
          0,  1,  2,  3,  4
     };
-    nd_vector_impl<3, float, false> ndv2(data2, {2, 2, 5});
+    nd_span<float, 3> ndv2(data2, {2, 2, 5});
 
     float data_expected[] = {
         -15, -15, -15, -15, -15,
@@ -590,7 +590,7 @@ TEST(nd_vector, operator_minus_equals) {
           5,   5,   5,   5,   5,
          15,  15,  15,  15,  15
     };
-    nd_vector_impl<3, float, false> ndv_expected(data_expected, {2, 2, 5});
+    nd_span<float, 3> ndv_expected(data_expected, {2, 2, 5});
 
     ndv1 -= ndv2;
 
@@ -604,14 +604,14 @@ TEST(nd_vector, operator_minus) {
         10, 11, 12, 13, 14,
         15, 16, 17, 18, 19
     };
-    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+    nd_span<float, 3> ndv1(data1, {2, 2, 5});
     float data2[] = {
         15, 16, 17, 18, 19,
         10, 11, 12, 13, 14,
          5,  6,  7,  8,  9,
          0,  1,  2,  3,  4
     };
-    nd_vector_impl<3, float, false> ndv2(data2, {2, 2, 5});
+    nd_span<float, 3> ndv2(data2, {2, 2, 5});
 
     float data_expected[] = {
         -15, -15, -15, -15, -15,
@@ -619,7 +619,7 @@ TEST(nd_vector, operator_minus) {
           5,   5,   5,   5,   5,
          15,  15,  15,  15,  15
     };
-    nd_vector_impl<3, float, false> ndv_expected(data_expected, {2, 2, 5});
+    nd_span<float, 3> ndv_expected(data_expected, {2, 2, 5});
 
     auto ndv_result = ndv1 - ndv2;
 
@@ -635,14 +635,14 @@ TEST(nd_vector, operator_multiply_equals) {
         10, 11, 12, 13, 14,
         15, 16, 17, 18, 19
     };
-    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+    nd_span<float, 3> ndv1(data1, {2, 2, 5});
     float data2[] = {
         15, 16, 17, 18, 19,
         10, 11, 12, 13, 14,
          5,  6,  7,  8,  9,
          0,  1,  2,  3,  4
     };
-    nd_vector_impl<3, float, false> ndv2(data2, {2, 2, 5});
+    nd_span<float, 3> ndv2(data2, {2, 2, 5});
 
     float data_expected[] = {
          0, 16, 34,  54,  76,
@@ -650,7 +650,7 @@ TEST(nd_vector, operator_multiply_equals) {
         50, 66, 84, 104, 126,
          0, 16, 34,  54,  76
     };
-    nd_vector_impl<3, float, false> ndv_expected(data_expected, {2, 2, 5});
+    nd_span<float, 3> ndv_expected(data_expected, {2, 2, 5});
 
     ndv1 *= ndv2;
 
@@ -664,14 +664,14 @@ TEST(nd_vector, operator_multiply) {
         10, 11, 12, 13, 14,
         15, 16, 17, 18, 19
     };
-    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+    nd_span<float, 3> ndv1(data1, {2, 2, 5});
     float data2[] = {
         15, 16, 17, 18, 19,
         10, 11, 12, 13, 14,
          5,  6,  7,  8,  9,
          0,  1,  2,  3,  4
     };
-    nd_vector_impl<3, float, false> ndv2(data2, {2, 2, 5});
+    nd_span<float, 3> ndv2(data2, {2, 2, 5});
 
     float data_expected[] = {
          0, 16, 34,  54,  76,
@@ -679,7 +679,7 @@ TEST(nd_vector, operator_multiply) {
         50, 66, 84, 104, 126,
          0, 16, 34,  54,  76
     };
-    nd_vector_impl<3, float, false> ndv_expected(data_expected, {2, 2, 5});
+    nd_span<float, 3> ndv_expected(data_expected, {2, 2, 5});
 
     auto ndv_result = ndv1 * ndv2;
 
@@ -695,14 +695,14 @@ TEST(nd_vector, operator_divide_equals) {
         10, 11, 12, 13, 14,
         15, 16, 17, 18, 19
     };
-    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+    nd_span<float, 3> ndv1(data1, {2, 2, 5});
     float data2[] = {
         42,  1,  2,  3,
          5,  6,  7,  8,
         10, 11, 12, 13,
         15, 16, 17, 18
     };
-    nd_vector_impl<3, float, false> ndv2(data2, {2, 2, 4});
+    nd_span<float, 3> ndv2(data2, {2, 2, 4});
 
     float data_expected[] = {
         0, 1, 1, 1,  4,
@@ -710,7 +710,7 @@ TEST(nd_vector, operator_divide_equals) {
         1, 1, 1, 1, 14,
         1, 1, 1, 1, 19
     };
-    nd_vector_impl<3, float, false> ndv_expected(data_expected, {2, 2, 5});
+    nd_span<float, 3> ndv_expected(data_expected, {2, 2, 5});
 
     ndv1 /= ndv2;
 
@@ -724,14 +724,14 @@ TEST(nd_vector, operator_divide) {
         10, 11, 12, 13, 14,
         15, 16, 17, 18, 19
     };
-    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+    nd_span<float, 3> ndv1(data1, {2, 2, 5});
     float data2[] = {
         42,  1,  2,  3,
          5,  6,  7,  8,
         10, 11, 12, 13,
         15, 16, 17, 18
     };
-    nd_vector_impl<3, float, false> ndv2(data2, {2, 2, 4});
+    nd_span<float, 3> ndv2(data2, {2, 2, 4});
 
     float data_expected[] = {
         0, 1, 1, 1,  4,
@@ -739,7 +739,7 @@ TEST(nd_vector, operator_divide) {
         1, 1, 1, 1, 14,
         1, 1, 1, 1, 19
     };
-    nd_vector_impl<3, float, false> ndv_expected(data_expected, {2, 2, 5});
+    nd_span<float, 3> ndv_expected(data_expected, {2, 2, 5});
 
     auto ndv_result = ndv1 / ndv2;
 
@@ -761,7 +761,7 @@ TEST(nd_vector, operator_plus_equals_scalar) {
         10, 11, 12, 13, 14,
         15, 16, 17, 18, 19
     };
-    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+    nd_span<float, 3> ndv1(data1, {2, 2, 5});
 
     ndv1 += 42;
 
@@ -782,7 +782,7 @@ TEST(nd_vector, operator_plus_scalar_nd_vector) {
         2, 2, 2, 2, 2,
         3, 3, 3, 3, 3
     };
-    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+    nd_span<float, 3> ndv1(data1, {2, 2, 5});
 
     auto ndv2 = 42 + ndv1;
 
@@ -805,7 +805,7 @@ TEST(nd_vector, operator_plus_nd_vector_scalar) {
         2, 2, 2, 2, 2,
         3, 3, 3, 3, 3
     };
-    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+    nd_span<float, 3> ndv1(data1, {2, 2, 5});
 
     auto ndv2 = ndv1 + 42;
 
@@ -829,7 +829,7 @@ TEST(nd_vector, operator_minus_equals_scalar) {
         2, 2, 2, 2, 2,
         3, 3, 3, 3, 3
     };
-    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+    nd_span<float, 3> ndv1(data1, {2, 2, 5});
 
     ndv1 -= 42;
 
@@ -852,7 +852,7 @@ TEST(nd_vector, operator_minus_scalar_nd_vector) {
         2, 2, 2, 2, 2,
         3, 3, 3, 3, 3
     };
-    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+    nd_span<float, 3> ndv1(data1, {2, 2, 5});
 
     auto ndv2 = 42 - ndv1;
 
@@ -875,7 +875,7 @@ TEST(nd_vector, operator_minus_nd_vector_scalar) {
         2, 2, 2, 2, 2,
         3, 3, 3, 3, 3
     };
-    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+    nd_span<float, 3> ndv1(data1, {2, 2, 5});
 
     auto ndv2 = ndv1 - 42;
 
@@ -899,7 +899,7 @@ TEST(nd_vector, operator_multiply_equals_scalar) {
         2, 2, 2, 2, 2,
         3, 3, 3, 3, 3
     };
-    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+    nd_span<float, 3> ndv1(data1, {2, 2, 5});
 
     ndv1 *= 42;
 
@@ -922,7 +922,7 @@ TEST(nd_vector, operator_multiply_scalar_nd_vector) {
         2, 2, 2, 2, 2,
         3, 3, 3, 3, 3
     };
-    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+    nd_span<float, 3> ndv1(data1, {2, 2, 5});
 
     auto ndv2 = 42 * ndv1;
 
@@ -945,7 +945,7 @@ TEST(nd_vector, operator_multiply_nd_vector_scalar) {
         2, 2, 2, 2, 2,
         3, 3, 3, 3, 3
     };
-    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+    nd_span<float, 3> ndv1(data1, {2, 2, 5});
 
     auto ndv2 = ndv1 * 42;
 
@@ -969,7 +969,7 @@ TEST(nd_vector, operator_divide_equals_scalar) {
         84.f, 84.f, 84.f, 84.f, 84.f,
         126.f,126.f,126.f,126.f,126.f
     };
-    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+    nd_span<float, 3> ndv1(data1, {2, 2, 5});
 
     ndv1 /= 42;
 
@@ -992,7 +992,7 @@ TEST(nd_vector, operator_divide_scalar_nd_vector) {
         3, 3, 3, 3, 3,
         4, 4, 4, 4, 4
     };
-    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+    nd_span<float, 3> ndv1(data1, {2, 2, 5});
 
     auto ndv2 = 42 / ndv1;
 
@@ -1015,7 +1015,7 @@ TEST(nd_vector, operator_divide_nd_vector_scalar) {
         84.f, 84.f, 84.f, 84.f, 84.f,
         126.f,126.f,126.f,126.f,126.f
     };
-    nd_vector_impl<3, float, false> ndv1(data1, {2, 2, 5});
+    nd_span<float, 3> ndv1(data1, {2, 2, 5});
 
     auto ndv2 = ndv1 / 42;
 
