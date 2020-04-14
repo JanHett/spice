@@ -39,6 +39,12 @@ const int NO_ALPHA = -1;
  */
 const int DISABLE_ALPHA_DEDUCTION = -2;
 
+namespace CHANNEL_SEMANTICS {
+    const channel_list RGB{"R", "G", "B"};
+    const channel_list RGBA{"R", "G", "B", "A"};
+    const channel_list CMYK{"C", "M", "Y", "K"};
+};
+
 /**
  * Specialized formatter for `spice::color`.
  */

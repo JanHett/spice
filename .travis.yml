@@ -1,4 +1,3 @@
-sudo: true
 language: cpp
 
 compiler:
@@ -17,9 +16,10 @@ script: ./ci/travis.sh
 
 deploy:
   provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
+  cleanup: false
+  token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
   keep_history: true
+  strategy: git
   on:
     branch: master
   local_dir: ./doc/html
